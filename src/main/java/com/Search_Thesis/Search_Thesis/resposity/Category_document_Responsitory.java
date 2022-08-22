@@ -1,0 +1,16 @@
+package com.Search_Thesis.Search_Thesis.resposity;
+
+import com.Search_Thesis.Search_Thesis.Model.Category_document;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface Category_document_Responsitory extends JpaRepository<Category_document,  Integer> {
+
+    @Query("SELECT u FROM Category_document u WHERE u.root_folder.id= :ID")
+    List<Category_document> findByID(int ID) ;
+
+}

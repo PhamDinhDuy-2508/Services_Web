@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zxx" class="no-js" xmlns="http://www.w3.org/1999/html">
+<meta charset="utf-8">
+
+
+<head>
+  <!-- Mobile Specific Meta -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <!-- Favicon-->
+  <link rel="shortcut icon" href="img/applie_science.png">
+  <!-- Author Meta -->
+  <meta name="author" content="CodePixar">
+  <!-- Meta Description -->
+  <meta name="description" content="">
+  <!-- Meta Keyword -->
+  <meta name="keywords" content="">
+  <!-- meta character set -->
+  <meta charset="UTF-8">
+  <!-- Site Title -->
+  <title>CKT Service login</title>
+
+  <!--
+      CSS
+      ============================================= -->
+  <link rel="stylesheet" href="css/linearicons.css">
+  <link rel="stylesheet" href="css/owl.carousel.css">
+  <link rel="stylesheet" href="css/themify-icons.css">
+  <link rel="stylesheet" href="css/font-awesome.min.css">
+  <link rel="stylesheet" href="css/nice-select.css">
+  <link rel="stylesheet" href="css/nouislider.min.css">
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+
+<!-- Start Header Area -->
+<header class="header_area sticky-header">
+  <div class="main_menu">
+    <nav class="navbar navbar-expand-lg navbar-light main_box">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <a class="navbar-brand logo_h" href="index.html"><img src="img/applie_science.png" width="100" alt=""></a>
+        <a class="text-xl-center-dark ">  CKT Services    </a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+          <ul class="nav navbar-nav menu_nav ml-auto">
+
+            <li class="nav-item"><a class="nav-link" href="index.html">Trang chủ</a></li>
+
+            <!--						<li class="nav-item submenu dropdown">-->
+            <!--							<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"-->
+            <!--							   aria-expanded="false">Blog</a>-->
+            <!--							<ul class="dropdown-menu">-->
+            <!--								<li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>-->
+            <!--								<li class="nav-item"><a class="nav-link" href="single-blog.html">Blog Details</a></li>-->
+            <!--							</ul>-->
+            <!--						</li>-->
+            <li class="nav-item submenu dropdown active">
+              <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                 aria-expanded="false">Login Page</a>
+              <ul class="dropdown-menu">
+
+              </ul>
+            </li>
+            <li class="nav-item"><a class="nav-link" href="/blog">Blog</a></li>
+
+            <li class="nav-item"><a class="nav-link" href="contact.html">Liên hệ</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </div>
+  <div class="search_input" id="search_input_box">
+    <div class="container">
+      <form class="d-flex justify-content-between">
+        <input type="text" class="form-control" id="search_input" placeholder="Search Here">
+        <button type="submit" class="btn"></button>
+        <span class="lnr lnr-cross" id="close_search" title="Close Search"></span>
+      </form>
+    </div>
+  </div>
+</header>
+<!-- End Header Area -->
+
+<!-- Start Banner Area -->
+<section class="banner-area organic-breadcrumb">
+  <div class="container">
+    <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+      <div class="col-first">
+        <nav class="d-flex align-items-center">
+        </nav>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End Banner Area -->
+
+<!--================Login Box Area =================-->
+</header>
+<section>
+  <div class="bg-white shadow rounded-lg d-block d-sm-flex">
+    <div class="profile-tab-nav border-right">
+      <div class="p-4">
+
+        <h4 class="text-center">${account}</h4>
+      </div>
+      <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <a class="nav-link active" id="account-tab" data-toggle="pill" href="#account" role="tab" aria-controls="account" aria-selected="true">
+          <i class="fa fa-home text-center mr-1"></i>
+          Account
+        </a>
+        <a class="nav-link" id="password-tab" data-toggle="pill" href="#password" onclick="load_pass()" role="tab" aria-controls="password" aria-selected="false">
+          <i class="fa fa-key text-center mr-1"></i>
+          Password
+        </a>
+      </div>
+    </div>
+
+    <div class="tab-content p-4 p-md-5" id="v-pills-tabContent">
+      <div class="tab-pane fade show active" id="account" role="tabpanel" aria-labelledby="account-tab">
+      <div class="h1 text-dark"> Thông tin người dùng </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Họ</label>
+              <input type="text" id="first_name" class="form-control" value="">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Tên</label>
+              <input type="text" id="last_name" class="form-control" value="">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Email/Gmail</label>
+              <input type="email" id="email" class="form-control" value="">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Số điện thoại</label>
+              <input type="number" id="phone_number" class="form-control" value="">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Số nhà</label>
+              <input type="text" id="home_number" class="form-control" value="">
+            </div>
+
+
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label>Quốc Gia</label>
+              <input type="text" id="Country" class="form-control" value="Việt Nam">
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Thành Phố/Tỉnh</label>
+
+              <input type="text" id="Province" list="cityname" class="form-control" value="">
+              <datalist id="cityname" class="dropdown-divider ">
+
+              </datalist>
+
+
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div>
+              <label>  Quận/huyện  </label>
+              <input type="text" id="State" class="form-control" value="" list="statename">
+              <datalist id="statename" class="dropdown-divider ">
+
+              </datalist>
+
+            </div>
+
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label>Đường</label>
+              <input type="text" id="street" class="form-control" value="">
+            </div>
+          </div>
+
+
+          <div class="col-md-12">
+            <div class="form-group">
+              <label>Giới thiệu sơ lược</label>
+              <textarea class="form-control" rows="4"></textarea>
+            </div>
+          </div>
+        </div>
+        <div>
+          <a class="btn btn-light"onclick="update_data()">Cập nhật</a>
+          <a class="btn btn-light" href="home"  onclick="return_home_page()">Cancel</a>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="password" role="tabpanel" aria-labelledby="password-tab">
+        <div class="row">
+          <h1 class="text-dark">Thay đổi mật khẩu</h1>
+          <div class="col-md-6">
+            <div class="form-group">
+              <a class="text-dark"> Mật khẩu cũ /  </a>
+              <a href="#" data-toggle="modal" data-target="#bannerformmodal"> Quên Mật Khẩu ?</a>
+
+              <div class="modal fade bannerformmodal" tabindex="-1" role="dialog" aria-labelledby="bannerformmodal" aria-hidden="true" id="bannerformmodal">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <img   src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfMMKyGpY5pr-oTrs2i-Ab8wA0k5SzQCgOSQ&usqp=CAU" width="60">
+
+                      <i class="text-warning" style="font-size:16px">Chúng tôi sẽ gửi link reset mật khẩu vào email phía dưới</i>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+
+                      </div>
+                      <div class="modal-body">
+                        <form id="requestacallform" method="POST" name="requestacallform">
+
+
+
+                          <div class="form-group">
+                            <div class="input-group">
+                              <img id="modal_img_fg" src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-4uS-LJvm6CKsfIHqqZpZ2PIsZPp_HHbK7Q&usqp=CAU" width="40">
+
+                              <input id="email1" type="email" class="form-control" placeholder="Email mà bạn muốn nhận link reset" name="email1" onchange="validateEmailAdd();"/>
+                            </div>
+                          </div>
+
+
+
+                        </form>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-primary" onclick="">Gửi</button>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <input type="password" class="form-control" id = "old_pass">
+              <a type="text" class="text-danger" id="old_pass_error"></a>
+
+
+          </div>
+
+        </div>
+
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Mật khẩu mới</label>
+              <input type="password" class=" NewPass form-control" id="change_pass">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="Confirm form-group" >
+              <label>xác nhận lại mật khẩu</label>
+              <input type="password" class="form-control" id="confirm_pass">
+            </div>
+            <a type="text" class="text-danger" id="new_pass_error" ></a>
+
+          </div>
+
+        </div>
+        <div>
+          <button class="btn btn-primary" onclick="update_pass()"data-target="#notify" data-toggle="modal" >Update</button>
+
+          <div class="modal fade" id="notify" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"  >
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body" id="modal_body">
+                  <img id="modal_img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9Tt6e-s5azvktMNf0pbudSxqU256bbrAD1Q&usqp=CAU" width="40">
+                  <i class="text-dark" id="modal_text">Cập nhật mật khẩu thành công</i>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <a class="btn btn-light" href="/home">Cancel</a>
+        </div>
+        <div class="tab-pane fade" id="notification" role="tabpanel" aria-labelledby="notification-tab">
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+<script>
+  $(document).ready(function () {
+
+  })
+</script>
+
+<script src="js/vendor/jquery-2.2.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+        crossorigin="anonymous"></script>
+<script src="js/vendor/bootstrap.min.js"></script>
+<script src="js/jquery.ajaxchimp.min.js"></script>
+<script src="js/jquery.nice-select.min.js"></script>
+<script src="js/jquery.sticky.js"></script>
+<script src="js/nouislider.min.js"></script>
+<script src="js/jquery.magnific-popup.min.js"></script>
+<script src="js/owl.carousel.min.js"></script>
+<script  src="js/jquery-1.2.6.min.js"></script>
+<!--gmaps Js-->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjCGmQ0Uq4exrzdcL6rvxywDDOvfAu6eE"></script>
+<script src="js/gmaps.min.js"></script>
+<script src="js/main.js"></script>
+<script src="jwt-decode.js"></script>
+
+
+<script>
+  $(document).ready(function () {
+
+            console.log("test")
+            $('#old_pass_error').hide() ;
+            $('#new_pass_error').hide()
+
+            console.log(window.location.search)
+
+            const api_url =
+                    "http://localhost:8080/profile/load_data"+window.location.search;
+
+
+            async function load(url) {
+              var myHeaders = new Headers();
+              const response = await fetch(url);
+
+              var data = await response.json();
+
+
+                $('#first_name').val(data.first_name) ;
+                $('#last_name').val(data.last_name) ;
+                $('#phone_number').val(data.phone) ;
+                $('#home_number').val(data.home_number) ;
+                $('#street').val(data.street) ;
+                $('#State').val(data.state) ;
+                $('#email').val(data.email) ;
+                $('#Province').val(data.province) ;
+                $('#Country').val(data.country)
+
+              }
+
+          $.ajax({
+            url: "https://provinces.open-api.vn/api/p/",
+            type: "Get",
+            dataType: "json",
+            data: JSON.stringify({}),
+            success: function (data) {
+              var code_province;
+              var province
+              const object = JSON.parse(JSON.stringify(data), function (key, value) {
+                if (key == "name") {
+                  province = value;
+                }
+                if (key == "code") {
+                  code_province = value
+                  var newOption = $('<option value="' + province + value + '"></option>');
+                  $('#province').append(newOption);
+                }
+              });
+            }
+          });
+
+            load(api_url)
+          }
+  );
+
+</script>
+<script type="text/javascript" >
+  $( document ).ready(function() {
+    $.ajax({
+      url: "https://provinces.open-api.vn/api/p/",
+      type: "Get",
+      dataType: "json",
+      data: JSON.stringify({}),
+      success: function (data) {
+        var  code_province  ;
+        var province
+        const object = JSON.parse(JSON.stringify(data), function (key, value) {
+          if (key == "name") {
+            province = value ;
+          }
+          if(key == "code") {
+            code_province =  value
+            var newOption = $('<option value="'+province+'-'+code_province+'">'+ +"</option>>");
+            $('#cityname').append(newOption);
+          }
+        });
+      }
+    });
+  });
+</script>
+<script src="./app.js" charset="utf-8"/>
+
+<script type="text/javascript" >
+  $( document ).ready(function() {
+
+    $('#Province').change(function () {
+      var code_province = ( document.getElementById("Province").value).split('-')[1] ;
+      var province_name = ( document.getElementById("Province").value).split('-')[0] ;
+      $('#Province').val(province_name)
+
+      var _url = "https://provinces.open-api.vn/api/p/" + code_province + "?depth=2";
+
+      $('#statename').empty()
+      load_districts_data(_url)
+    });
+  });
+</script>
+<script>
+  async  function load_districts_data(url){
+    const response = await fetch(url);
+    var data = await response.json();
+    var object = JSON.parse(JSON.stringify(data)) ;
+    var district_name  ;
+    const object1 = JSON.parse(JSON.stringify(object.districts), function (key, value) {
+      if (key == "name") {
+        district_name = value;
+      }
+      if (key == "codename") {
+        var newOption = $('<option value=" '+district_name+'"></option>');
+        $('#statename').append(newOption);
+      }
+    }) ;
+  }  ;
+</script>
+<script>
+  function  update_data(){
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Cookie", "SESSION=YWNjMzc3NjctMGRiNi00MDliLWE1MTItZjUxMTQ1YzUxMGJk");
+
+    var raw = JSON.stringify({
+      "first_name": document.getElementById("first_name").value,
+      "last_name": document.getElementById("last_name").value,
+      "email": document.getElementById("email").value,
+      "home_number":document.getElementById("home_number").value,
+      "country": document.getElementById("Country").value,
+      "province":document.getElementById("Province").value,
+      "state":  document.getElementById("State").value,
+      "street": document.getElementById("street").value,
+      "phone_number": document.getElementById("phone_number").value
+
+    });
+    console.log(raw)
+
+    var requestOptions = {
+      method: 'PUT',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    };
+
+    fetch("http://localhost:8080/profile/update_info", requestOptions)
+            .then(response => response.text())
+            .then(result => console.log(result))
+            .catch(error => console.log('error', error));
+  }
+  function  load_pass(){
+    const api_url =
+            "http://localhost:8080/profile/load_pass"+window.location.search;
+
+
+    async function load(url) {
+      var myHeaders = new Headers();
+      const response = await fetch(url);
+
+      var data = await response.json();
+
+      var base64Url = data.jwt.split('.')[1];
+      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+
+      $('#old_pass').val(JSON.parse(jsonPayload).password)
+
+
+    }
+    load(api_url)
+  }
+</script>
+<script>
+  $( document ).ready(function() {
+    $('#password-tab').click(function() {
+      // load_pass()
+    });
+  });
+  function  update_pass(){
+    const api_url =
+          "http://localhost:8080/profile/update_pass"+window.location.search;
+
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Cookie", "SESSION=YWNjMzc3NjctMGRiNi00MDliLWE1MTItZjUxMTQ1YzUxMGJk");
+
+    var raw = JSON.stringify({
+      "old_password": document.getElementById("old_pass").value,
+      "new_password": document.getElementById("change_pass").value,
+      "confirm_password": document.getElementById("confirm_pass").value,
+
+    });
+    console.log(raw)
+
+    var requestOptions = {
+      method: 'PUT',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    };
+
+    fetch(api_url, requestOptions)
+
+            .then(response => response.text())
+            .then(result => {
+              var json_val = JSON.parse(result)
+
+              if(json_val.type != null){
+
+                console.log(result)
+                $('#modal_text').text("Cập nhật thất bại");
+
+                $('#modal_img').attr('src', 'data:image/png;base64,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').load(function(){
+                  this.width = 40;   // Note: $(this).width() will not work for in memory images
+                });
+                if(json_val.type ==2 ){
+                  $('#old_pass_error').text(json_val.error)
+                  $('#old_pass_error').show()
+                }
+                else if(json_val.type ==1){
+                  $('#new_pass_error').show()
+                  $('#new_pass_error').text(json_val.error)
+                }
+              }
+              else {
+                var json_val = JSON.parse(result)
+                //https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9Tt6e-s5azvktMNf0pbudSxqU256bbrAD1Q&usqp=CAU"
+                $('#modal_text').text("Cập nhật mật khẩu thành cônh");
+
+                $('#modal_img').attr('src' , "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9Tt6e-s5azvktMNf0pbudSxqU256bbrAD1Q&usqp=CAU").load(function(){
+                  this.width = 40;   // Note: $(this).width() will not work for in memory images
+                });
+                $('#old_pass_error').hide()
+                $('#new_pass_error').hide()
+
+              }
+            })
+            .catch(error => console.log('error', error));
+  }
+</script>
+
+
+</body>
+
+</html>
