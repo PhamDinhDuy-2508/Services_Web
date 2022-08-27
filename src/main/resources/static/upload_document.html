@@ -38,6 +38,9 @@
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/main.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+
 
 </head>
 
@@ -122,26 +125,65 @@
                 Kiểu tài liệu
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                <li value="1"><a class="dropdown-item" href="#">Đại Cương</a></li>
-                <li value="2"><a class="dropdown-item" href="#">Chuyên ngành</a></li>
-                <li value="3" ><a class="dropdown-item" href="#">Khác</a></li>
+                <li value="1" onclick="load_category(1 , 'Đại cương')"><a class="dropdown-item" href="#">Đại cương</a></li>
+                <li value="2" onclick="load_category(2 , 'Chuyên ngành')"><a class="dropdown-item" href="#">Chuyên ngành</a></li>
+                <li value="3" onclick="load_category(3 , 'Khác')" ><a class="dropdown-item" href="#">Khác</a></li>
             </ul>
         </div>
+
+
         <div class="form-group">
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <button class="btn-primary" st>Thêm mới</button>
-                </div>
-                <input type="text" class="form-control" placeholder="Chuyên đề" aria-label="Username" aria-describedby="basic-addon1">
-            </div>
-            <div class="form-group">
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <button class="btn-primary" st>Thêm mới</button>
-                    </div>
-                    <input type="text" class="form-control" placeholder="Thư Mục" aria-label="Username" aria-describedby="basic-addon1">
+            <div class="input-group mb-3 "  >
+                    <div class="input-group ps-5">
+
+
+                        <input class="col-sm-5 custom-select " list="category_list" type="search" id="category" onchange="load_folder()" class="form-control" placeholder="Chuyên đề" />
+                        <datalist id="category_list" onclick="load_folder()" >
+
+                        </datalist>
+                    <button type="button" class="btn btn-primary">
+                        <i class="bi bi-search "></i>
+                    </button>
+                        <div  class="text-dark">
+                          |     Hoặc      |
+                        </div>
+
+
+                        <button class="btn btn-outline-primary"  type="button"  data-toggle="modal" data-target="#CategoryModal" >
+                            <i class="bi bi-folder-plus" > Thêm mới </i>
+                        </button>
+
+
                 </div>
 
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="input-group mb-3 "  >
+                    <div class="input-group ps-5">
+
+
+                        <input class="col-sm-5 custom-select " list="folder_list" type="search" id="folder" class="form-control" placeholder="Thư mục" />
+                        <datalist id="folder_list" >
+
+                        </datalist>
+                        <button type="button" class="btn btn-primary">
+                            <i class="bi bi-search "></i>
+                        </button>
+                        <div  class="text-dark">
+                            |     Hoặc      |
+                        </div>
+
+
+                        <button class="btn btn-outline-primary"  >
+                            <i class="bi bi-folder-plus" > Thêm mới </i>
+                        </button>
+
+
+                    </div>
+
+                </div>
 
         </div>
             <div class="box">
@@ -171,10 +213,50 @@
                 </div>
             </div>
 
-
+        </div>
         </form>
 
+        <button type="button" class="btn btn-outline-primary" >
+            <i class="bi bi-skip-backward-circle"> <-  Trở về trang tài liệu</i>
+        </button>
 
+
+
+</div>
+<div class="modal fade" id="CategoryModal" tabindex="-1" role="dialog" aria-labelledby="CategoryModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-lg-center text-dark" id="exampleModalLabel">Tạo chuyên đề mới</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                <button class="btn btn-outline-dark dropdown-toggle" value="0" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                    Kiểu tài liệu
+                </button>
+
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2" id="category_create_new_root">
+                    <li value="1" onclick="load_root('dropdownMenuButton2',1 , 'Đại cương')"><a class="dropdown-item" href="#">Đại cương</a></li>
+                    <li value="2" onclick="load_root('dropdownMenuButton2' , 2 , 'Chuyên ngành')"><a class="dropdown-item" href="#">Chuyên ngành</a></li>
+                    <li value="3" onclick="load_root('dropdownMenuButton2' , 3 , 'Khác')" ><a class="dropdown-item" href="#">Khác</a></li>
+                </ul>
+                <input class=" col-md-5 custom-select "   id="code"  placeholder=" Mã chuyên đề" />
+                    <i class="text-danger" id ="check_cate" > Mã chuyên đề đã tồn lại </i>
+
+
+                </div>
+                <i class="text-dark">Tên chuyên đề</i>
+                <input class=" custom-select "   id="category_add"  placeholder=" Tên chuyên đề" />
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" value="true" id="save_change" onclick="create_category()" class="btn btn-primary">Lưu thay đổi</button>
+            </div>
+        </div>
+    </div>
 </div>
 </div>
 
@@ -191,7 +273,6 @@
 <script src="js/jquery.magnific-popup.min.js"></script>
 <script src="js/owl.carousel.min.js"></script>
 <!--gmaps Js-->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjCGmQ0Uq4exrzdcL6rvxywDDOvfAu6eE"></script>
 <script src="js/gmaps.min.js"></script>
 <script src="js/main.js"></script>
 
@@ -329,6 +410,140 @@
     }
 
 </style>
+<script>
+    function  load_folder(){
+        console.log("123")
+        console.log(  document.getElementById('category').value )
+    }
+</script>
+<script>
+    function load_root(drop_id ,id , text) {
+
+        $('#'+drop_id).text(text).toString()
+        $('#'+drop_id).val(id)
+        async function get_folder() {
+
+        }
+        //getvalue of button
+
+    }
+    function create_category(){
+       if( document.getElementById("save_change").value == "true" ) {
+
+           var settings = {
+               "url": "http://localhost:8080/api/ckt/Create_new_Category",
+               "method": "POST",
+               "timeout": 0,
+               "headers": {
+                   "Content-Type": "application/json"
+               },
+
+               "data": JSON.stringify({
+                   "name": document.getElementById('category_add').value,
+                   "code": document.getElementById('code').value  ,
+                   "root_id" :document.getElementById("dropdownMenuButton2").value,
+                   "root_name" : $('#dropdownMenuButton2').text()
+               }),
+           };
+           console.log(settings)
+
+           $.ajax(settings).done(function (response) {
+               console.log(response);
+           });
+
+       }
+
+    }
+    $(document).ready(function (){
+        $('#check_cate').hide()
+
+        $('#code').change(function (){
+            console.log(document.getElementById('code').value)
+
+            console.log(document.getElementById("dropdownMenuButton2").value)
+
+            var settings = {
+                "url": "http://localhost:8080/api/ckt/find_category?root=" + (document.getElementById("dropdownMenuButton2").value).toString() + "&code=" + document.getElementById('code').value ,
+                "method": "GET",
+                "timeout": 0,
+                "headers": {
+                    "Authorization": "Basic aGllcHNpOjEyMw==",
+                    "Content-Type": "application/json",
+                    "Cookie": "SESSION=Y2I4ZGE4YjAtMjk5OC00MGE0LTk4MzUtYzc2MWIyMGFhNDM4"
+                },
+
+            };
+
+            $.ajax(settings).done(function (response) {
+                console.log(response)
+                if(response == true){
+                    $('#check_cate').show()
+                    document.getElementById('save').value = "false"
+
+                }
+                else {
+                    $('#check_cate').hide()
+                    document.getElementById('save').value = "true"
+                }
+            });
+        })
+    }) ;
+
+</script>
+<script>
+    function load_category(root_id , text) {
+        var settings = {
+            "url": "http://localhost:8080/api/ckt/load_category?root=" +root_id,
+            "method": "GET",
+            "timeout": 0,
+            "headers": {
+                "Authorization": "Basic aGllcHNpOjEyMw==",
+                "Content-Type": "application/json",
+                "Cookie": "SESSION=Y2I4ZGE4YjAtMjk5OC00MGE0LTk4MzUtYzc2MWIyMGFhNDM4"
+            },
+
+        };
+
+        $.ajax(settings).done(function (response) {
+            $('#category_list').empty()
+            $('#dropdownMenuButton1').text(text)
+            for (let i = 0; i < response.length; i++) {
+                $('#category_list').append(
+                    "<option value="+response[i].code+">"+response[i].name+"</option>")
+            }
+            console.log(response);
+        });
+
+    }
+</script>
+    <script>
+        $(document).ready(function (){
+
+            $("#category").on("input", function() {
+                var settings = {
+                    "url": "http://localhost:8080/api/ckt/search_document?value=" +$(this).val(),
+                    "method": "GET",
+                    "timeout": 0,
+                    "headers": {
+                        "Authorization": "Basic aGllcHNpOjEyMw==",
+                        "Content-Type": "application/json",
+                        "Cookie": "SESSION=Y2I4ZGE4YjAtMjk5OC00MGE0LTk4MzUtYzc2MWIyMGFhNDM4"
+                    },
+
+                };
+
+                $.ajax(settings).done(function (response) {
+                    $('#category_list').empty()
+                    for (let i = 0; i < response.length; i++) {
+                        $('#category_list').append(
+                            "<option value="+response[i].code+">"+response[i].name+"</option>")
+                    }
+                });
+            });
+    })
+
+
+</script>
 
 
 </html>
