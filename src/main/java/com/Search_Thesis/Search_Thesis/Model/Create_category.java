@@ -3,6 +3,11 @@ package com.Search_Thesis.Search_Thesis.Model;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
+//@JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
+//        include = JsonTypeInfo.As.PROPERTY, property = "profileType" ,visible = true) @JsonSubTypes({
+//
+//        @JsonSubTypes.Type(value = Create_folder.class, name = "Create_folder")
+//})
 @Data
 @Component("create_cate")
 
@@ -23,5 +28,5 @@ public class Create_category {
                 ", root_name='" + root_name + '\'' +
                 '}';
     }
-
 }
+

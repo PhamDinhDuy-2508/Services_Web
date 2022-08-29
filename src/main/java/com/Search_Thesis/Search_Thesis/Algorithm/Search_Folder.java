@@ -14,6 +14,7 @@ public class Search_Folder implements  Search<List<Folder> ,  List<Folder>> {
 
     @Override
     public void Search(String req) {
+        this.list_folder_res.clear();
         for(Folder x : list_folder_request) {
 
             if( NativeSearch(x.getTitle() ,req) ) {

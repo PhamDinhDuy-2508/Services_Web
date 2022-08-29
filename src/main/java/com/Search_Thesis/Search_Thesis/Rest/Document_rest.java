@@ -1,10 +1,8 @@
 package com.Search_Thesis.Search_Thesis.Rest;
 
 import com.Search_Thesis.Search_Thesis.Event.Create_Category_Event;
-import com.Search_Thesis.Search_Thesis.Model.Category_document;
-import com.Search_Thesis.Search_Thesis.Model.Create_category;
-import com.Search_Thesis.Search_Thesis.Model.Folder;
-import com.Search_Thesis.Search_Thesis.Model.Root_Folder;
+import com.Search_Thesis.Search_Thesis.Event.Create_folder_Event;
+import com.Search_Thesis.Search_Thesis.Model.*;
 import com.Search_Thesis.Search_Thesis.Services.Document_services;
 import com.Search_Thesis.Search_Thesis.Services.Session_Service;
 import com.google.gson.Gson;
@@ -45,6 +43,8 @@ public class Document_rest {
     List<Category_document> list_category =  new ArrayList<>() ;
     ExecutorService threadpool = Executors.newCachedThreadPool();
     Future<List<Folder>> futureTask  ;
+
+    List<Folder> list_folder = new ArrayList<>() ;
 
 
 
@@ -108,25 +108,53 @@ public class Document_rest {
 
 
   @GetMapping("/get_folder")
-  public void folder( @RequestParam("code")  String code , @RequestParam("request_code") String request) {
-
+  public ResponseEntity folder( @RequestParam("code")  String code ) {
+      this.list_folder.clear();
       try {
-          this.futureTask = threadpool.submit(() -> document_services.get_Folder(code));
+          this.list_folder = document_services.get_Folder(code) ;
       } catch (Exception e) {
           System.out.println(e.getMessage());
       }
+      return ResponseEntity.ok(this.list_folder) ;
   }
 
   @GetMapping("/search_folder")
     public ResponseEntity<List<Folder>> get_list( @RequestParam("name")  String name) throws ExecutionException, InterruptedException {
+        if(this.list_folder.isEmpty()) {
+            this.list_folder = this.futureTask.get();
+        }
+        List<Folder>  res =  document_services.Search_folder(this.list_folder , name) ;
 
-        List<Folder> list_Folder =  this.futureTask.get() ;
 
-        return  ResponseEntity.ok(document_services.Search_folder(list_Folder ,  name)) ;
+        return  ResponseEntity.ok(res) ;
   }
+  @GetMapping("/check_folder")
+    public ResponseEntity check_folder(@RequestParam("folder") String folder) {
+      System.out.println(folder);
+       for(Folder x : this.list_folder) {
+           if(x.getTitle().equals(folder)) {
+               return ResponseEntity.ok(true) ;
+           }
+       }
+      return ResponseEntity.ok(false) ;
+  }
+  @PostMapping("/create_new_folder")
+    public void create_folder(@RequestBody Create_folder Create_folder) {
+
+        try{
+            applicationEventPublisher.publishEvent(new Create_folder_Event(this ,  Create_folder ));
+
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+  }
+
 }
 @Data
 class document_find{
     private String Root_id ;
     private String code ;
 }
+
+
+

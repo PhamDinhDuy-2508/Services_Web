@@ -3,6 +3,7 @@ package com.Search_Thesis.Search_Thesis.Services;
 import com.Search_Thesis.Search_Thesis.Algorithm.Search_Folder;
 import com.Search_Thesis.Search_Thesis.Algorithm.Search_category;
 import com.Search_Thesis.Search_Thesis.Event.Create_Category_Event;
+import com.Search_Thesis.Search_Thesis.Event.Create_folder_Event;
 import com.Search_Thesis.Search_Thesis.Model.Category_document;
 import com.Search_Thesis.Search_Thesis.Model.Folder;
 import com.Search_Thesis.Search_Thesis.Model.Root_Folder;
@@ -15,12 +16,15 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.Future;
 
 @Service
 public class Document_services {
 
+    @Autowired
+    Folder folder ;
     @Autowired
     Root_Folder root_folder ;
     @Autowired
@@ -105,9 +109,10 @@ public class Document_services {
             root_folder.setId(Integer.valueOf(create_category_event.getCreate_category().getRoot_id()));
             root_folder.setName(create_category_event.getCreate_category().getName());
 
-
             category_document.setName(create_category_event.getCreate_category().getName());
+
             category_document.setCode(create_category_event.getCreate_category().getCode());
+
             category_document.setRoot_folder(root_folder);
 
             root_folder.setCategory_document(Collections.singleton(category_document));
@@ -119,12 +124,13 @@ public class Document_services {
         catch (Exception e) {
             System.out.println("something was wrong");
         }
+
     }
 
     public List<Folder> get_Folder(String  code) {
 
-            List<Folder> list =  folder_respository.findbyCode(code) ;
-            return list ;
+        List<Folder> list =  folder_respository.findbyCode(code) ;
+        return list ;
     }
     public List<Folder> Search_folder(List<Folder> folderList , String request) {
         if(request == "") {
@@ -133,6 +139,49 @@ public class Document_services {
         search_folder.setList(folderList);
         search_folder.Search(request );
         return  search_folder.getResult() ;
+
+    }
+
+    @EventListener
+    @Async
+    public void Create_Folder(Create_folder_Event create_folder_event) {
+        System.out.println(Thread.currentThread().getName());
+
+        try {
+
+            root_folder.setId(Integer.valueOf(create_folder_event.getCreate_folder().getRoot_id()));
+            root_folder.setName(create_folder_event.getCreate_folder().getName());
+
+            category_document.setName(create_folder_event.getCreate_folder().getName());
+            category_document.setCode(create_folder_event.getCreate_folder().getCode());
+
+            folder.setTitle(create_folder_event.getCreate_folder().getFolder_name());
+            LocalDate myObj = LocalDate.now() ;
+            java.sql.Date date = java.sql.Date.valueOf(myObj.toString()) ;
+            folder.setPublish_date(date);
+            category_document.setNewfolder(Collections.singleton(folder));
+
+            folder.setCategorydocument(category_document);
+
+            category_document.setRoot_folder(root_folder);
+
+
+
+
+            root_folder.setCategory_document(Collections.singleton(category_document));
+
+
+            root_responsitory.save(root_folder) ;
+
+
+
+
+
+        }
+
+        catch (Exception e) {
+            System.out.println("something was wrong");
+        }
 
     }
 

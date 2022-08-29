@@ -19,8 +19,8 @@ public class Folder {
     @Id
     @Expose
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column
-    private int idFolder ;
+    @Column(name = "id_folder")
+    private int idFolder  =0  ;
 
     @Expose
     @Column(name = "Title")
@@ -35,7 +35,8 @@ public class Folder {
 //    @JsonIgnore
 //    @JoinColumn(name = "Category_id_key", referencedColumnName ="category_id" , nullable = true )
     @ManyToOne
-    @JoinColumn(name = "Category_id_key")
+    @JoinColumn(name = "Category_id_key" , referencedColumnName = "category_id" ,columnDefinition = "json"
+            , nullable = true)
     private  Category_document categorydocument ;
 
 }

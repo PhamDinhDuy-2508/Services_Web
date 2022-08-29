@@ -2,15 +2,13 @@ package com.Search_Thesis.Search_Thesis.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.annotations.Expose;
-import lombok.Data;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
-@Data
 @EnableAutoConfiguration
 @Component("category_document")
 @Entity
@@ -45,7 +43,7 @@ public class Category_document {
 
     @OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER, mappedBy = "categorydocument")
     @JsonIgnore
-    private List<Folder> newfolder ;
+    private Set<Folder> newfolder ;
 
     @Override
 
@@ -57,4 +55,43 @@ public class Category_document {
                 '}';
     }
 
+    public int getCategory_id() {
+        return category_id;
+    }
+
+    public void setCategory_id(int category_id) {
+        this.category_id = category_id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public Root_Folder getRoot_folder() {
+        return root_folder;
+    }
+
+    public void setRoot_folder(Root_Folder root_folder) {
+        this.root_folder = root_folder;
+    }
+
+    public Set<Folder> getNewfolder() {
+        return newfolder;
+    }
+
+    public void setNewfolder(Set<Folder> newfolder) {
+        this.newfolder = newfolder;
+    }
 }
