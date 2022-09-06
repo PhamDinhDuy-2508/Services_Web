@@ -25,12 +25,15 @@ public class Document_Filter implements Filter {
 
         String paramValue = request.getParameter("token") ;
 
+        System.out.println("test" + paramValue);
+
+
         if(paramValue == null) {
 
             response.sendRedirect("/login");
+            chain.doFilter(res ,  response);
         }
-        else {
-            chain.doFilter(res, response);
-        }
+        chain.doFilter(res, response);
+
     }
 }

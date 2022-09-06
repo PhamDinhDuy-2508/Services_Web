@@ -30,10 +30,6 @@ public class Folder {
     @Column(name =  "Publish_date")
     private Date Publish_date ;
 
-//    @ManyToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
-//    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL)
-//    @JsonIgnore
-//    @JoinColumn(name = "Category_id_key", referencedColumnName ="category_id" , nullable = true )
     @ManyToOne
     @JoinColumn(name = "Category_id_key" , referencedColumnName = "category_id" ,columnDefinition = "json"
             , nullable = true)

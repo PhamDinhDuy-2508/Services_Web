@@ -37,6 +37,7 @@ public class customerDetailsServices implements UserDetailsService {
             String noop_pass  = "{noop}"+this.user_.getPassword() ;
 
             grantList.add(authority);
+            System.out.println(authority.toString());
 
 
             return new org.springframework.security.core.userdetails.User(username, noop_pass,

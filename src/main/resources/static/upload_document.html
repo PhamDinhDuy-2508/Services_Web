@@ -179,38 +179,48 @@
 
         </div>
             <div class="box">
+            <div class="row" id="box_file" >
+                <div class="col">
                 <!-- fileuploader view component -->
-                <form action="#" method="post" class="text-center">
-                    <div class="margin-bottom-20">
+
+                    <div class="margin-center-20">
                         <img class="thumbnail box-center margin-top-20" alt="No image" src="http://www.washaweb.com/tutoriaux/fileupload/imgs/image-temp-220.png">
+
                     </div>
-                    <p>
+
+                <p>
                         <button type="submit" class="btn btn-sm" name="delete"><i class="icon-remove"></i> Remove</button>
                         <button type="submit" class="btn btn-primary btn-sm" id="save" name="save"><i class="icon-ok icon-white"></i> Save</button>
                     </p>
-                </form>
+                </div>
+
+            </div>
+                </div>
+
                 <!-- ./fileuploader view component -->
                 <div class="row">
                     <div class="col-sm-10">
             <span class="control-fileupload">
-              <label for="file1" class="text-left">Please choose a file on your computer.</label>
-              <input type="file" id="file1">
+              <label id="label_file" class="text-left">Please choose a file on your computer.</label>
+              <input type="file" id="file_input" multiple="multiple" name="file1">
             </span>
                     </div>
                     <div class="col-sm-2">
-                        <button type="button" class="btn btn-primary btn-block">
+                        <button type="button" class="btn btn-primary btn-block" onclick="document_submit()">
                             <i class="icon-upload icon-white"></i> Upload
                         </button>
                     </div>
                 </div>
             </div>
 
+
         </div>
+            <a type="button" class="btn btn-outline-primary" onclick="back_to_document_page()" >
+                <i class="bi bi-skip-backward-circle"> Trở về trang tài liệu</i>
+            </a>
         </form>
 
-        <button type="button" class="btn btn-outline-primary" >
-            <i class="bi bi-skip-backward-circle"> <-  Trở về trang tài liệu</i>
-        </button>
+
 
 
 
@@ -450,12 +460,69 @@
 
 </style>
 <script>
-    function save_folder_change() {
+function back_to_document_page(){
+   var location =  "http://localhost:8080/document" + window.location.search
+    window.location.href =  location
+ }
+</script>
+<script>
+    function document_submit() {
 
+        var myFile = $('#file_input').prop('files');
+        console.log(myFile)
     }
 
 </script>
+
 <script>
+    function add_box(tail, filename){
+        let src = ""
+        if(tail=="pdf"){
+            src = 'img/pdf.png'
+        }
+        else  if(tail == "xlsx" || tail=="csv"){
+
+            src = 'img/sheets.png'
+
+        }
+        else if(tail == "docx"){
+            src  ='img/doc.png'
+
+        }
+        else {
+            src  ='img/documents.png'
+
+        }
+        console.log(src)
+
+        var box_html = " <div class='col'>  <div class='margin-bottom-20'>" +
+            "                        <img class='thumbnail box-center margin-top-20'  src='"+  src+ "' width='80'>" +
+            " </div> <label>" + filename+ "</label>"+
+            "  <p>" +
+            "  <button type='submit' class='btn btn-sm' name='delete'><i class='icon-remove'></i> Remove</button>" +
+            "                    </p>" +
+            "                </div>"
+
+        console.log(box_html)
+
+
+        return box_html
+    }
+    $("input[name=file1]").change(function() {
+        var names = [];
+        $('#box_file').empty()
+        for (var i = 0; i < $(this).get(0).files.length; ++i) {
+            var value = ($(this).get(0).files[i].name)
+            var tail = value.split(".")
+            console.log(tail.length)
+            $('#box_file').append(add_box(value.split(".")[tail.length-1] ,$(this).get(0).files[i].name ))
+
+
+            names.push($(this).get(0).files[i].name);
+        }
+        $("#label_file").empty()
+        $("#label_file").append(names.toString())
+    });
     function  check_folder()   {
 
         async function check() {
@@ -485,6 +552,7 @@
             let response = await fetch(url);
             let y = await response.json();
             for (let i = 0; i < y.length; i++) {
+
                 $('#folder_list').append(
                     "<option value="+y[i].title+"></option>")
             }
@@ -497,13 +565,82 @@
 
     }
 </script>
+
 <script>
+
     function load_root(drop_id ,id , text) {
 
         $('#'+drop_id).text(text).toString()
         $('#'+drop_id).val(id)
 
         //getvalue of button
+
+    }
+    function  document_submit(){
+
+        var settings = {
+            "url": "http://localhost:8080/api/ckt/create_folder",
+            "method": "POST",
+            "timeout": 0,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+
+            "data": JSON.stringify({
+                "name": $('#category_list').text(),
+                "code": $('#category').val()  ,
+                "root_id" :document.getElementById("dropdownMenuButton1").value,
+                "root_name" : $('#dropdownMenuButton1').text() ,
+                "folder_name" : $('#folder_search').val()
+            }),
+        };
+        $.ajax(settings).done(function (response) {
+
+            console.log("succsess")
+            uploadFile()
+
+        });
+
+    }
+
+        function uploadFile() {
+            var signal =  true
+
+            jQuery.each(jQuery('#file_input')[0].files, function(i, file) {
+
+                var data = new FormData();
+                data.append('file', file);
+                jQuery.ajax({
+                    url: 'http://localhost:8080/api/ckt/upload_document',
+                    data: data,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    type: 'POST',
+                    success: function(data){
+                        signal= true
+                    } ,
+                    error : function (data){
+                        signal = false
+                    }
+                });
+            });
+            var response  = true
+            if(signal == true) {
+                alert("Success")
+            }
+            else {
+                alert("Error")
+            }
+
+
+            // await fetch('http://localhost:8080/api/ckt/upload_document', {
+            //     method: "POST",
+            //     body: formData
+            // });
+            // alert('The file has been uploaded successfully.');
+
+
 
     }
     function create_folder(){
@@ -530,7 +667,6 @@
 
         });
         console.log(settings)
-
 
     }
     function create_category(){
@@ -633,6 +769,7 @@
 
     }
 </script>
+
     <script>
         $(document).ready(function (){
 

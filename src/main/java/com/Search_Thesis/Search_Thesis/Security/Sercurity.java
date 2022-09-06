@@ -53,7 +53,7 @@ public class Sercurity extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable()
                 .authorizeRequests().antMatchers("/api/ckt/**" ,"/profile/**","/home/**" ,"/login" , "/blog" ,"/css/**" , "/fonts/**" , "/img/**" ,"/js/**","/reset_pass" ,"/contact").hasRole("USER").
-                antMatchers(HttpMethod.GET ,"/profile/**"  ,"/home/**","/reset_pass").hasAnyRole("USER").
+                antMatchers(HttpMethod.GET ,"/profile/**"  ,"/home/**","/reset_pass" , "/documenht").hasAnyRole("USER").
                 antMatchers("/login" ,"/blog", "/sign_up","/reset_pass","/reset_pass/**",
                         "/profile/**","/forgot_password/**" ,"/home/**" ,"/api/ckt/**", "/css/**" , "/fonts/**" , "/img/**" ,"/js/**"
                         ,"/contact","/document/**",

@@ -4,10 +4,13 @@ import com.Search_Thesis.Search_Thesis.Algorithm.Search_Folder;
 import com.Search_Thesis.Search_Thesis.Algorithm.Search_category;
 import com.Search_Thesis.Search_Thesis.Event.Create_Category_Event;
 import com.Search_Thesis.Search_Thesis.Event.Create_folder_Event;
+import com.Search_Thesis.Search_Thesis.Event.Upload_document_Event;
 import com.Search_Thesis.Search_Thesis.Model.Category_document;
+import com.Search_Thesis.Search_Thesis.Model.Document;
 import com.Search_Thesis.Search_Thesis.Model.Folder;
 import com.Search_Thesis.Search_Thesis.Model.Root_Folder;
 import com.Search_Thesis.Search_Thesis.resposity.Category_document_Responsitory;
+import com.Search_Thesis.Search_Thesis.resposity.Document_Repository;
 import com.Search_Thesis.Search_Thesis.resposity.Folder_Respository;
 import com.Search_Thesis.Search_Thesis.resposity.Root_Responsitory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +18,15 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.Future;
@@ -23,6 +34,8 @@ import java.util.concurrent.Future;
 @Service
 public class Document_services {
 
+    @Autowired
+    Document document ;
     @Autowired
     Folder folder ;
     @Autowired
@@ -43,6 +56,9 @@ public class Document_services {
 
     @Autowired
     Category_document category_document ;
+
+    @Autowired
+    Document_Repository document_repository ;
 
 
     private  Thread Search_document ;
@@ -119,6 +135,11 @@ public class Document_services {
 
             root_responsitory.save(root_folder) ;
 
+            Create_Category_Folder(create_category_event.getCreate_category().getRoot_name() ,
+                                    create_category_event.getCreate_category().getCode() );
+
+
+
         }
 
         catch (Exception e) {
@@ -165,17 +186,13 @@ public class Document_services {
 
             category_document.setRoot_folder(root_folder);
 
-
-
-
             root_folder.setCategory_document(Collections.singleton(category_document));
-
 
             root_responsitory.save(root_folder) ;
 
-
-
-
+            Create_Folder_Directory(create_folder_event.getCreate_folder().getRoot_name()  ,
+                                     create_folder_event.getCreate_folder().getCode() ,
+                                    create_folder_event.getCreate_folder().getFolder_name());
 
         }
 
@@ -184,6 +201,115 @@ public class Document_services {
         }
 
     }
+    public void Create_Category_Folder(String root , String category) throws IOException {
+
+        String category_path = "D:\\Data\\Document_data\\" + root+"\\"+ category ;
+
+        File category_root_directory = new File(category_path) ;
+
+        if(!category_root_directory.exists()) {
+            category_root_directory.mkdir() ;
+
+            Path path = Paths.get(category_path);
+
+            Files.createDirectories(path);
+            System.out.println("Success");
+        }
+    }
+    public void Create_Folder_Directory(String root , String category , String folder) throws IOException {
+        Create_Category_Folder(root , category);
+
+        String Folder_Path = "D:\\Data\\Document_data\\" + root+"\\"+ category+"\\"+folder ;
+        System.out.println(Folder_Path);
+
+        File folder_category_root_directory = new File(Folder_Path) ;
+
+        if(!folder_category_root_directory.exists()) {
+
+            folder_category_root_directory.mkdir() ;
+
+        }
+
+    }
+
+    public String Create_File(String root , String category , String folder , String filename , MultipartFile multipartFile) throws IOException {
+
+//        Create_Folder_Directory(root , category ,  folder) ;
+
+        String Folder_Path = "D:\\Data\\Document_data\\" + root+"\\"+ category+"\\"+folder+"\\"+filename ;
+
+        File document_root_directory = new File(Folder_Path) ;
+        if(!document_root_directory.exists()) {
+            document_root_directory.getParentFile().mkdirs();
+
+        }
+
+        Path document_path = Paths.get(Folder_Path);
+        Path fileToSavePath = Files.createFile(document_path);
+
+        try {
+            byte[] bytes = multipartFile.getBytes();
+
+            // Creating the directory to store file
+            File dir = new File(Folder_Path);
+            if (!dir.exists())
+                dir.mkdirs();
+            else {
+                dir.delete() ;
+            }
+
+            BufferedOutputStream stream = new BufferedOutputStream(
+                    new FileOutputStream(document_root_directory));
+            stream.write(multipartFile.getBytes());
+            stream.close();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "You failed to upload " + filename + " => " + e.getMessage();
+        }
+        return Folder_Path ;
+    }
+    @EventListener
+    @Async
+    public void Create_Document(Upload_document_Event upload_document_event) throws IOException {
+
+
+        String root_name = upload_document_event.getCreate_folder().getRoot_name() ;
+
+        String category_name = upload_document_event.getCreate_folder().getCode() ;
+
+        String Folder_name =  upload_document_event.getCreate_folder().getFolder_name() ;
+
+        List<MultipartFile> multipartFiles =  new ArrayList<>() ;
+        for(MultipartFile multipartFile  : upload_document_event.getMultipartFile()) {
+
+            try {
+                String file_path = Create_File(root_name ,  category_name , Folder_name , multipartFile.getOriginalFilename() , multipartFile);
+                document = create_Document_info(multipartFile.getOriginalFilename() ,  file_path) ;
+                document_repository.save(document) ;
+
+            } catch (IOException e) {
+
+                System.out.println(e.getMessage());
+
+            }
+        }
+    }
+
+    public Document create_Document_info(String file_name , String file_path) {
+        Document document1 =  new Document() ;
+        document1.setFile(file_path);
+        document1.setTitle(file_name);
+
+        LocalDate myObj = LocalDate.now() ;
+
+        java.sql.Date date = java.sql.Date.valueOf(myObj.toString()) ;
+
+        document1.setPublish_date(date);
+
+        return document1 ;
+    }
+
 
 
 }

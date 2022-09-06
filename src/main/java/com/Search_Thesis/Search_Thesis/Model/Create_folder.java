@@ -15,7 +15,11 @@ public class Create_folder  {
     @Override
     public String toString() {
         return "Create_folder{" +
-                "folder_name='" + folder_name + '\'' +
+                "name='" + name + '\'' +
+                ", code='" + code + '\'' +
+                ", root_id='" + root_id + '\'' +
+                ", root_name='" + root_name + '\'' +
+                ", folder_name='" + folder_name + '\'' +
                 '}';
     }
 }

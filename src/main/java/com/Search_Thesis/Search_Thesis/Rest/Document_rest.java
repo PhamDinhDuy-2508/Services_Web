@@ -49,6 +49,8 @@ public class Document_rest {
 
 
 
+
+
     @GetMapping("/load_category")
     public ResponseEntity<List<Category_document>> response_category(@RequestParam("root") String Root , HttpServletRequest request) {
         System.out.println(Root);
@@ -105,8 +107,6 @@ public class Document_rest {
         return null   ;
   }
 
-
-
   @GetMapping("/get_folder")
   public ResponseEntity folder( @RequestParam("code")  String code ) {
       this.list_folder.clear();
@@ -142,13 +142,18 @@ public class Document_rest {
     public void create_folder(@RequestBody Create_folder Create_folder) {
 
         try{
+
             applicationEventPublisher.publishEvent(new Create_folder_Event(this ,  Create_folder ));
 
         }catch (Exception e) {
             System.out.println(e.getMessage());
         }
   }
+  @GetMapping("/display_root")
+    public void Display_Folder(){
 
+
+  }
 }
 @Data
 class document_find{
