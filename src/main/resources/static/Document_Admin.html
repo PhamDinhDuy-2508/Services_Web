@@ -158,64 +158,22 @@
                             </div>
 
 
-
-
-
                             <ul id="tree1">
 
                                 <li><a href="#">Chuyên ngành</a>
 
-                                 <ul>
-                                        <li>Company Maintenance</li>
-                                        <li>Employees
-                                            <ul>
-                                                <li>Reports
-                                                    <ul>
-                                                        <li>Report1</li>
-                                                        <li>Report2</li>
-                                                        <li>Report3</li>
-                                                    </ul>
-                                                </li>
-                                                <li>Employee Maint.</li>
-                                            </ul>
-                                        </li>
-                                        <li>Human Resources</li>
+                                 <ul id="chuyennganh"onclick="lang1(event);">
+
                                     </ul>
                                 </li>
                                 <li><a href="#">Đại cương</a>
-                                    <ul>
-                                        <li>Company Maintenance</li>
-                                        <li>Employees
-                                            <ul>
-                                                <li>Reports
-                                                    <ul>
-                                                        <li>Report1</li>
-                                                        <li>Report2</li>
-                                                        <li>Report3</li>
-                                                    </ul>
-                                                </li>
-                                                <li>Employee Maint.</li>
-                                            </ul>
-                                        </li>
-                                        <li>Human Resources</li>
+                                    <ul id="daicuong">
+
                                     </ul>
                                 </li>
                                 <li><a href="#">Khác</a>
-                                    <ul>
-                                        <li>Company Maintenance</li>
-                                        <li>Employees
-                                            <ul>
-                                                <li>Reports
-                                                    <ul>
-                                                        <li>Report1</li>
-                                                        <li>Report2</li>
-                                                        <li>Report3</li>
-                                                    </ul>
-                                                </li>
-                                                <li>Employee Maint.</li>
-                                            </ul>
-                                        </li>
-                                        <li>Human Resources</li>
+                                    <ul id="khac">
+
                                     </ul>
                                 </li>
                             </ul>
@@ -257,23 +215,29 @@
                 </div>
             </div>
             <div class="col-sm-8 tab-content no-bg no-border">
-                <div class="tab-pane active documents documents-panel">
+
+                <h1 class="text-dark" id="title_list"></h1>
+                <h4 class="text-info" id="amount"></h4>
+
+
+
+                <div class="tab-pane active documents documents-panel" id="folder_list">
                     <div class="document success">
                         <div class="document-body">
                             <i class="fa fa-file-excel-o text-success"></i>
                         </div>
                         <div class="document-footer">
-                            <span class="document-name"> Excel database 2017 </span>
-                            <span class="document-description"> 1.2 MB </span>
+                            <span class="text-dark"> <a class="link">Excel database 2017</a>  </span>
+<!--                            <span class="document-description"> 1.2 MB </span>-->
                         </div>
                     </div>
-                    <div class="document">
+                    <div class="document" >
                         <div class="document-body">
                             <i class="fa fa-file-excel-o text-success"></i>
                         </div>
                         <div class="document-footer">
                             <span class="document-name"> Excel database 2016 </span>
-                            <span class="document-description"> 1.1 MB </span>
+<!--                            <span class="document-description"> 1.1 MB </span>-->
                         </div>
                     </div>
                     <div class="document info">
@@ -282,9 +246,18 @@
                         </div>
                         <div class="document-footer">
                             <span class="document-name"> Word file 2017 </span>
-                            <span class="document-description"> 932 KB </span>
+<!--                            <span class="document-description"> 932 KB </span>-->
                         </div>
                     </div>
+                    <div class="document info">
+                    <div class="document-body">
+                        <i class="fa fa-folder-open-o text-info"></i>
+                    </div>
+                    <div class="document-footer">
+                        <span class="document-name"> Word file 2017 </span>
+                        <!--                            <span class="document-description"> 932 KB </span>-->
+                    </div>
+                </div>
 <!--                    uploadpage-->
 <!--                    <div class="modal fade bannerformmodal" tabindex="-1" role="dialog" aria-labelledby="bannerformmodal" aria-hidden="true" id="bannerformmodal">-->
 <!--                        <div class="modal-dialog  modal-xl ">-->
@@ -324,6 +297,7 @@
                 </div>
 
     </div>
+
 
     <style type="text/css">
         body{
@@ -740,7 +714,12 @@
             background-color: #fff;
             border-radius: 3px;
             border: 1px solid #dce2e9;
+
         }
+        .document.hover{
+            background-color: #0a2b1d;
+        }
+
 
         .document .document-body {
             height: 130px;
@@ -765,6 +744,9 @@
             padding: 5px 12px;
             border-radius: 0 0 2px 2px;
         }
+        .document.hover{
+            background-color: #00BCD4;
+        }
 
         .document .document-footer .document-name {
             display: block;
@@ -776,6 +758,7 @@
             overflow-x: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
+
         }
 
         .document .document-footer .document-description {
@@ -1018,6 +1001,101 @@
 <script src="js/bstreeview.js">
 </script>
 <script>
+    $(document).ready(function (){
+        var settings = {
+            "url": "http://localhost:8080/api/ckt/display_root",
+            "method": "GET",
+            "timeout": 0,
+            "headers": {
+                "Cookie": "SESSION=NGM4MTc5NjgtMmUwNS00YzM2LTkzYzYtYjY2ZGEyNmVmYmQ1"
+            },
+            "processData": false,
+            "mimeType": "multipart/form-data",
+            "contentType": false,
+        };
+
+        $.ajax(settings).done(function (response) {
+            console.log(JSON.parse(response));
+            var Json_list = JSON.parse(response)
+            for(var i = 0 ;  i < Json_list[1].length ; i++) {
+                $('#chuyennganh').append("<li  id='"+Json_list[1][i].code +"'> <a type='button'>"+Json_list[1][i].name+ "(" +Json_list[1][i].code + ")"+"</a></li>")
+                document.getElementById(Json_list[1][i].code).style.cursor = "pointer";
+            }
+            for(var i = 0 ;  i < Json_list[0].length ; i++) {
+                $('#daicuong').append("<li id='"+Json_list[0][i].code +"'><a type='button'>"+Json_list[0][i].name+ "(" +Json_list[0][i].code + ")"+"</a></li>")
+                document.getElementById(Json_list[0][i].code).style.cursor = "pointer";
+
+            }  for(var i = 0 ;  i < Json_list[2].length ; i++) {
+                $('#khac').append("<li id='"+Json_list[2][i].code +"'><a  <a type='button' >"+Json_list[2][i].name+ "(" +Json_list[2][i].code + ")"+"</a></li>")
+                document.getElementById(Json_list[2][i].code).style.cursor = "pointer";
+
+            }
+
+        });
+    })
+
+</script>
+<script>
+    function lang1(event) {
+        var target = event.target || event.srcElement;
+
+        // alert(event.target.text())
+        var text = (event.target.innerHTML).toString().split("(")
+        var Code = text[text.length-1].replace(')' ,'')
+        var settings = {
+            "url": "http://localhost:8080/api/ckt/display_folder/" + Code,
+            "method": "GET",
+            "timeout": 0,
+            "headers": {
+                "Cookie": "SESSION=OWE1NDJkY2ItMjdjMy00MWQ3LTg3OTctN2I4NTY1YTYyMzM4"
+            },
+            "processData": false,
+            "mimeType": "multipart/form-data",
+            "contentType": false,
+        };
+
+        $.ajax(settings).done(function (response) {
+            console.log(response);
+            $('#folder_list').empty()
+            var Json = JSON.parse(response)
+            $('#title_list').text((event.target.innerHTML).toString())
+            $('#amount').text("Tìm được " +Json.length.toString() + " folder")
+            for ( let i = 0; i < Json.length ; i++) {
+                var onclick =  "onclick='show_folder(" + Json[i].idFolder +")'"
+
+
+                var folder =  "<div class='document' type='button' id='"+Json[i].idFolder +"'"+ onclick+ " > " +
+                    "                <div class='document-body'>" +
+                    "                    <i class='fa fa-folder-open text-info '></i>" +
+                    "                </div>" +
+                    "                <div class='document-footer'>" +
+                    "                    <span class='document-name'>" +Json[i].title + " </span>" +
+                    "                  <span class='document-description link' >" + Json[i].publish_date + "</span>" +
+                    "                </div>" +
+                    "            </div>"
+                $('#folder_list').append(folder)
+                document.getElementById(Json[i].idFolder).style.cursor = "pointer";
+
+
+            }
+
+        });
+    }
+
+</script>
+<script>
+function show_folder(ID) {
+    console.log(ID)
+    alert(ID)
+
+}
+</script>
+<script>
+    function display_folder() {
+        alert("sjow")
+    }
+</script>
+<script>
     $.fn.extend({
         treed: function (o) {
 
@@ -1084,6 +1162,7 @@
 <script>
     function redirect_upload() {
         window.location.href = "http://localhost:8080/document_upload"+window.location.search
+
     }
 </script>
 </body>

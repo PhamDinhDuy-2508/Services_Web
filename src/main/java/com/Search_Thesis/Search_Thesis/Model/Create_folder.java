@@ -3,13 +3,27 @@ package com.Search_Thesis.Search_Thesis.Model;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+
 @Data
+@Valid
 @Component("create_folder")
 public class Create_folder  {
+
+
+    @NotBlank
     private String name;
+
+    @NotBlank
     private String code;
+
+    @NotBlank
     private String root_id;
+
+    @NotBlank
     private String root_name;
+    @NotBlank
     private String folder_name;
 
     @Override

@@ -35,7 +35,6 @@ public class upload_document
 
         document_services.Create_Folder_Directory(create_folder.getRoot_name() ,
                 create_folder.getCode() ,  create_folder.getFolder_name());
-        System.out.println(create_folder.toString());
 
 
         return;
@@ -49,9 +48,7 @@ public class upload_document
             List<String> fileNames = new ArrayList<>();
 
             Arrays.asList(multipartFile).stream().forEach(file -> {
-                System.out.println(file);
                 fileNames.add(file.getOriginalFilename());
-                System.out.println(file.getOriginalFilename() + "-" + file.getSize());
             });
             applicationEventPublisher.publishEvent(new Upload_document_Event(this , multipartFile ,  this.create_folder));
             message = "Uploaded the files successfully: " + fileNames;

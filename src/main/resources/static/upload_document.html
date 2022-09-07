@@ -130,10 +130,12 @@
 
 
                         <input class="col-sm-5 custom-select " list="category_list" type="search" id="category" onchange="load_folder()" class="form-control" placeholder="Chuyên đề" />
+
+
                         <datalist id="category_list" onclick="load_folder()" >
 
                         </datalist>
-                    <button type="button" class="btn btn-primary">
+                    <button type="button" value="false" class="btn btn-primary">
                         <i class="bi bi-search "></i>
                     </button>
                         <div  class="text-dark">
@@ -144,6 +146,8 @@
                         <button class="btn btn-outline-primary"  type="button"  data-toggle="modal" data-target="#CategoryModal" >
                             <i class="bi bi-folder-plus" > Thêm mới </i>
                         </button>
+                        <i class="text-danger" id ="category_empty">Category không được bỏ trống</i>
+                        <i class="text-danger" id="category_wrong">Category không tồn tại</i>
 
 
                 </div>
@@ -160,7 +164,7 @@
                         <datalist id="folder_list" >
 
                         </datalist>
-                        <button type="button" class="btn btn-primary">
+                        <button type="button" value="false" class="btn btn-primary">
                             <i class="bi bi-search "></i>
                         </button>
                         <div  class="text-dark">
@@ -171,6 +175,8 @@
                         <button class="btn btn-outline-primary" type="button"  data-toggle="modal" data-target="#FolderModal"  >
                             <i class="bi bi-folder-plus" > Thêm mới </i>
                         </button>
+                        <i class="text-danger" id ="folder_empty">Folder không được bỏ trống</i>
+                        <i class="text-danger" id="folder_wrong">Folder không tồn tại</i>
 
 
                     </div>
@@ -206,7 +212,7 @@
             </span>
                     </div>
                     <div class="col-sm-2">
-                        <button type="button" class="btn btn-primary btn-block" onclick="document_submit()">
+                        <button type="button" value="false" id="save_button" class="btn btn-primary btn-block" onclick="document_submit()">
                             <i class="icon-upload icon-white"></i> Upload
                         </button>
                     </div>
@@ -540,10 +546,144 @@ function back_to_document_page(){
             }
         }
 
-        check()
+
+            check()
+
+
 
 
         }
+</script>
+
+<script>
+    $(document).ready(function(){
+        $('#category_wrong').hide()
+        $('#category_empty').hide()
+        $('#folder_empty').hide()
+        $('#folder_wrong').hide()
+
+        $("#category").change(function(){
+            console.log("http://localhost:8080/api/ckt/check/"+$('#category').val())
+
+            var settings = {
+                "url": "http://localhost:8080/api/ckt/check/"+$('#category').val(),
+                "method": "GET",
+                "timeout": 0,
+                "headers": {
+                    "Cookie": "SESSION=MDFhYTA1YWMtZDEzNC00ZGVhLTlmYjctNTFmMDU5MjUyMjll"
+                },
+                "processData": false,
+                "mimeType": "multipart/form-data",
+                "contentType": false,
+            };
+            console.log(settings)
+
+            $.ajax(settings).done(function (response) {
+                console.log(response)
+                if(response.toString() == "false") {
+                    $('#save_button').val("false")
+                    $('#category_wrong').show()
+
+                }
+
+                else if(response.toString() == "true"){
+                    $('#save_button').val("true")
+
+                    $('#category_wrong').hide()
+                }
+                $('#folder_search').val("")
+
+            });
+        });
+        $("#folder_search").focus(function(){
+            console.log("Focus")
+            if($('#category').val() .length == 0 ) {
+                $('#save_button').val("false")
+
+
+                $('#category_empty').show()
+            }
+            else if($('#category').val() .length > 0){
+                $('#save_button').val("true")
+
+                $('#category_empty').hide()
+
+            }
+        }) ;
+        $("#folder_search").focusout(function(){
+            console.log("Focusout")
+            if($('#folder_search').val() .length == 0 ) {
+
+                $('#folder_empty').show()
+            }
+            else if($('#folder_search').val() .length > 0){
+                $('#folder_empty').hide()
+                console.log("http://localhost:8080/api/ckt/check/"+$('#category').val() +"/" +$('#folder_search').val())
+                var settings = {
+                    "url": "http://localhost:8080/api/ckt/check/"+$('#category').val() +"/" +$('#folder_search').val(),
+                    "method": "GET",
+                    "timeout": 0,
+                    "headers": {
+                        "Cookie": "SESSION=N2VmZDI0YTUtYWExZS00NDdjLWE3YWUtYjFlMTBhYzFkZjkx"
+                    },
+                    "processData": false,
+                    "mimeType": "multipart/form-data",
+                    "contentType": false,
+                };
+
+                $.ajax(settings).done(function (response) {
+                    if(response.toString() == "false") {
+                        $('#save_button').val("false")
+
+
+                        $('#folder_wrong').show()
+                    }
+
+                    else if(response.toString() == "true"){
+                        $('#save_button').val("true")
+
+                        $('#folder_wrong').hide()
+                    }
+                    console.log(response);
+                });
+
+            }
+        }) ;
+        $("#folder_search").change(function(){
+            var settings = {
+                "url": "http://localhost:8080/api/ckt/check/"+$('#category').val() +"/" + $('#folder_search').val(),
+                "method": "GET",
+                "timeout": 0,
+                "headers": {
+                    "Cookie": "SESSION=N2VmZDI0YTUtYWExZS00NDdjLWE3YWUtYjFlMTBhYzFkZjkx"
+                },
+                "processData": false,
+                "mimeType": "multipart/form-data",
+                "contentType": false,
+            };
+
+            $.ajax(settings).done(function (response) {
+                if(response.toString() == "false") {
+                    $('#save_button').val("false")
+
+                    $('#folder_wrong').show()
+                }
+
+                else if(response.toString() == "true"){
+                    $('#save_button').val("true")
+
+                    $('#folder_wrong').hide()
+                }
+                console.log(response);
+            });
+
+
+
+        });
+    });
+</script>
+</head>
+
 </script>
 <script>
     function  load_folder(){
@@ -604,6 +744,10 @@ function back_to_document_page(){
     }
 
         function uploadFile() {
+            if($('#save_button').val() == "false") {
+                alert("Đầu vào không hợp lệ")
+            }
+
             var signal =  true
 
             jQuery.each(jQuery('#file_input')[0].files, function(i, file) {
@@ -771,12 +915,12 @@ function back_to_document_page(){
 </script>
 
     <script>
-        $(document).ready(function (){
+        $(document).ready(function () {
 
 
-            $("#category").on("input", function() {
+            $("#category").on("input", function () {
                 var settings = {
-                    "url": "http://localhost:8080/api/ckt/search_document?value=" +$(this).val(),
+                    "url": "http://localhost:8080/api/ckt/search_document?value=" + $(this).val(),
                     "method": "GET",
                     "timeout": 0,
                     "headers": {
@@ -791,10 +935,22 @@ function back_to_document_page(){
                     $('#category_list').empty()
                     for (let i = 0; i < response.length; i++) {
                         $('#category_list').append(
-                            "<option value="+response[i].code+">"+response[i].name+"</option>")
+                            "<option value=" + response[i].code + ">" + response[i].name + "</option>")
                     }
                 });
             });
+            $("#folder_search").on("input", function () {
+                var settings = {
+                    "url": "http://localhost:8080/api/ckt/search_folder?name=" + $(this).val(),
+                    "method": "GET",
+                    "timeout": 0,
+                    "headers": {
+                        "Authorization": "Basic aGllcHNpOjEyMw==",
+                        "Content-Type": "application/json",
+                        "Cookie": "SESSION=Y2I4ZGE4YjAtMjk5OC00MGE0LTk4MzUtYzc2MWIyMGFhNDM4"
+                    },
+
+                };
 
 
                 $.ajax(settings).done(function (response) {
@@ -802,12 +958,12 @@ function back_to_document_page(){
                     console.log(response)
                     for (let i = 0; i < response.length; i++) {
                         $('#folder_list').append(
-                            "<option value="+response[i].title+"></option>")
+                            "<option value=" + response[i].title + "></option>")
                     }
                 });
 
             });
-
+        })
 
 
 </script>

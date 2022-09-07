@@ -29,6 +29,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
 @Service
@@ -65,7 +66,17 @@ public class Document_services {
 
     private HashMap<String,Folder> hashMapFolder = new HashMap<>()   ;
 
+    private Boolean signal ;
 
+    private  Category_document present_Category ;
+
+    public Boolean getSignal() {
+        return signal;
+    }
+
+    public void setSignal(Boolean signal) {
+        this.signal = signal;
+    }
 
     @Autowired
     Category_document_Responsitory category_document_responsitory ;
@@ -137,8 +148,6 @@ public class Document_services {
 
             Create_Category_Folder(create_category_event.getCreate_category().getRoot_name() ,
                                     create_category_event.getCreate_category().getCode() );
-
-
 
         }
 
@@ -230,6 +239,39 @@ public class Document_services {
 
         }
 
+    }
+
+    @Async
+    public CompletableFuture<Boolean> check_Category_Existed(String code) {
+        try {
+            List<Category_document> categoryDocument = category_document_responsitory.findByCode(code)  ;
+
+            if (categoryDocument == null) {
+                return CompletableFuture.completedFuture(false);
+            }
+            this.category_document = categoryDocument.get(0);
+            return CompletableFuture.completedFuture(true) ;
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return CompletableFuture.completedFuture(false) ;
+
+        }
+    }
+    @Async
+    public CompletableFuture<Boolean> check_Folder(String Code , String Title) {
+        try {
+            Folder folder1 = folder_respository.findByTitleAndCode(Code , Title);
+            if(folder1 == null) {
+                return  CompletableFuture.completedFuture(false) ;
+            }
+            else {
+                return  CompletableFuture.completedFuture(true) ;
+            }
+        }
+        catch (Exception e) {
+            return  CompletableFuture.completedFuture(false)  ;
+        }
     }
 
     public String Create_File(String root , String category , String folder , String filename , MultipartFile multipartFile) throws IOException {

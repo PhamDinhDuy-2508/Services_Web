@@ -43,8 +43,17 @@ public class Document {
     public ModelAndView user_token(HttpServletRequest res) {
         HttpSession session = res.getSession(true);
         String token = (String) session.getAttribute("jwt_code");
-        ModelAndView modelAndView = new ModelAndView("redirect:/document?token=" + token);
-        return modelAndView;
+        if(token == null) {
+            ModelAndView modelAndView = new ModelAndView("/login");
+            return modelAndView;
+
+        }
+        else {
+            ModelAndView modelAndView = new ModelAndView("redirect:/document?token=" + token);
+            return modelAndView;
+
+        }
+
     }
 
     @GetMapping("/load_user")

@@ -18,6 +18,6 @@ public interface Category_document_Responsitory extends JpaRepository<Category_d
 
     List<Category_document> find_category_code(@Param("ID") int ID, @Param("code") String code) ;
 
-
+    List<Category_document> findByCode(String Code) ;
 
 }
