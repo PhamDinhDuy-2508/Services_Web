@@ -31,4 +31,10 @@ public class Document {
     @Column(name = "Publish_date")
     private Date Publish_date ;
 
+    @Column(name = "Id_folder")
+
+    private int Id_folder ;
+    @Column
+    private  int size ;
+
 }

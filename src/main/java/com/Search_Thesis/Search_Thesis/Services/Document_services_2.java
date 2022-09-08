@@ -1,9 +1,11 @@
 package com.Search_Thesis.Search_Thesis.Services;
 
 import com.Search_Thesis.Search_Thesis.Model.Category_document;
+import com.Search_Thesis.Search_Thesis.Model.Document;
 import com.Search_Thesis.Search_Thesis.Model.Folder;
 import com.Search_Thesis.Search_Thesis.Model.Root_Folder;
 import com.Search_Thesis.Search_Thesis.resposity.Category_document_Responsitory;
+import com.Search_Thesis.Search_Thesis.resposity.Document_Repository;
 import com.Search_Thesis.Search_Thesis.resposity.Folder_Respository;
 import com.Search_Thesis.Search_Thesis.resposity.Root_Responsitory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +35,11 @@ public class Document_services_2 {
     Category_document_Responsitory category_document_responsitory ;
 
     @Autowired
+
     Folder_Respository folder_respository ;
+
+    @Autowired
+    Document_Repository document_repository ;
 
     HashMap<String ,  List<Category_document>> Hash_category_documentList =  new HashMap<>() ;
 
@@ -60,5 +66,21 @@ public class Document_services_2 {
         List<Folder> folder = folder_respository.findbyCode(code) ;
 
         return folder ;
+    }
+    public List<Document> load_Document(String ID) {
+        try {
+            System.out.println(Integer.valueOf(ID));
+           return document_repository.findById_folder(Integer.valueOf(ID)) ;
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return  null;
+        }
+    }
+    public String pdf_Path( String ID_document){
+
+        Document document =  document_repository.findByID(Integer.valueOf( ID_document) )  ;
+
+        return document.getFile() ;
     }
 }

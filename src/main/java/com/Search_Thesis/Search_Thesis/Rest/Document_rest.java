@@ -11,6 +11,7 @@ import com.google.gson.GsonBuilder;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,6 +47,9 @@ public class Document_rest {
     Future<List<Folder>> futureTask;
 
     List<Folder> list_folder = new ArrayList<>();
+
+    @Autowired
+    ResourceLoader resourceLoader ;
 
 
     @GetMapping("/load_category")
@@ -188,9 +192,29 @@ public class Document_rest {
     public  ResponseEntity<List<Document>> display_document(
             @RequestParam("ID") String ID) {
 
-        return  null ;
-
+        return ResponseEntity.ok(document_services_2.load_Document(ID)) ;
     }
+    @RequestMapping(method = RequestMethod.GET, value = "Preview_file/{ID}", produces = "application/pdf")
+
+    public ResponseEntity<?> prview_file(@PathVariable("ID") String ID) {
+
+        String filename = document_services_2.pdf_Path(ID) ;
+
+        try {
+            return ResponseEntity.ok(resourceLoader.getResource("file:" + filename));
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/Document/download/{title}")
+
+    public ResponseEntity download_file(@PathVariable String title) {
+
+        return null ;
+    }
+
+
 }
 @Data
 class check{

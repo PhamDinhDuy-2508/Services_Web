@@ -297,9 +297,88 @@
                 </div>
 
     </div>
+            <div id="myModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <i class="text-dark" style="font-size:16px">Danh Sách File</i>
+
+                            <button type="button" class="close" data-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="panel panel-primary" id="result_panel">
+                                <div class="panel-heading">
+                                </div>
+                                <div class="tbl-header">
+                                    <table style="width:100%;">
+                                        <thead>
+                                        <tr>
+                                            <th width="70%">Tên File</th>
+                                            <th width="10%"></th>
+                                        </tr>
+
+                                        </thead>
+                                    </table>
+                                </div>
+                                <div style="width:100%;overflow:auto; max-height:300px;">
+                                    <table class="table-hover table table-striped" style="width:100%;" id="table_file">
+<!--                                        <tr>-->
+<!--                                            <td width="70%">dsada</td>-->
+<!--                                            <td width="30%">dsadas</td>-->
+<!--                                        </tr>-->
+<!--                                        <tr>-->
+<!--                                            <td>-->
+<!--                                            <a href='#' class = "text-dark stretched-link">-->
+<!--                                                textlink-->
+
+<!--                                            </a>-->
+<!--                                            </td>-->
+<!--                                            <td>-->
+<!--                                            <button type="button" role="button" class = "button btn-dark">-->
+<!--                                                Dowload-->
+
+<!--                                            </button>-->
+<!--                                            </td>-->
+<!--                                        </tr>-->
+<!--                                        <tr>-->
+<!--                                            <td>dsada</td>-->
+<!--                                            <td>dsadas</td>-->
+<!--                                        </tr>-->
+<!--                                        <tr>-->
+<!--                                            <td>dsada</td>-->
+<!--                                            <td>dsadas</td>-->
+<!--                                        </tr>-->
+<!--                                        <tr>-->
+<!--                                            <td>dsada</td>-->
+<!--                                            <td>dsadas</td>-->
+<!--                                        </tr>-->
+<!--                                        <tr>-->
+<!--                                            <td>dsada</td>-->
+<!--                                            <td>dsadas</td>-->
+<!--                                        </tr>-->
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
 
 
     <style type="text/css">
+
+
+        .table-responsive{
+            max-height:300px;
+
+        }
         body{
             margin-top:20px;
             background:#eee;
@@ -922,6 +1001,14 @@
 
         .
     </style>
+            <style>
+                .list-group{
+                    max-height: 300px;
+                    margin-bottom: 10px;
+                    overflow:scroll;
+                    -webkit-overflow-scrolling: touch;
+                }
+            </style>
 
 </section>
 <!--================Blog Area =================-->
@@ -1064,7 +1151,7 @@
                 var onclick =  "onclick='show_folder(" + Json[i].idFolder +")'"
 
 
-                var folder =  "<div class='document' type='button' id='"+Json[i].idFolder +"'"+ onclick+ " > " +
+               var folder =  "<div class='document' type='button' id='"+Json[i].idFolder +"'"+ onclick+ " data-toggle='modal' " + " data-target='#myModal'"+  "> " +
                     "                <div class='document-body'>" +
                     "                    <i class='fa fa-folder-open text-info '></i>" +
                     "                </div>" +
@@ -1085,8 +1172,51 @@
 </script>
 <script>
 function show_folder(ID) {
-    console.log(ID)
-    alert(ID)
+
+    var settings = {
+        "url": "http://localhost:8080/api/ckt/display_document?ID=" + ID,
+        "method": "GET",
+        "timeout": 0,
+        "headers": {
+            "Cookie": "SESSION=MTkxYTQ2YTYtNzkyOS00ZmZiLWJjNTYtYTVhNGRlNTIzNDgx"
+        },
+        "processData": false,
+        "mimeType": "multipart/form-data",
+        "contentType": false,
+    };
+    // <tr>
+    //     <td>
+    //         <a href='#' className="text-dark stretched-link">
+    //             textlink
+    //
+    //         </a>
+    //     </td>
+    //     <td>
+    //         <button type="button" role="button" className="button btn-dark">
+    //             Dowload
+    //
+    //         </button>
+    //     </td>
+    // </tr>
+
+    $.ajax(settings).done(function (response) {
+
+        JSON_arr = JSON.parse(response)
+        for (var i = 0; i < JSON_arr.length ; i++) {
+            $('#table_file').append(" <tr id = " + JSON_arr[i].id +">" +
+                "                                            <td>" +
+                "                                            <a  target='_blank' rel='noopener noreferrer' href='/api/ckt/Preview_file/"+JSON_arr[i].id +"' class = 'text-dark stretched-link'>" + JSON_arr[i].title +
+                "                                            </a>" +
+                "                                            </td>" +
+                "                                            <td>" +
+                "                                            <button type='button' role='button' class = 'button btn-outline-primary '>" +
+                "                                                <i> <img src='img/download.png' width='20'></i>" +
+                "                                            </button>" +
+                "                                            </td>" +
+                "                                        </tr>")
+        }
+        });
+
 
 }
 </script>
@@ -1149,9 +1279,7 @@ function show_folder(ID) {
             });
         }
     });
-
     //Initialization of treeviews
-
     $('#tree1').treed();
 
     $('#tree2').treed({openedClass:'glyphicon-folder-open', closedClass:'glyphicon-folder-close'});
@@ -1159,6 +1287,7 @@ function show_folder(ID) {
     $('#tree3').treed({openedClass:'glyphicon-chevron-right', closedClass:'glyphicon-chevron-down'});
 
 </script>
+
 <script>
     function redirect_upload() {
         window.location.href = "http://localhost:8080/document_upload"+window.location.search

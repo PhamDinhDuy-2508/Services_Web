@@ -162,6 +162,9 @@ public class Document_services {
         List<Folder> list =  folder_respository.findbyCode(code) ;
         return list ;
     }
+    public  Folder findByCodeAndTitle(String category , String title) {
+        return folder_respository.findByTitleAndCode(category ,  title);
+    }
     public List<Folder> Search_folder(List<Folder> folderList , String request) {
         if(request == "") {
             return folderList ;
@@ -274,11 +277,17 @@ public class Document_services {
         }
     }
 
+
+
     public String Create_File(String root , String category , String folder , String filename , MultipartFile multipartFile) throws IOException {
 
 //        Create_Folder_Directory(root , category ,  folder) ;
+        if(multipartFile.getSize()==0) {
+            return null ;
+        }
 
         String Folder_Path = "D:\\Data\\Document_data\\" + root+"\\"+ category+"\\"+folder+"\\"+filename ;
+
 
         File document_root_directory = new File(Folder_Path) ;
         if(!document_root_directory.exists()) {
@@ -307,7 +316,7 @@ public class Document_services {
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return "You failed to upload " + filename + " => " + e.getMessage();
+            return null;
         }
         return Folder_Path ;
     }
@@ -322,13 +331,18 @@ public class Document_services {
 
         String Folder_name =  upload_document_event.getCreate_folder().getFolder_name() ;
 
+        Folder folder1 = findByCodeAndTitle(category_name , Folder_name) ;
+
         List<MultipartFile> multipartFiles =  new ArrayList<>() ;
+
         for(MultipartFile multipartFile  : upload_document_event.getMultipartFile()) {
 
             try {
                 String file_path = Create_File(root_name ,  category_name , Folder_name , multipartFile.getOriginalFilename() , multipartFile);
-                document = create_Document_info(multipartFile.getOriginalFilename() ,  file_path) ;
-                document_repository.save(document) ;
+                if(file_path != null) {
+                    document = create_Document_info(multipartFile.getOriginalFilename() ,  file_path , folder1) ;
+                    document_repository.save(document) ;
+                }
 
             } catch (IOException e) {
 
@@ -338,7 +352,8 @@ public class Document_services {
         }
     }
 
-    public Document create_Document_info(String file_name , String file_path) {
+    public Document create_Document_info(String file_name , String file_path , Folder folder) {
+
         Document document1 =  new Document() ;
         document1.setFile(file_path);
         document1.setTitle(file_name);
@@ -348,6 +363,7 @@ public class Document_services {
         java.sql.Date date = java.sql.Date.valueOf(myObj.toString()) ;
 
         document1.setPublish_date(date);
+        document1.setId_folder(folder.getIdFolder());
 
         return document1 ;
     }
