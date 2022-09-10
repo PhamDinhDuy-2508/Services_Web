@@ -298,14 +298,18 @@
 
     </div>
             <div id="myModal" class="modal fade" role="dialog">
-                <div class="modal-dialog">
+                <div class="modal-dialog modal-lg">
 
                     <!-- Modal content-->
                     <div class="modal-content">
                         <div class="modal-header">
                             <i class="text-dark" style="font-size:16px">Danh Sách File</i>
 
+
                             <button type="button" class="close" data-dismiss="modal"></button>
+                            <button type="button" class="btn btn-outline-primary" >Dowload tất cả</button>
+
+
                         </div>
                         <div class="modal-body">
                             <div class="panel panel-primary" id="result_panel">
@@ -363,7 +367,9 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="modal-footer">
+
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         </div>
                     </div>
@@ -1200,7 +1206,7 @@ function show_folder(ID) {
     // </tr>
 
     $.ajax(settings).done(function (response) {
-
+        $('#table_file').empty()
         JSON_arr = JSON.parse(response)
         for (var i = 0; i < JSON_arr.length ; i++) {
             $('#table_file').append(" <tr id = " + JSON_arr[i].id +">" +
@@ -1209,7 +1215,7 @@ function show_folder(ID) {
                 "                                            </a>" +
                 "                                            </td>" +
                 "                                            <td>" +
-                "                                            <button type='button' role='button' class = 'button btn-outline-primary '>" +
+                "                                            <button type='button' role='button' class = 'btn btn-outline-primary'>" +
                 "                                                <i> <img src='img/download.png' width='20'></i>" +
                 "                                            </button>" +
                 "                                            </td>" +

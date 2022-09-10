@@ -54,7 +54,6 @@ public class Document_rest {
 
     @GetMapping("/load_category")
     public ResponseEntity<List<Category_document>> response_category(@RequestParam("root") String Root, HttpServletRequest request) {
-        System.out.println(Root);
         root_folder = document_services.load_Root_Folder(Root);
         List<Category_document> documentList = new ArrayList<>();
 
@@ -196,7 +195,7 @@ public class Document_rest {
     }
     @RequestMapping(method = RequestMethod.GET, value = "Preview_file/{ID}", produces = "application/pdf")
 
-    public ResponseEntity<?> prview_file(@PathVariable("ID") String ID) {
+    public ResponseEntity<?> preview(@PathVariable("ID") String ID) {
 
         String filename = document_services_2.pdf_Path(ID) ;
 
@@ -207,12 +206,6 @@ public class Document_rest {
         }
     }
 
-    @GetMapping("/Document/download/{title}")
-
-    public ResponseEntity download_file(@PathVariable String title) {
-
-        return null ;
-    }
 
 
 }

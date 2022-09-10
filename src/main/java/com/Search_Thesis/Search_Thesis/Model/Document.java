@@ -34,7 +34,6 @@ public class Document {
     @Column(name = "Id_folder")
 
     private int Id_folder ;
-    @Column
-    private  int size ;
+
 
 }

@@ -10,11 +10,16 @@ import com.Search_Thesis.Search_Thesis.resposity.Folder_Respository;
 import com.Search_Thesis.Search_Thesis.resposity.Root_Responsitory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.ServletContext;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
 @Service
 public class Document_services_2 {
     @Autowired
@@ -40,6 +45,11 @@ public class Document_services_2 {
 
     @Autowired
     Document_Repository document_repository ;
+
+    @Autowired
+
+    Dowload_File_Utils dowload_file_utils ;
+
 
     HashMap<String ,  List<Category_document>> Hash_category_documentList =  new HashMap<>() ;
 
@@ -82,5 +92,14 @@ public class Document_services_2 {
         Document document =  document_repository.findByID(Integer.valueOf( ID_document) )  ;
 
         return document.getFile() ;
+    }
+    @Async
+    public CompletableFuture<String> Download(String ID, String file_name , ServletContext servletContext) throws IOException {
+
+        String file_path = pdf_Path(ID) ;
+
+
+        return  CompletableFuture.completedFuture(file_path) ;
+
     }
 }

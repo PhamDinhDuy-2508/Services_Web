@@ -225,7 +225,6 @@ public class Document_services {
             Path path = Paths.get(category_path);
 
             Files.createDirectories(path);
-            System.out.println("Success");
         }
     }
     public void Create_Folder_Directory(String root , String category , String folder) throws IOException {
