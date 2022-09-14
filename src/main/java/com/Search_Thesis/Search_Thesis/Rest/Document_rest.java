@@ -41,12 +41,13 @@ public class Document_rest {
     @Autowired
     Document_services_2 document_services_2;
 
-
     List<Category_document> list_category = new ArrayList<>();
     ExecutorService threadpool = Executors.newCachedThreadPool();
     Future<List<Folder>> futureTask;
 
     List<Folder> list_folder = new ArrayList<>();
+
+    private int Present_folder_ID ;
 
     @Autowired
     ResourceLoader resourceLoader ;
@@ -195,18 +196,26 @@ public class Document_rest {
     }
     @RequestMapping(method = RequestMethod.GET, value = "Preview_file/{ID}", produces = "application/pdf")
 
-    public ResponseEntity<?> preview(@PathVariable("ID") String ID) {
+    public ResponseEntity<?> preview(HttpServletRequest request , @PathVariable("ID") String ID) {
 
         String filename = document_services_2.pdf_Path(ID) ;
 
+
         try {
+            session_service.Create_Session(request ,  "folder" , ID);
             return ResponseEntity.ok(resourceLoader.getResource("file:" + filename));
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
     }
 
+    @GetMapping("/Search_Document/{root}/{category}/{folder}")
+    public void Search_Document(@PathVariable String category,
+                                @PathVariable String folder,
+                                @PathVariable String root  ,@RequestParam("name") String   name){
 
+
+    }
 
 }
 @Data

@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.Produces;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -59,7 +62,7 @@ public class download_document_rest {
                     try {
                         data = Files.readAllBytes(path);
                     } catch (IOException e) {
-                        throw new RuntimeException(e);
+                        System.out.println(e.getMessage());
                     }
                     ByteArrayResource resource = new ByteArrayResource(data);
 
@@ -71,24 +74,59 @@ public class download_document_rest {
                 })  ;
 
 
-//        catch (Exception e) {
-//            System.out.println(e.getMessage());
-//        }
-//
-//        String file_path = document_services_2.pdf_Path(ID) ;
-//        MediaType mediaType = MediaTypeUtils.getMediaTypeForFileName(this.servletContext, ID);
-//        Path path = Paths.get(file_path);
-//
-//        byte[] data = Files.readAllBytes(path);
-//        ByteArrayResource resource = new ByteArrayResource(data);
-//
-//        return ResponseEntity.ok()
-//
-//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + path.getFileName())
-//                .contentType(mediaType) //
-//                .contentLength(data.length) //
-//                .body(resource);
     }
+    @GetMapping("/download_zip/{code}")
+    @Produces("application/zip")
+    public  void download_zip_file(@PathVariable String code , HttpServletResponse response, HttpServletRequest request) {
+        System.out.println(code);
+        System.out.println("Main_Thread" + Thread.currentThread().getId());
+
+
+        try {
+            System.out.println("Run a task specified by a Runnable Object asynchronously.");
+
+//
+//            CompletableFuture<String> future1 = document_services_2.get_name_of_Folder(Integer.parseInt(code)).thenApplyAsync(filelname->{
+//                response.setHeader("Content-Disposition", "attachment; filename="+filelname+".zip");
+//                return filelname;
+//            }) ;
+//            CompletableFuture<Void> future2  = CompletableFuture.runAsync( document_services_2.Download_Zip(Integer.parseInt(code),  response))
+//                    .thenApply(check->{
+//                        String zipFileName =  "test" ;
+//                        System.out.println("Thread1" + Thread.currentThread().getId());
+//
+//                        response.setStatus(HttpServletResponse.SC_OK);
+//                        response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + zipFileName + "\"") ;
+//                        System.out.println("Done!!!");
+//
+//                        return null;
+//                    }) ;
+//            System.out.println("It is also running... ")
+
+            CompletableFuture<String> future1 = document_services_2.get_name_of_Folder(Integer.parseInt(code)).thenApplyAsync(filelname->{
+                System.out.println("Thread_3" + Thread.currentThread().getId());
+
+                response.setHeader("Content-Disposition", "attachment; filename="+filelname+".zip");
+                return filelname;
+            }) ;
+            CompletableFuture<Void> future2  = CompletableFuture.runAsync( document_services_2.Download_Zip(Integer.parseInt(code),  response));
+
+            CompletableFuture<Void> combine_future1_future2 = future1.thenCombine(future2 ,(filename,unused) ->{
+                System.out.println("Thread1" + Thread.currentThread().getId());
+
+                        response.setStatus(HttpServletResponse.SC_OK);
+                        response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename= test.zip") ;
+                        System.out.println("Done!!!");
+                        return null;
+            }) ;
+            System.out.println("It is also running... ");
+
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
 
 
 }

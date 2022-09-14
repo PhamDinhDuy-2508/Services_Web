@@ -305,9 +305,9 @@
                         <div class="modal-header">
                             <i class="text-dark" style="font-size:16px">Danh Sách File</i>
 
-
-                            <button type="button" class="close" data-dismiss="modal"></button>
-                            <button type="button" class="btn btn-outline-primary" >Dowload tất cả</button>
+                            <div class="btn-group"  id="header_document_list">
+                            </div>
+<!--                            <a type="button" onclick="" class="btn btn-outline-primary" >Dowload tất cả</a>-->
 
 
                         </div>
@@ -1190,39 +1190,36 @@ function show_folder(ID) {
         "mimeType": "multipart/form-data",
         "contentType": false,
     };
-    // <tr>
-    //     <td>
-    //         <a href='#' className="text-dark stretched-link">
-    //             textlink
-    //
-    //         </a>
-    //     </td>
-    //     <td>
-    //         <button type="button" role="button" className="button btn-dark">
-    //             Dowload
-    //
-    //         </button>
-    //     </td>
-    // </tr>
 
     $.ajax(settings).done(function (response) {
+
         $('#table_file').empty()
+
         JSON_arr = JSON.parse(response)
-        for (var i = 0; i < JSON_arr.length ; i++) {
-            $('#table_file').append(" <tr id = " + JSON_arr[i].id +">" +
+        console.log(response)
+        var onclick =  "/api/ckt/download_zip/"+ID
+        $('#header_document_list').empty()
+        $('#header_document_list').append(  " <a type='button' role='button' href='"+  onclick + "' class = 'btn btn-outline-primary'>" +
+                "Dowload tất cả" +
+                " </a>" )
+        for (var i = 0; i < JSON_arr.length; i++) {
+            var name = JSON_arr[i].title
+            name =  name.replace(/\s/g ,'')
+            var download_folder = "/api/ckt/download/" + JSON_arr[i].id + "/" +JSON_arr[i].id
+            console.log(download_folder)
+            $('#table_file').append(" <tr id = " + JSON_arr[i].id + ">" +
                 "                                            <td>" +
-                "                                            <a  target='_blank' rel='noopener noreferrer' href='/api/ckt/Preview_file/"+JSON_arr[i].id +"' class = 'text-dark stretched-link'>" + JSON_arr[i].title +
+                "                                            <a  target='_blank' rel='noopener noreferrer' href='/api/ckt/Preview_file/" + JSON_arr[i].id + "' class = 'text-dark stretched-link'>" + JSON_arr[i].title +
                 "                                            </a>" +
                 "                                            </td>" +
                 "                                            <td>" +
-                "                                            <button type='button' role='button' class = 'btn btn-outline-primary'>" +
+                "                                            <a type='button' role='button' href='" + download_folder + "' class = 'btn btn-outline-primary'>" +
                 "                                                <i> <img src='img/download.png' width='20'></i>" +
-                "                                            </button>" +
+                "                                            </a>" +
                 "                                            </td>" +
                 "                                        </tr>")
         }
         });
-
 
 }
 </script>
@@ -1293,6 +1290,24 @@ function show_folder(ID) {
     $('#tree3').treed({openedClass:'glyphicon-chevron-right', closedClass:'glyphicon-chevron-down'});
 
 </script>
+<script>
+    function  download_zip(ID){
+        var settings = {
+            "url": "http://localhost:8080/api/ckt/download_zip/"+ID,
+            "method": "GET",
+            "timeout": 0,
+            "headers": {
+                "Authorization": "Basic Zm9vOmZvbw==",
+                "Content-Type": "application/json",
+                "Cookie": "SESSION=NjkwNjM2OGQtNzNhZC00YmViLWIwOWUtZmUxZjA3YjVlNTM1"
+            },
+        };
+            $.ajax(settings).done(function (response) {
+                console.log(response);
+            });
+    }
+</script>
+
 
 <script>
     function redirect_upload() {
