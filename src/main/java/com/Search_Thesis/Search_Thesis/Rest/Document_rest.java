@@ -43,14 +43,15 @@ public class Document_rest {
 
     List<Category_document> list_category = new ArrayList<>();
     ExecutorService threadpool = Executors.newCachedThreadPool();
+    private List<Document> documentList;
     Future<List<Folder>> futureTask;
 
     List<Folder> list_folder = new ArrayList<>();
 
-    private int Present_folder_ID ;
+    private int Present_folder_ID;
 
     @Autowired
-    ResourceLoader resourceLoader ;
+    ResourceLoader resourceLoader;
 
 
     @GetMapping("/load_category")
@@ -157,66 +158,71 @@ public class Document_rest {
 
     @GetMapping("/check/{Code}")
 
-    public CompletableFuture<ResponseEntity<Boolean>>  check_Category(@PathVariable("Code") String Code) {
+    public CompletableFuture<ResponseEntity<Boolean>> check_Category(@PathVariable("Code") String Code) {
 
-        return document_services.check_Category_Existed(Code).thenApply(ResponseEntity::ok) ;
+        return document_services.check_Category_Existed(Code).thenApply(ResponseEntity::ok);
 
     }
+
     @GetMapping("/check/{Code}/{folder}")
     public CompletableFuture<ResponseEntity> check_folder_Existed(@PathVariable String folder, @PathVariable String Code) {
 
 
-        return  document_services.check_Folder(Code , folder).thenApply(ResponseEntity::ok) ;
+        return document_services.check_Folder(Code, folder).thenApply(ResponseEntity::ok);
 
     }
 
     @GetMapping("/display_root")
-    public ResponseEntity<List<List<Category_document>  >> Display_Folder() {
+    public ResponseEntity<List<List<Category_document>>> Display_Folder() {
         try {
             return ResponseEntity.ok(document_services_2.load_category());
         } catch (Exception e) {
             return ResponseEntity.ok(null);
         }
     }
+
     @GetMapping("/display_folder/{code}")
     public ResponseEntity<List<Folder>> display_folder(@PathVariable("code") String code) {
 
-        try{
-            return ResponseEntity.ok(document_services_2.load_folder(code)) ;
-        }
-        catch (Exception e) {
-            return ResponseEntity.notFound().build() ;
+        try {
+            return ResponseEntity.ok(document_services_2.load_folder(code));
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
         }
     }
-    @GetMapping("/display_document")
-    public  ResponseEntity<List<Document>> display_document(
-            @RequestParam("ID") String ID) {
 
-        return ResponseEntity.ok(document_services_2.load_Document(ID)) ;
+    @GetMapping("/display_document")
+    public ResponseEntity<List<Document>> display_document(
+            @RequestParam("ID") String ID) {
+        documentList = document_services_2.load_Document(ID);
+        return ResponseEntity.ok(documentList);
     }
+
     @RequestMapping(method = RequestMethod.GET, value = "Preview_file/{ID}", produces = "application/pdf")
 
-    public ResponseEntity<?> preview(HttpServletRequest request , @PathVariable("ID") String ID) {
+    public ResponseEntity<?> preview(HttpServletRequest request, @PathVariable("ID") String ID) {
 
-        String filename = document_services_2.pdf_Path(ID) ;
+        String filename = document_services_2.pdf_Path(ID);
 
 
         try {
-            session_service.Create_Session(request ,  "folder" , ID);
+            session_service.Create_Session(request, "folder", ID);
             return ResponseEntity.ok(resourceLoader.getResource("file:" + filename));
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @GetMapping("/Search_Document/{root}/{category}/{folder}")
-    public void Search_Document(@PathVariable String category,
-                                @PathVariable String folder,
-                                @PathVariable String root  ,@RequestParam("name") String   name){
+    @GetMapping("/Search_Document")
+    public CompletableFuture<ResponseEntity> Search_Document(@RequestParam("signal") String signal) {
 
+        return document_services_2.search_document(this.documentList,
+                signal).thenApply(listdocument_list -> {
+            return ResponseEntity.ok(listdocument_list);
+
+        });
 
     }
-
 }
 @Data
 class check{

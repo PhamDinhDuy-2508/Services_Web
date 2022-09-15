@@ -38,6 +38,29 @@ public class Document {
         ModelAndView modelAndView = new ModelAndView("upload_document.html");
         return modelAndView;
     }
+    @RequestMapping("/edit_document")
+    public ModelAndView display_view_edit() {
+        ModelAndView modelAndView = new ModelAndView("Edit_Document.html");
+        return modelAndView;
+    }
+    @GetMapping("/load_user_token_Edit_page")
+    public ModelAndView user_token_Edit_view(HttpServletRequest res) {
+        HttpSession session = res.getSession(true);
+        String token = (String) session.getAttribute("jwt_code");
+        if(token == null) {
+            ModelAndView modelAndView = new ModelAndView("/login");
+            return modelAndView;
+
+        }
+        else {
+            ModelAndView modelAndView = new ModelAndView("redirect:/edit_document?token=" + token);
+            return modelAndView;
+
+        }
+
+    }
+
+
 
     @GetMapping("/load_user_token")
     public ModelAndView user_token(HttpServletRequest res) {

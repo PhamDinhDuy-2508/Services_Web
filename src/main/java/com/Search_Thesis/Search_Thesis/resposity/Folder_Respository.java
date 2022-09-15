@@ -23,4 +23,8 @@ public interface Folder_Respository  extends JpaRepository<Folder , Integer> {
     Folder findByTitleAndCode(String Code , String Title) ;
 
     Folder findByIdFolder(int ID) ;
+    @Query("SELECT u FROM Folder u WHERE u.Contributor_ID= :Contributor_ID")
+
+    List<Folder> findByContributor_ID(int Contributor_ID) ;
+
 }

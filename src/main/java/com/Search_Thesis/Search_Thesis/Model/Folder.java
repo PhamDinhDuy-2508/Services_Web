@@ -35,5 +35,8 @@ public class Folder {
             , nullable = true)
     private  Category_document categorydocument ;
 
+    @Column(name = "Contributor_id")
+    private  int Contributor_ID  ;
+
 }
 

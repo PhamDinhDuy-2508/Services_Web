@@ -54,16 +54,16 @@
                     <ul class="nav navbar-nav menu_nav ml-auto">
 
 
-                        <li class="nav-item submenu dropdown">
-                            <a id="login" href ="/login" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                               aria-expanded="false">Đăng nhập</a>
-                            <!--                            <ul class="dropdown-menu">-->
-                            <!--&lt;!&ndash;                                <li class="nav-item active"><a class="nav-link" href="login.html">Đăng nhập</a></li>&ndash;&gt;-->
-                            <!--&lt;!&ndash;                                <li class="nav-item"><a class="nav-link" href="tracking.html">Tracking</a></li>&ndash;&gt;-->
-                            <!--&lt;!&ndash;                                <li class="nav-item"><a class="nav-link" href="elements.html">Elements</a></li>&ndash;&gt;-->
-                            <!--                            </ul>-->
+
+
+                        <li class="nav-item submenu dropdown active">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" id="login"
+                               aria-expanded="false">Login Page</a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item active"><a class="nav-link" href="login">Login</a></li>
+                            </ul>
                         </li>
-                        <li class="nav-item submenu dropdown ">
+                        <li class="nav-item submenu dropdown active">
                             <a href="#" class=" bi bi-person-badge nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" id="user"
                                aria-expanded="false"></a>
                             <ul class="dropdown-menu">
@@ -79,11 +79,15 @@
                             </ul>
                         </li>
                         <li class="nav-item"><a class="nav-link" href="/home">Trang chủ</a></li>
-                        <li class="nav-item "><a class="nav-link active" href="/blog">Blog</a></li>
-                        <li class="nav-item active "><a class="nav-link " href="/document">Tài liệu</a></li>
-                        <li class="nav-item"><a class="nav-link" href="contact.html">Dịch vụ</a></li>
+
+                        <li class="nav-item"><a class="nav-link" href="/blog">Blog</a></li>
+
                         <li class="nav-item"><a class="nav-link" href="/contact">Liên hệ</a></li>
 
+
+                        <!--                        <li class="nav-item"><a class="nav-link" href="/blog">Blog</a></li>-->
+
+                        <!--                        <li class="nav-item"><a class="nav-link" href="contact.html">Liên hệ</a></li>-->
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
 
@@ -149,7 +153,7 @@
                                     <i class="text-black-50">  Upload </i>
                                 </a>
 
-                                <a class=" dropdown-item" href="#">
+                                <a class=" dropdown-item" href="/load_user_token_Edit_page">
                                     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSQAxqAhaXY94tcr-focyqTqda1fH1JjIwhQ&usqp=CAU" width="50" alt="post">
                                     <i class="text-black-50">  Edit </i>
                                 </a>
@@ -258,60 +262,30 @@
                         <!--                            <span class="document-description"> 932 KB </span>-->
                     </div>
                 </div>
-<!--                    uploadpage-->
-<!--                    <div class="modal fade bannerformmodal" tabindex="-1" role="dialog" aria-labelledby="bannerformmodal" aria-hidden="true" id="bannerformmodal">-->
-<!--                        <div class="modal-dialog  modal-xl ">-->
-<!--                            <div class="modal-content">-->
-<!--                                <div class="modal-header">-->
 
-<!--                                    <i class="text-heading" style="font-size:32px">Upload Tài liệu</i>-->
-<!--                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
-<!--                                        <span aria-hidden="true">&times;</span>-->
-<!--                                    </button>-->
-<!--                                </div>-->
-<!--                                <div class="modal-body">-->
-<!--                                    <form>-->
-<!--                                        <div class="dropdown">-->
-<!--                                            <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">-->
-<!--                                                Kiểu tài liệu-->
-<!--                                            </button>-->
-<!--                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">-->
-<!--                                                <li value="1"><a class="dropdown-item" href="#">Đại Cương</a></li>-->
-<!--                                                <li value="2"><a class="dropdown-item" href="#">Chuyên ngành</a></li>-->
-<!--                                                <li value="3" ><a class="dropdown-item" href="#">Khác</a></li>-->
-<!--                                            </ul>-->
-<!--                                        </div>-->
-<!--                                        <div class="mb-3">-->
-<!--                                            <label for="message-text" class="col-form-label">Category</label>-->
-<!--                                            <input class="form-control" id="message-text"></input>-->
-<!--                                            <a href="#" data-toggle="modal" data-target="#bannerformmodal"> Hoặc tạo mới ?</a>-->
-<!--                                        </div>-->
-<!--                                    </form>-->
-<!--                                </div>-->
-<!--                            </div>-->
-
-<!--                        </div>-->
-
-<!--                        </div>-->
-<!--                    </div>-->
                 </div>
 
     </div>
             <div id="myModal" class="modal fade" role="dialog">
+
                 <div class="modal-dialog modal-lg">
 
                     <!-- Modal content-->
                     <div class="modal-content">
                         <div class="modal-header">
-                            <i class="text-dark" style="font-size:16px">Danh Sách File</i>
+                            <div class="col-md-4">
+                                <i class="text-dark" style="font-size:16px">Danh Sách File</i>
+
+                        </div>
+
 
                             <div class="btn-group"  id="header_document_list">
-                            </div>
-<!--                            <a type="button" onclick="" class="btn btn-outline-primary" >Dowload tất cả</a>-->
 
+                            </div>
 
                         </div>
                         <div class="modal-body">
+
                             <div class="panel panel-primary" id="result_panel">
                                 <div class="panel-heading">
                                 </div>
@@ -319,49 +293,38 @@
                                     <table style="width:100%;">
                                         <thead>
                                         <tr>
-                                            <th width="70%">Tên File</th>
-                                            <th width="10%"></th>
+
+                                            <th width="8%">
+                                                Tên File :
+
+
+                                            </th>
+                                            <th width="100%">
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" id="basic-addon1">Search</span>
+                                                    </div>
+                                                    <input type="text" id="search_document" class="form-control" placeholder="Tìm kiếm tài liệu" aria-label="find" aria-describedby="basic-addon1">
+
+                                                </div>
+                                            </th>
+
+
+                                        <th width="100%">
+
+                                        </th>
+
                                         </tr>
 
+
                                         </thead>
+
+
                                     </table>
                                 </div>
                                 <div style="width:100%;overflow:auto; max-height:300px;">
                                     <table class="table-hover table table-striped" style="width:100%;" id="table_file">
-<!--                                        <tr>-->
-<!--                                            <td width="70%">dsada</td>-->
-<!--                                            <td width="30%">dsadas</td>-->
-<!--                                        </tr>-->
-<!--                                        <tr>-->
-<!--                                            <td>-->
-<!--                                            <a href='#' class = "text-dark stretched-link">-->
-<!--                                                textlink-->
 
-<!--                                            </a>-->
-<!--                                            </td>-->
-<!--                                            <td>-->
-<!--                                            <button type="button" role="button" class = "button btn-dark">-->
-<!--                                                Dowload-->
-
-<!--                                            </button>-->
-<!--                                            </td>-->
-<!--                                        </tr>-->
-<!--                                        <tr>-->
-<!--                                            <td>dsada</td>-->
-<!--                                            <td>dsadas</td>-->
-<!--                                        </tr>-->
-<!--                                        <tr>-->
-<!--                                            <td>dsada</td>-->
-<!--                                            <td>dsadas</td>-->
-<!--                                        </tr>-->
-<!--                                        <tr>-->
-<!--                                            <td>dsada</td>-->
-<!--                                            <td>dsadas</td>-->
-<!--                                        </tr>-->
-<!--                                        <tr>-->
-<!--                                            <td>dsada</td>-->
-<!--                                            <td>dsadas</td>-->
-<!--                                        </tr>-->
 
                                     </table>
                                 </div>
@@ -1129,6 +1092,9 @@
 
 </script>
 <script>
+
+</script>
+<script>
     function lang1(event) {
         var target = event.target || event.srcElement;
 
@@ -1312,6 +1278,110 @@ function show_folder(ID) {
 <script>
     function redirect_upload() {
         window.location.href = "http://localhost:8080/document_upload"+window.location.search
+
+    }
+</script>
+<script>
+    $(document).ready(function () {
+
+
+        $("#search_document").on("input", function () {
+            console.log( $(this).val())
+            var settings = {
+                "url": "http://localhost:8080/api/ckt/Search_Document?signal=" + $(this).val(),
+                "method": "GET",
+                "timeout": 0,
+                "headers": {
+                    "Authorization": "Basic aGllcHNpOjEyMw==",
+                    "Content-Type": "application/json",
+                    "Cookie": "SESSION=Y2I4ZGE4YjAtMjk5OC00MGE0LTk4MzUtYzc2MWIyMGFhNDM4"
+                },
+
+            };
+
+            $.ajax(settings).done(function (response) {
+
+                $('#table_file').empty()
+                console.log(response)
+
+                JSON_arr = (response)
+                console.log(response)
+                var onclick =  "/api/ckt/download_zip/"+JSON_arr[0].id_folder
+
+                for (var i = 0; i < JSON_arr.length; i++) {
+
+                    var name = JSON_arr[i].title
+                    name = name.replace(/\s/g, '')
+                    var download_folder = "/api/ckt/download/" + JSON_arr[i].id + "/" + JSON_arr[i].id
+                    $('#table_file').append(" <tr id = " + JSON_arr[i].id + ">" +
+                        "                                            <td>" +
+                        "                                            <a  target='_blank' rel='noopener noreferrer' href='/api/ckt/Preview_file/" + JSON_arr[i].id + "' class = 'text-dark stretched-link'>" + JSON_arr[i].title +
+                        "                                            </a>" +
+                        "                                            </td>" +
+                        "                                            <td>" +
+                        "                                            <a type='button' role='button' href='" + download_folder + "' class = 'btn btn-outline-primary'>" +
+                        "                                                <i> <img src='img/download.png' width='20'></i>" +
+                        "                                            </a>" +
+                        "                                            </td>" +
+                        "                                        </tr>")
+                }
+                });
+        });
+    });
+</script>
+<script>
+    $(document).ready(function (){
+        console.log("test")
+        const api_url =
+            "http://localhost:8080/home/get_session";
+
+// Defining async function
+        async function getapi(url) {
+
+            // Storing response
+            const response = await fetch(url);
+            var data = await response.json();
+            const object = JSON.parse(JSON.stringify(data)) ;
+            console.log(object)
+            if(object.jwt != "null") {
+                set_Info(object.jwt)
+            }
+            else {
+                $('#login').show()
+                $('#user').hide()
+                $('#say_hello').hide()
+
+            }
+
+
+            // Storing data in form of JSON
+            var data = await response.json();
+            console.log(data);
+            if (response) {
+                console.log(response)
+            }
+        }
+        getapi(api_url)
+    })
+</script>
+<script>
+    function  redirect_to_profle_page(){
+        var  title = $('#user').text();
+        var  username = title.slice(10,title.length)
+
+        window.location.href="http://localhost:8080/profile?username="+username
+    }
+</script>
+<script>
+    function  set_Info(username){
+        $('#login').hide()
+        $('#user').show()
+        var text = " Xin Chào " + username ;
+        $('#user').text(text)
+        $('#user').val(username)
+        $('#say_hello').show()
+
+
 
     }
 </script>

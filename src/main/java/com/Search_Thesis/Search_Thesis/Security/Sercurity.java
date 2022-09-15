@@ -52,11 +52,11 @@ public class Sercurity extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable()
-                .authorizeRequests().antMatchers("/api/ckt/**" ,"/profile/**","/home/**" ,"/login" , "/blog" ,"/css/**" , "/fonts/**" , "/img/**" ,"/js/**","/reset_pass" ,"/contact").hasRole("USER").
-                antMatchers(HttpMethod.GET ,"/profile/**"  ,"/home/**","/reset_pass" , "/documenht").hasAnyRole("USER").
-                antMatchers("/login" ,"/blog", "/sign_up","/reset_pass","/reset_pass/**",
-                        "/profile/**","/forgot_password/**" ,"/home/**" ,"/api/ckt/**", "/css/**" , "/fonts/**" , "/img/**" ,"/js/**"
-                        ,"/contact","/document/**",
+                .authorizeRequests().antMatchers("/load_user_token_Edit_page" , "/edit_document" ,"/api/ckt/**" ,"/profile/**","/home/**" ,"/login" , "/blog" ,"/css/**" , "/fonts/**" , "/img/**" ,"/js/**","/reset_pass" ,"/contact").hasRole("USER").
+                antMatchers(HttpMethod.GET ,"/load_user_token_Edit_page" ,  "/edit_document"  ,"/profile/**"  ,"/home/**","/reset_pass" , "/documenht").hasAnyRole("USER").
+                antMatchers("/load_user_token_Edit_page" , "/login" ,"/blog", "/sign_up","/reset_pass","/reset_pass/**",
+                          "/profile/**","/forgot_password/**" ,"/home/**" ,"/api/ckt/**", "/css/**" , "/fonts/**" , "/img/**" ,"/js/**"
+                        ,"/contact","/document/**" , "/edit_document",
                         "/document_upload" ,"/load_user_token" )
                 .permitAll().
                 anyRequest().authenticated().and().

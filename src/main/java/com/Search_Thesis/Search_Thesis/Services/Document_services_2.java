@@ -1,5 +1,6 @@
 package com.Search_Thesis.Search_Thesis.Services;
 
+import com.Search_Thesis.Search_Thesis.Algorithm.Search_Document;
 import com.Search_Thesis.Search_Thesis.Model.Category_document;
 import com.Search_Thesis.Search_Thesis.Model.Document;
 import com.Search_Thesis.Search_Thesis.Model.Folder;
@@ -18,10 +19,8 @@ import org.springframework.util.StreamUtils;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.*;
+import java.util.concurrent.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -53,8 +52,21 @@ public class Document_services_2 {
     Document_Repository document_repository ;
 
     @Autowired
-
     Dowload_File_Utils dowload_file_utils ;
+
+    @Autowired
+    Search_Document search_document ;
+    private Future<Set<Category_document>> get_Category_task ;
+    private ExecutorService threadpool = Executors.newCachedThreadPool();
+
+    private  HashMap<String ,  List<Folder>> Map_category_Folder ;
+
+
+
+
+
+
+
 
 
     HashMap<String ,  List<Category_document>> Hash_category_documentList =  new HashMap<>() ;
@@ -114,9 +126,6 @@ public class Document_services_2 {
     }
 
     public Runnable Download_Zip(int Code , HttpServletResponse response ){
-        System.out.println("Thread2"+Thread.currentThread().getId());
-        System.out.println("asdasd");
-
 
         Folder folder =  folder_respository.findByIdFolder(Code) ;
         List<Document> documents =  document_repository.findById_folder(Code) ;
@@ -124,15 +133,11 @@ public class Document_services_2 {
             return null;
         }
 
-
         if(documents.isEmpty()){
             return null;
         }
         List<String> listOfFileNames  =  new ArrayList<>() ;
-//        String first = "D:\\Data\\Document_data\\Chuyên ngành\\AS3019\\test1234\\Báo cáo tiến độ.docx" ;
-//        String second ="D:\\Data\\Document_data\\Chuyên ngành\\AS3019\\test1234\\documents.png"  ;
-//        listOfFileNames.add(first) ;
-//        listOfFileNames.add(second) ;
+
         for(int i = 0 ;i < documents.size() ;i++) {
             listOfFileNames.add(documents.get(i).getFile()) ;
         }
@@ -160,17 +165,63 @@ public class Document_services_2 {
         }
 
 
-//        String time =String.valueOf( System.currentTimeMillis() );
-
-//        String zipFileName =  "test" ;
-
-//        response.setStatus(HttpServletResponse.SC_OK);
-//        response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + zipFileName + "\"") ;
-//            return;
-        System.out.println("Completed");
 
         return null;
     }
+    @Async
+    public CompletableFuture<List<Document> > search_document(List<Document> base ,String signal) {
+
+        List<Document> result=new ArrayList<>() ;
+        if(signal.isBlank()) {
+            return  CompletableFuture.completedFuture(base) ;
+        }
+        search_document.setList(base);
+
+        search_document.Search(signal);
+
+        result = search_document.getResult() ;
+
+        return  CompletableFuture.completedFuture(result) ;
 
 
+    }
+
+    public Set<Category_document> get_category_with_id_folder() throws ExecutionException, InterruptedException {
+
+            Set<Category_document> category_documentList = this.get_Category_task.get();
+
+            return category_documentList ;
+    }
+
+    public void get_folder_with_userId(String ID){
+        List<Folder> folders =  folder_respository.findByContributor_ID(Integer.parseInt(ID)) ;
+        this.Map_category_Folder =  new HashMap<>() ;
+        Callable callable = ()->{
+            Set<Category_document> list =  new HashSet<>() ;
+            for(int i = 0; i < folders.size() ; i++) {
+                list.add(folders.get(i).getCategorydocument()) ;
+            }
+            return  list ;
+        } ;
+        for(Folder i  : folders) {
+            if(this.Map_category_Folder.get(i.getCategorydocument().getCode()) == null) {
+                List<Folder> folderList =  new ArrayList<>() ;
+                folderList.add(i) ;
+                this.Map_category_Folder.put(i.getCategorydocument().getCode() , folderList ) ;
+            }
+            else {
+                this.Map_category_Folder.get(i.getCategorydocument().getCode()).add(i) ;
+            }
+        }
+        this.get_Category_task = threadpool.submit(callable) ;
+
+    }
+
+    public HashMap<String, List<Folder>> getMap_category_Folder() {
+        return Map_category_Folder;
+    }
+
+    public void setMap_category_Folder(HashMap<String, List<Folder>> map_category_Folder) {
+        Map_category_Folder = map_category_Folder;
+    }
 }
