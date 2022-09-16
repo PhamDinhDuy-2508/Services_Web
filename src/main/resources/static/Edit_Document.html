@@ -259,58 +259,7 @@
                 </div>
 
 
-<!--                <div class="document success">-->
-<!--                    <div class="document-body">-->
-<!--                        <i class="fa fa-file-excel-o text-success"></i>-->
-<!--                    </div>-->
-<!--                    <div class="document-footer">-->
-<!--                        <span class="text-dark"> <a class="link">Excel database 2017</a>  </span>-->
-<!--                        &lt;!&ndash;                            <span class="document-description"> 1.2 MB </span>&ndash;&gt;-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="document" >-->
-<!--                    <div class="document-body">-->
-<!--                        <i class="fa fa-file-excel-o text-success"></i>-->
-<!--                    </div>-->
-<!--                    <div class="document-footer">-->
-<!--                        <span class="document-name"> Excel database 2016 </span>-->
-<!--                        &lt;!&ndash;                            <span class="document-description"> 1.1 MB </span>&ndash;&gt;-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="document info">-->
-<!--                    <div class="document-body">-->
-<!--                        <i class="fa fa-file-word-o text-info"></i>-->
-<!--                    </div>-->
-<!--                    <div class="document-footer">-->
-<!--                        <span class="document-name"> Word file 2017 </span>-->
-<!--                        &lt;!&ndash;                            <span class="document-description"> 932 KB </span>&ndash;&gt;-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="document info">-->
 
-<!--                    <div class="document-body">-->
-<!--                        <i class="fa fa-folder-open-o text-info"></i>-->
-<!--                    </div>-->
-<!--                    <div class="document-footer">-->
-<!--                        <span class="document-name"> Word file 2017 </span>-->
-<!--                        &lt;!&ndash;                            <span class="document-description"> 932 KB </span>&ndash;&gt;-->
-<!--                    </div>-->
-
-<!--                </div>-->
-<!--                <button class="btn-outline-danger" style="border-radius: 10px">-->
-<!--                    <i> <img src="img/bin.png" width="15"> </i>-->
-
-<!--                </button>-->
-<!--                <button class="btn-outline-primary" style="border-radius: 10px">-->
-<!--                    <i> <img src="img/edit.png" width="20"> </i>-->
-
-<!--                </button>-->
-<!--                <div class="btn-group">-->
-<!--                    <button class="btn-outline-info" style="border-radius: 60px">-->
-<!--                        <i> <img src="img/plus.png" width="30"> </i>-->
-
-<!--                    </button>-->
-<!--                </div>-->
 
             </div>
 
@@ -360,7 +309,6 @@
                 </div>
 
             </div>
-            <button class="btn-outline-primary">upload </button>
 
         </div>
 
@@ -1254,11 +1202,18 @@
             console.log(response);
             $('#folder_list').empty()
             var Json = JSON.parse(response)
+            console.log(Json)
             $('#title_list').text((event.target.innerHTML).toString())
             $('#amount').text("Tìm được " +Json.length.toString() + " folder")
             for ( let i = 0; i < Json.length ; i++) {
+
                 var onclick = "onclick='show_folder(" + Json[i].idFolder + ")'"
                 var delete_folder =  "onclick = 'delete_folder(" + Json[i].idFolder+")'"
+                var edit_folder =  "onclick = 'Edit_Folder(" + Json[i].idFolder+ ")'"
+                var View_folder =  "onclick = 'View_Folder(" + Json[i].idFolder+")'"
+
+
+
 
 
                 var button = " <button class='btn-outline-danger'"+delete_folder +" style='border-radius: 10px'>\n" +
@@ -1267,25 +1222,31 @@
                     "                    </button>" +
                     "                    <button class='btn-outline-primary' style='border-radius: 10px'>" +
                     "                       <i class=\"bi bi-pencil-square\">Edit</i> </button>"
-                var folder =  "  <div class=\"card\" style=\"width: 18rem;\">\n" +
-                    "  <div class=\"card-body\">\n" +
-                    "    <h5 class=\"card-title\">Card title</h5>\n" +
-                    "    <h6 class=\"card-subtitle mb-2 text-muted\">Card subtitle</h6>\n" +
-                    "    <p class=\"card-text\">Some quick example text to build on the card title and make up the bulk of the card's content.</p>\n" +
-                    "    <a href=\"#\" class=\"card-link\">Card link</a>\n" +
-                    "    <a href=\"#\" class=\"card-link\">Another link</a>\n" +
-                    "  </div>\n" +
-                    "</div> "
+                var folder =  " <div class=\"card mt-2\" style=\"width: 18rem;\">\n" +
+                    "                    <div class=\"card-body\">\n" +
+                    "                        <h5 class=\"card-title\">\n" +
+                    "                            <img src=\"img/folder.png\" width=\"50\">\n" +
+                    "                            <i class=\"card-text text-dark\">"+Json[i].title + "</i>\n" +
+                    "\n" +
+                    "\n" +
+                    "                        </h5>\n" +
+                    "                        <p class=\"card-text\">"+ Json[i].publish_date+ "</p>\n" +
+                    "                        <a " +  View_folder +   "class=\"card-link text-primary mt-20\" style='cursor: pointer ; width: 8rem ; border-radius: 5px;height: 8rem' data-toggle='modal'    data-target='#myModal'> Xem</a>\n" +
+                    "                        <a " +  edit_folder +   "class=\"card-link mt-20\" style='cursor: pointer ; width: 8rem ; border-radius: 5px;height: 8rem'>Chỉnh Sửa</a>\n" +
+                    "                        <a " +  delete_folder +   "class=\"card-link text-danger mt-20\" style='cursor: pointer ; width: 8rem ; border-radius: 5px;height: 8rem'>Xóa</a>\n" +
+                    "                    </div>\n" +
+                    "                </div>"
                 $('#folder_list').append(folder)
                 // document.getElementById(Json[i].idFolder).style.cursor = "pointer";
 
 
 
             }
-            var url_upload = "/document_upload"+window.location.search
+            var url_upload = "href='/document_upload"+window.location.search+"'"
+            console.log(window.location.search)
             $('#folder_list').append(" <div class='btn-group'>" +
-                "                    <a class='btn-outline-info' href='"+ url_upload+ " 'style='border-radius: 60px'>" +
-                "                        <i> <img src='img/plus.png' width='30'> </i>" +
+                "                    <a class='btn-outline-info'" +  url_upload+ " style='border-radius: 60px' >" +
+                "                        <i> <img src='img/plus.png' width='30' > </i>" +
                 "\n" +
                 "                    </a>" +
                 "                </div>")
@@ -1301,7 +1262,66 @@
 <script>
     function delete_folder(ID){
         alert(ID)
+    }
+    function Edit_Folder(ID) {
+        var settings = {
+            "url": "http://localhost:8080/api/ckt/Edit_Folder/" + ID ,
+            "method": "GET",
+            "timeout": 0,
+            "headers": {
+                "Cookie": "SESSION=MTFjMWI5ZTUtNDhhNi00ZGUwLTg1YWItYzM3NWRhOTAzY2E0"
+            },
+            "processData": false,
+            "mimeType": "multipart/form-data",
+            "contentType": false,
+        };
 
+        $.ajax(settings).done(function (response) {
+            console.log(JSON.parse(response));
+        });
+    }
+    function View_Folder(ID){
+        var settings = {
+            "url": "http://localhost:8080/api/ckt/display_document?ID=" + ID,
+            "method": "GET",
+            "timeout": 0,
+            "headers": {
+                "Cookie": "SESSION=MTkxYTQ2YTYtNzkyOS00ZmZiLWJjNTYtYTVhNGRlNTIzNDgx"
+            },
+            "processData": false,
+            "mimeType": "multipart/form-data",
+            "contentType": false,
+        };
+
+        $.ajax(settings).done(function (response) {
+
+            $('#table_file').empty()
+
+            JSON_arr = JSON.parse(response)
+            console.log(response)
+            var onclick =  "/api/ckt/download_zip/"+ID
+            $('#header_document_list').empty()
+            $('#header_document_list').append(  " <a type='button' role='button' href='"+  onclick + "' class = 'btn btn-outline-primary'>" +
+                "Dowload tất cả" +
+                " </a>" )
+            for (var i = 0; i < JSON_arr.length; i++) {
+                var name = JSON_arr[i].title
+                name =  name.replace(/\s/g ,'')
+                var download_folder = "/api/ckt/download/" + JSON_arr[i].id + "/" +JSON_arr[i].id
+                console.log(download_folder)
+                $('#table_file').append(" <tr id = " + JSON_arr[i].id + ">" +
+                    "                                            <td>" +
+                    "                                            <a  target='_blank' rel='noopener noreferrer' href='/api/ckt/Preview_file/" + JSON_arr[i].id + "' class = 'text-dark stretched-link'>" + JSON_arr[i].title +
+                    "                                            </a>" +
+                    "                                            </td>" +
+                    "                                            <td>" +
+                    "                                            <a type='button' role='button' href='" + download_folder + "' class = 'btn btn-outline-primary'>" +
+                    "                                                <i> <img src='img/download.png' width='20'></i>" +
+                    "                                            </a>" +
+                    "                                            </td>" +
+                    "                                        </tr>")
+            }
+        });
     }
 
 </script>
