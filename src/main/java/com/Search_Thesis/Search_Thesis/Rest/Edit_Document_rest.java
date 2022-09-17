@@ -58,7 +58,6 @@ public class Edit_Document_rest {
 
         jwt_services.setJwt(token);
 
-        System.out.println(token);
 
         JSONObject jsonObject = jwt_services.getPayload();
         String username = (String) jsonObject.get("sub");
@@ -93,15 +92,10 @@ public class Edit_Document_rest {
 
         Title = getTitle.get();
 
-
-
         edit_get_method.setDocument(list);
         edit_get_method.setName(Title);
 
-
-
         return ResponseEntity.ok(edit_get_method);
-
     }
     @PutMapping("/Edit_Folder")
 
@@ -116,10 +110,11 @@ public class Edit_Document_rest {
     @DeleteMapping("/Edit_Folder/{id}")
     public CompletableFuture<ResponseEntity> Delete(@PathVariable String id) {
 
-        CompletableFuture<Boolean> update_signal = edit_document_services.delete(Integer.parseInt(id)) ;
-        return update_signal.thenApply(signal->{
-            return ResponseEntity.ok(signal) ;
-        })  ;
+////        CompletableFuture<Boolean> update_signal = edit_document_services.delete(Integer.parseInt(id)) ;
+//        return update_signal.thenApply(signal->{
+//            return ResponseEntity.ok(signal) ;
+//        })  ;
+        return  null ;
 
     }
 
