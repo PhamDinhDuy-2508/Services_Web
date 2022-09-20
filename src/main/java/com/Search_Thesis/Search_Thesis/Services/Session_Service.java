@@ -43,5 +43,10 @@ public class Session_Service {
 
         return (String) session.getAttribute(name);
     }
+    public void Check_Session_Existed(HttpServletRequest request ,  String name){
+
+    }
+
+
 
 }

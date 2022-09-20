@@ -15,9 +15,10 @@ public  class Document_Server {
         ArrayBlockingQueue<Listen_to_Client> listren_to_clients  = new ArrayBlockingQueue<>(3) ;
 
         try {
-            ServerSocket serverSocket  =  new ServerSocket(25082000) ;
+            ServerSocket serverSocket  =  new ServerSocket(2508) ;
 
             System.out.println("Server is ready");
+
 
             Scanner scanner = new Scanner(System.in) ;
 

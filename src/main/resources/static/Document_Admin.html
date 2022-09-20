@@ -278,7 +278,9 @@
 
                         </div>
 
+                            <div class="text-dark"  id="ID_Folder">
 
+                            </div>
                             <div class="btn-group"  id="header_document_list">
 
                             </div>
@@ -1164,6 +1166,8 @@ function show_folder(ID) {
         JSON_arr = JSON.parse(response)
         console.log(response)
         var onclick =  "/api/ckt/download_zip/"+ID
+        $('#ID_Folder').text(ID)
+        $('#ID_Folder').hide()
         $('#header_document_list').empty()
         $('#header_document_list').append(  " <a type='button' role='button' href='"+  onclick + "' class = 'btn btn-outline-primary'>" +
                 "Dowload tất cả" +
@@ -1287,8 +1291,9 @@ function show_folder(ID) {
 
         $("#search_document").on("input", function () {
             console.log( $(this).val())
+            code = $('#ID_Folder').text()
             var settings = {
-                "url": "http://localhost:8080/api/ckt/Search_Document?signal=" + $(this).val(),
+                "url": "http://localhost:8080/api/ckt/Search_Document/"+code+"?"+"signal=" + $(this).val(),
                 "method": "GET",
                 "timeout": 0,
                 "headers": {

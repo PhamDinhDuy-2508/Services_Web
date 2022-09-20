@@ -5,14 +5,16 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Date;
 
 @Component("document_")
 @Entity
 @Data
 @Table(name = "document")
+
 @EnableAutoConfiguration
-public class Document {
+public class Document implements Serializable {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id_document")

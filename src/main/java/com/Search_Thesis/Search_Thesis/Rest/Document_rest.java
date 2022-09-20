@@ -3,9 +3,13 @@ package com.Search_Thesis.Search_Thesis.Rest;
 import com.Search_Thesis.Search_Thesis.Event.Create_Category_Event;
 import com.Search_Thesis.Search_Thesis.Event.Create_folder_Event;
 import com.Search_Thesis.Search_Thesis.Model.*;
+import com.Search_Thesis.Search_Thesis.Redis_Model.Document_Service_redis;
+import com.Search_Thesis.Search_Thesis.Redis_Model.Document_redis;
 import com.Search_Thesis.Search_Thesis.Services.Document_services;
 import com.Search_Thesis.Search_Thesis.Services.Document_services_2;
 import com.Search_Thesis.Search_Thesis.Services.Session_Service;
+import com.Search_Thesis.Search_Thesis.Services.Session_Service_2;
+import com.Search_Thesis.Search_Thesis.resposity.Folder_Reids_respository;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.Data;
@@ -30,6 +34,9 @@ public class Document_rest {
     ApplicationEventPublisher applicationEventPublisher;
 
     @Autowired
+    Document_Service_redis document_service_redis ;
+
+    @Autowired
     Document_services document_services;
 
     @Autowired
@@ -40,6 +47,8 @@ public class Document_rest {
 
     @Autowired
     Document_services_2 document_services_2;
+    @Autowired
+    Folder_Reids_respository folder_reids_respository ;
 
     List<Category_document> list_category = new ArrayList<>();
     ExecutorService threadpool = Executors.newCachedThreadPool();
@@ -63,6 +72,8 @@ public class Document_rest {
 
             documentList = document_services.load_category(root_folder.getId());
             list_category = documentList;
+            Session_Service_2<List<Document>> session_service_2 =  new Session_Service_2<>() ;
+
 
             Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
@@ -112,10 +123,15 @@ public class Document_rest {
     }
 
     @GetMapping("/get_folder")
-    public ResponseEntity folder(@RequestParam("code") String code) {
+    public ResponseEntity folder(@RequestParam("code") String code , HttpServletRequest request) {
         this.list_folder.clear();
+        Session_Service_2<List<Folder>> session_service_2 =  new Session_Service_2<>() ;
         try {
             this.list_folder = document_services.get_Folder(code);
+            String name_of_Session = "List_Folder_"+this.list_folder.get(0).getTitle() ;
+
+            session_service_2.Create_Session(request, name_of_Session ,  this.list_folder );
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -123,7 +139,15 @@ public class Document_rest {
     }
 
     @GetMapping("/search_folder")
-    public ResponseEntity<List<Folder>> get_list(@RequestParam("name") String name) throws ExecutionException, InterruptedException {
+    public ResponseEntity<List<Folder>> get_list(@RequestParam("name") String name , HttpServletRequest request) throws ExecutionException, InterruptedException {
+
+        Session_Service_2<List<Folder>> session_service_2 =  new Session_Service_2<>() ;
+
+        String name_of_Session = "List_Folder_"+name ;
+
+        this.list_folder = session_service_2.Get_Session(request , name_of_Session) ;
+
+
         if (this.list_folder.isEmpty()) {
             this.list_folder = this.futureTask.get();
         }
@@ -193,8 +217,14 @@ public class Document_rest {
 
     @GetMapping("/display_document")
     public ResponseEntity<List<Document>> display_document(
-            @RequestParam("ID") String ID) {
-        documentList = document_services_2.load_Document(ID);
+            @RequestParam("ID") String ID , HttpServletRequest request) {
+        documentList = document_services_2.load_Document(ID) ;
+        try {
+            folder_reids_respository.save_folder_ID(ID, documentList);
+        }
+        catch (Exception e ) {
+            System.out.println(e.getMessage());
+        }
         return ResponseEntity.ok(documentList);
     }
 
@@ -213,15 +243,20 @@ public class Document_rest {
         }
     }
 
-    @GetMapping("/Search_Document")
-    public CompletableFuture<ResponseEntity> Search_Document(@RequestParam("signal") String signal) {
+    @GetMapping("/Search_Document/{code}")
+
+    public CompletableFuture<ResponseEntity> Search_Document(@RequestParam("signal") String signal , HttpServletRequest request, @PathVariable String code) {
+        String Haskey = code + "_folder" ;
+        System.out.println(Haskey);
+
+        Document_redis document_redis =  document_service_redis.find(Haskey ,  code) ;
+
+        this.documentList =  document_redis.getDocuments() ;
 
         return document_services_2.search_document(this.documentList,
                 signal).thenApply(listdocument_list -> {
             return ResponseEntity.ok(listdocument_list);
-
         });
-
     }
 }
 @Data

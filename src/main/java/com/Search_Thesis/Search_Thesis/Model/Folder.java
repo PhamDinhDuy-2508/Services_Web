@@ -38,5 +38,14 @@ public class Folder {
     @Column(name = "Contributor_id")
     private  int Contributor_ID  ;
 
+    @Override
+    public String toString() {
+        return "Folder{" +
+                "idFolder=" + idFolder +
+                ", title='" + title + '\'' +
+                ", Publish_date=" + Publish_date +
+                ", Contributor_ID=" + Contributor_ID +
+                '}';
+    }
 }
 

@@ -39,12 +39,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
                 = new JedisConnectionFactory();
         jedisConFactory.setHostName("localhost");
         jedisConFactory.setPort(6379);
+        jedisConFactory.getPoolConfig().setMaxIdle(30);
+        jedisConFactory.getPoolConfig().setMinIdle(10);
         return jedisConFactory;
     }
     @Bean
     public RedisTemplate<String, Object> redisTemplate() {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(jedisConnectionFactory());
+        template.setEnableTransactionSupport(true) ;
+
         return template;
     }
     @Bean
@@ -52,6 +56,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
         RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
         configuration.setHostName("localhost");
         configuration.setPort(6379);
+
         return new JedisConnectionFactory(configuration);
     }
 
@@ -65,8 +70,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
         template.setValueSerializer(new JdkSerializationRedisSerializer());
         template.setEnableTransactionSupport(true);
         template.afterPropertiesSet();
+
         return template;
     }
+
+
+
+
 
 
 }

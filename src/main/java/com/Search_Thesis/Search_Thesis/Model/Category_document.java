@@ -45,16 +45,6 @@ public class Category_document {
     @JsonIgnore
     private Set<Folder> newfolder ;
 
-    @Override
-
-    public String toString() {
-        return "Category_document{" +
-                "category_id=" + category_id +
-                ", name='" + name + '\'' +
-                ", code='" + code + '\'' +
-                '}';
-    }
-
     public int getCategory_id() {
         return category_id;
     }
@@ -93,5 +83,15 @@ public class Category_document {
 
     public void setNewfolder(Set<Folder> newfolder) {
         this.newfolder = newfolder;
+    }
+
+    @Override
+    public String toString() {
+        return "Category_document{" +
+                "category_id=" + category_id +
+                ", name='" + name + '\'' +
+                ", code='" + code + '\'' +
+                ", root_folder=" + root_folder +
+                '}';
     }
 }

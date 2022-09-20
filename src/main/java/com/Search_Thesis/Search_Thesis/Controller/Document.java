@@ -59,9 +59,6 @@ public class Document {
         }
 
     }
-
-
-
     @GetMapping("/load_user_token")
     public ModelAndView user_token(HttpServletRequest res) {
         HttpSession session = res.getSession(true);

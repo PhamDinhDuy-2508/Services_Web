@@ -4,10 +4,9 @@ import com.Search_Thesis.Search_Thesis.Model.Category_document;
 import com.Search_Thesis.Search_Thesis.Model.Document;
 import com.Search_Thesis.Search_Thesis.Model.Folder;
 import com.Search_Thesis.Search_Thesis.Model.User;
-import com.Search_Thesis.Search_Thesis.Services.Document_services;
-import com.Search_Thesis.Search_Thesis.Services.Document_services_2;
-import com.Search_Thesis.Search_Thesis.Services.Edit_Document_Services;
-import com.Search_Thesis.Search_Thesis.Services.JWT_Services;
+import com.Search_Thesis.Search_Thesis.Redis_Model.Document_Service_redis;
+import com.Search_Thesis.Search_Thesis.Redis_Model.Document_redis;
+import com.Search_Thesis.Search_Thesis.Services.*;
 import com.Search_Thesis.Search_Thesis.resposity.Document_Repository;
 import com.Search_Thesis.Search_Thesis.resposity.Folder_Respository;
 import com.Search_Thesis.Search_Thesis.resposity.User_respository;
@@ -41,6 +40,8 @@ public class Edit_Document_rest {
     User_respository user_respository ;
     @Autowired
     Edit_Document_Services edit_document_services ;
+    @Autowired
+    Document_Service_redis document_service_redis ;
 
     @Autowired
     User user ;
@@ -82,13 +83,24 @@ public class Edit_Document_rest {
 
         Edit_Get_method edit_get_method =  new Edit_Get_method() ;
         String Title ;
+        String key =  id_folder+"_folder" ;
+        List<Document> list  ;
 
         CompletableFuture<String> getTitle =  document_services_2.get_name_of_Folder(Integer.parseInt(id_folder)) ;
         getTitle.thenApply(title->{
             return title;
         }) ;
 
-        List<Document> list =  document_services_2.load_Document(id_folder) ;
+
+        if(document_service_redis.find(key ,  id_folder) == null) {
+            list =  document_services_2.load_Document(id_folder) ;
+            document_service_redis.save_folder_ID(id_folder ,  list);
+        }
+        else {
+          Document_redis document_redis =  document_service_redis.find(key ,  id_folder);
+          list =  document_redis.getDocuments() ;
+
+        }
 
         Title = getTitle.get();
 
@@ -110,14 +122,11 @@ public class Edit_Document_rest {
     @DeleteMapping("/Edit_Folder/{id}")
     public CompletableFuture<ResponseEntity> Delete(@PathVariable String id) {
 
-////        CompletableFuture<Boolean> update_signal = edit_document_services.delete(Integer.parseInt(id)) ;
-//        return update_signal.thenApply(signal->{
-//            return ResponseEntity.ok(signal) ;
-//        })  ;
-        return  null ;
-
+        CompletableFuture<Boolean> update_signal = edit_document_services.delete_folder(Integer.parseInt(id)) ;
+        return update_signal.thenApply(signal->{
+            return ResponseEntity.ok(signal) ;
+        })  ;
     }
-
 }
 @Data
 class Edit_Get_method {

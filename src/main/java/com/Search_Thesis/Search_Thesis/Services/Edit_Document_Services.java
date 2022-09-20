@@ -2,15 +2,18 @@ package com.Search_Thesis.Search_Thesis.Services;
 
 import com.Search_Thesis.Search_Thesis.Model.Document;
 import com.Search_Thesis.Search_Thesis.Model.Folder;
+import com.Search_Thesis.Search_Thesis.Model.Root_Folder;
 import com.Search_Thesis.Search_Thesis.Redis_Model.Folder_model_redis;
 import com.Search_Thesis.Search_Thesis.resposity.Document_Repository;
 import com.Search_Thesis.Search_Thesis.resposity.Folder_Reids_respository;
 import com.Search_Thesis.Search_Thesis.resposity.Folder_Respository;
+import com.Search_Thesis.Search_Thesis.resposity.Root_Responsitory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -28,6 +31,12 @@ public class Edit_Document_Services {
     @Autowired
     Document_Repository document_repository ;
 
+    @Autowired
+    Root_Responsitory root_responsitory ;
+
+    private Socket socket ;
+
+
     @Async
     public CompletableFuture<Boolean> update(int ID , String name ){
         try {
@@ -35,6 +44,8 @@ public class Edit_Document_Services {
             folder = folder_respository.findByIdFolder(ID);
             folder.setTitle(name);
             folder_respository.save(folder) ;
+            Update_folder_in_Server(folder ,   name)  ;
+
             return CompletableFuture.completedFuture(true) ;
 
         }
@@ -43,10 +54,12 @@ public class Edit_Document_Services {
         }
     }
     @Async
-    public CompletableFuture<Boolean> delete_folder( String Folder , int ID){
+    public CompletableFuture<Boolean> delete_folder(  int ID){
         String name ;
         List<Document> documentList =  new ArrayList<>() ;
+
         ExecutorService threadpool = Executors.newCachedThreadPool();
+
 
         try {
             Callable callable = ()-> {
@@ -58,20 +71,28 @@ public class Edit_Document_Services {
             folder = folder_respository.findByIdFolder(ID);
             name =  folder.getTitle() ;
 
+            Root_Folder root_folder = root_responsitory.findRoot_FolderByIdById(folder.getCategorydocument() .getRoot_folder().getId()) ;
+
             String Category = folder.getCategorydocument() .getCode() ;
-            String root_name =  folder.getCategorydocument().getRoot_folder().getName() ;
+            String root_name =root_folder.getName();
+            String Folder = folder.getTitle();
             String url =  "D:\\Data\\Document_data\\"+root_name+"\\" + Category+"\\" +Folder;
+
 
             List<Document> documents =  get_document_task.get() ;
 
+
             save_to_folder_redis(folder  , documents ,  url ) ;
 
-            folder_respository.delete(folder);
+
+
+            folder_respository.deleteByIdFolder(ID);
 
 
             return CompletableFuture.completedFuture(true) ;
         }
         catch (Exception e){
+            System.out.println(e.getMessage()+"asdasd");
             return CompletableFuture.completedFuture(false) ;
         }
     }
@@ -86,7 +107,8 @@ public class Edit_Document_Services {
         try {
 
 
-            String HASHKEY = String.valueOf(folder.getContributor_ID()) + "_" + String.valueOf(folder.getIdFolder());
+            String HASHKEY =(folder.getContributor_ID()) + "_" + String.valueOf(folder.getIdFolder());
+            System.out.println(HASHKEY);
 
             Folder_model_redis folder_model_redis = new Folder_model_redis();
 
@@ -107,7 +129,12 @@ public class Edit_Document_Services {
             return  false  ;
         }
     }
-    public void Update_folder_in_Server(String root_name ,  String Category ,  String Folder , String newName) {
+    public Boolean Update_folder_in_Server(  Folder folder , String newName) {
+        String root_name = folder.getCategorydocument().getRoot_folder().getName() ;
+        String Category = folder.getCategorydocument().getCode()  ;
+        String Folder = folder.getTitle() ;
+
+
         String url =  "D:\\Data\\Document_data\\"+root_name+"\\" + Category+"\\" +  Folder;
         String rename = "D:\\Data\\Document_data\\"+root_name+"\\" + Category+"\\" +  newName;
 
@@ -115,10 +142,10 @@ public class Edit_Document_Services {
         File file_des =  new File(rename) ;
 
         if (file.renameTo(file_des)) {
-            System.out.println("Success");
+            return true;
         }
         else {
-            System.out.println("Fail");
+            return false  ;
         }
     }
     @Async
@@ -134,16 +161,19 @@ public class Edit_Document_Services {
             }
         }
 
-    public void Add_Document_in_Server(String name) {}
-    public void Delete_Document_in_Server(String name) {}
+    public void Add_Document_in_Server(String name) {
 
-    public List<Document> load_document_in_Folder(int id) {
-
-        return document_repository.findById_folder(id) ;
+    }
+    public void Delete_Document_in_Server(String name) {
 
     }
 
+    public List<Document> load_document_in_Folder(int id) {
+        return document_repository.findById_folder(id) ;
+    }
 
-
+    public Boolean deleteDocument_inFolder(int idFolder) {
+        return null ;
+    }
 
 }
