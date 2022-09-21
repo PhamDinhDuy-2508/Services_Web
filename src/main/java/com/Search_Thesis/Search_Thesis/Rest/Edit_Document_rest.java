@@ -6,7 +6,10 @@ import com.Search_Thesis.Search_Thesis.Model.Folder;
 import com.Search_Thesis.Search_Thesis.Model.User;
 import com.Search_Thesis.Search_Thesis.Redis_Model.Document_Service_redis;
 import com.Search_Thesis.Search_Thesis.Redis_Model.Document_redis;
-import com.Search_Thesis.Search_Thesis.Services.*;
+import com.Search_Thesis.Search_Thesis.Services.Document_services;
+import com.Search_Thesis.Search_Thesis.Services.Document_services_2;
+import com.Search_Thesis.Search_Thesis.Services.Edit_Document_Services;
+import com.Search_Thesis.Search_Thesis.Services.JWT_Services;
 import com.Search_Thesis.Search_Thesis.resposity.Document_Repository;
 import com.Search_Thesis.Search_Thesis.resposity.Folder_Respository;
 import com.Search_Thesis.Search_Thesis.resposity.User_respository;
@@ -17,6 +20,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Produces;
 import java.util.List;
 import java.util.Set;
@@ -59,7 +65,6 @@ public class Edit_Document_rest {
 
         jwt_services.setJwt(token);
 
-
         JSONObject jsonObject = jwt_services.getPayload();
         String username = (String) jsonObject.get("sub");
         user =  user_respository.findUsersByAccount(username) ;
@@ -71,13 +76,13 @@ public class Edit_Document_rest {
         return ResponseEntity.ok(list) ;
     }
 
-    @DeleteMapping("/delete_folder/{id_folder}")
-    public ResponseEntity deleteFolder(@PathVariable String id_folder) {
-        return null ;
-    }
+
+
+
     @GetMapping("/Edit_Folder/{id_folder}")
 
     @Produces(MediaType.APPLICATION_JSON_VALUE)
+
 
     public ResponseEntity display(@PathVariable String id_folder) throws ExecutionException, InterruptedException {
 
@@ -119,13 +124,94 @@ public class Edit_Document_rest {
         })  ;
     }
 
+
+
     @DeleteMapping("/Edit_Folder/{id}")
     public CompletableFuture<ResponseEntity> Delete(@PathVariable String id) {
 
         CompletableFuture<Boolean> update_signal = edit_document_services.delete_folder(Integer.parseInt(id)) ;
         return update_signal.thenApply(signal->{
+
             return ResponseEntity.ok(signal) ;
+
         })  ;
+    }
+    public String ReadCookies(HttpServletRequest request , String name) {
+        Cookie[] cookies = request.getCookies();
+        try {
+            if (cookies != null) {
+
+                for (Cookie cookie : cookies) {
+                    System.out.println(cookie.getName()  + cookie.getValue());
+                    if (cookie.getName().equals(name)) {
+                        return cookie.getValue();
+                    }
+                }
+            } else {
+                return "";
+            }
+            return "";
+        }
+        catch (Exception e) {
+            return "" ;
+        }
+    }
+
+    @PostMapping("/deleteFolderRequest/{id_folder}/{id_document}")
+
+    public void WriteCookies(HttpServletRequest request , HttpServletResponse response ,  @PathVariable String id_document, @PathVariable String id_folder) {
+
+        String delete_Cookie ="" ;
+        delete_Cookie = ReadCookies(request , "deleteRequest") ;
+        if(delete_Cookie.isEmpty()) {
+            delete_Cookie  = id_document ;
+        }
+        else {
+            delete_Cookie+= "_"+id_document ;
+
+        }
+        Cookie cookie1 =  new Cookie("deleteRequest" ,delete_Cookie) ;
+        cookie1.setDomain("localhost");
+        cookie1.setPath("/");
+        cookie1.setMaxAge(60*3600);
+
+        response.addCookie(cookie1);
+        Cookie[] allCookies = request.getCookies();
+    }
+    @DeleteMapping("/delete_folder/{id_folder}")
+    public ResponseEntity deleteFolder(HttpServletResponse response ,  HttpServletRequest request, @PathVariable String id_folder  ) {
+
+        String deleteList =    ReadCookies(request , "deleteRequest") ;
+        deleteCookie(request , response , "deleteRequest");
+
+//        List<String> myList = new ArrayList<String>(Arrays.asList(deleteList.split("_")));
+//
+//        edit_document_services.Delete_Document_in_Server(myList , id_folder);
+
+        return null ;
+    }
+    public void deleteCookie( HttpServletRequest request  , HttpServletResponse response , String name) {
+        Cookie[] cookies = request.getCookies();
+        try {
+            if (cookies != null) {
+
+                for (Cookie cookie : cookies) {
+                    System.out.println(cookie.getName());
+                    if (cookie.getName().equals(name)) {
+                        cookie.setValue("");
+                        cookie.setPath("/");
+
+                        cookie.setMaxAge(0);
+                        response.addCookie(cookie);
+                        return;
+                    }
+                }
+            }
+        }
+        catch (Exception e) {
+            return  ;
+        }
+
     }
 }
 @Data

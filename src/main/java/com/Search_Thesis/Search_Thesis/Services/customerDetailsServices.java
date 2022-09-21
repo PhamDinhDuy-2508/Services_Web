@@ -50,11 +50,7 @@ public class customerDetailsServices implements UserDetailsService {
 
 
     }
-    public User load_data_base(){
-        this.user_ =  _signIn_respository.findUsersByAccount("duy");
-        return this.user_ ;
 
-    }
     public User getUser_() {
         return user_;
     }

@@ -37,5 +37,15 @@ public class Document implements Serializable {
 
     private int Id_folder ;
 
-
+    @Override
+    public String toString() {
+        return "Document{" +
+                "ID=" + ID +
+                ", Title='" + Title + '\'' +
+                ", File='" + File + '\'' +
+                ", Author='" + Author + '\'' +
+                ", Publish_date=" + Publish_date +
+                ", Id_folder=" + Id_folder +
+                '}';
+    }
 }

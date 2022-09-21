@@ -27,6 +27,11 @@ public class Sercurity extends WebSecurityConfigurerAdapter {
 
     public SignIn_Respository signIn_respository;
     private customerDetailsServices customerDetailsServices = new customerDetailsServices() ;
+    private  final  UserDetailsService userDetailsService ;
+
+    public Sercurity(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     @Override
     @Bean
@@ -52,12 +57,12 @@ public class Sercurity extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable()
-                .authorizeRequests().antMatchers("/load_user_token_Edit_page" , "/edit_document" ,"/api/ckt/**" ,"/profile/**","/home/**" ,"/login" , "/blog" ,"/css/**" , "/fonts/**" , "/img/**" ,"/js/**","/reset_pass" ,"/contact").hasRole("USER").
-                antMatchers(HttpMethod.GET ,"/load_user_token_Edit_page" ,  "/edit_document"  ,"/profile/**"  ,"/home/**","/reset_pass" , "/documenht").hasAnyRole("USER").
+                .authorizeRequests().antMatchers("/edit_document" ,"/load_user_token_Edit_page" , "/api/ckt/**" ,"/profile/**","/home/**" ,"/login" , "/blog" ,"/css/**" , "/fonts/**" , "/img/**" ,"/js/**","/reset_pass" ,"/contact").hasRole("USER").
+                antMatchers(HttpMethod.GET ,"/load_user_token_Edit_page" , "/edit_document" ,"/profile/**"  ,"/home/**","/reset_pass" , "/documenht").hasAnyRole("USER").
                 antMatchers("/load_user_token_Edit_page" , "/login" ,"/blog", "/sign_up","/reset_pass","/reset_pass/**",
                           "/profile/**","/forgot_password/**" ,"/home/**" ,"/api/ckt/**", "/css/**" , "/fonts/**" , "/img/**" ,"/js/**"
-                        ,"/contact","/document/**" , "/edit_document",
-                        "/document_upload" ,"/load_user_token" )
+                        ,"/contact","/document/**" ,
+                        "/document_upload" ,"/load_user_token" ,"/edit_document" )
                 .permitAll().
                 anyRequest().authenticated().and().
 
@@ -95,6 +100,12 @@ public class Sercurity extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(this.customerDetailsServices);
+        try {
+            System.out.println(this.customerDetailsServices.get_Role());
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
 }

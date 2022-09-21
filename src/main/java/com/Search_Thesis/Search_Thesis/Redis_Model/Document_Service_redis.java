@@ -47,13 +47,11 @@ public class Document_Service_redis  implements  Services_Redis<Document_redis ,
 
         document_redisList =  Convert_to_Document_Redis(ID ,  documents) ;
 
-
         redisTemplate.opsForHash().put(HASH_KEY , ID , document_redisList);
 
         Document_redis document_redis = (Document_redis) redisTemplate.opsForHash().get(HASH_KEY, ID) ;
 
         return  ;
-
     }
     public Document_redis Convert_to_Document_Redis(String ID , List<Document> document) {
         Document_redis document_redis =  new Document_redis() ;

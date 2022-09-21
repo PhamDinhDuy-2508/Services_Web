@@ -3,6 +3,7 @@ package com.Search_Thesis.Search_Thesis.Services;
 import com.Search_Thesis.Search_Thesis.Model.Document;
 import com.Search_Thesis.Search_Thesis.Model.Folder;
 import com.Search_Thesis.Search_Thesis.Model.Root_Folder;
+import com.Search_Thesis.Search_Thesis.Redis_Model.Document_info_redis_Services;
 import com.Search_Thesis.Search_Thesis.Redis_Model.Folder_model_redis;
 import com.Search_Thesis.Search_Thesis.resposity.Document_Repository;
 import com.Search_Thesis.Search_Thesis.resposity.Folder_Reids_respository;
@@ -33,6 +34,10 @@ public class Edit_Document_Services {
 
     @Autowired
     Root_Responsitory root_responsitory ;
+
+
+    @Autowired
+    Document_info_redis_Services document_info_redis_services ;
 
     private Socket socket ;
 
@@ -92,7 +97,6 @@ public class Edit_Document_Services {
             return CompletableFuture.completedFuture(true) ;
         }
         catch (Exception e){
-            System.out.println(e.getMessage()+"asdasd");
             return CompletableFuture.completedFuture(false) ;
         }
     }
@@ -129,6 +133,8 @@ public class Edit_Document_Services {
             return  false  ;
         }
     }
+
+
     public Boolean Update_folder_in_Server(  Folder folder , String newName) {
         String root_name = folder.getCategorydocument().getRoot_folder().getName() ;
         String Category = folder.getCategorydocument().getCode()  ;
@@ -164,7 +170,39 @@ public class Edit_Document_Services {
     public void Add_Document_in_Server(String name) {
 
     }
-    public void Delete_Document_in_Server(String name) {
+    @Async
+    public void Delete_Document(List<String> id_Document , String id_folder ) {
+        List<Document> documentList =  new ArrayList<>() ;
+//        Runnable Thread = () ->{
+//            for(int  i = 0 ; i < id_Document.size() ; i++) {
+//                Document document =  document_repository.findByID(Integer.parseInt(id_Document.get(i))) ;
+//                document_repository.delete(document);
+//            }
+//
+//        } ;
+//        Thread.run();
+
+        Document document_ = document_repository.findByID(Integer.parseInt(id_Document.get(0))) ;
+        Folder folder1 = folder_respository.findByIdFolder(document_.getId_folder()) ;
+        String Id  = String.valueOf(folder1.getContributor_ID());
+
+        id_Document.parallelStream().forEach(id->{
+            try {
+
+                Document document = document_repository.findByID(Integer.valueOf(id));
+                if (document != null) {
+                    documentList.add(document);
+
+                }
+            }
+            catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        });
+
+        document_info_redis_services.save_folder_ID(Id , documentList);
+
+        document_info_redis_services.Expire(documentList);
 
     }
 

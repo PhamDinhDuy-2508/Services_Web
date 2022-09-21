@@ -1310,8 +1310,6 @@
                 $('#folder_list').append(folder)
                 // document.getElementById(Json[i].idFolder).style.cursor = "pointer";
 
-
-
             }
             var url_upload = "href='/document_upload"+window.location.search+"'"
             console.log(window.location.search)
@@ -1422,6 +1420,8 @@
                 var name = JSON_arr[i].title
                 name =  name.replace(/\s/g ,'')
                 var download_folder = "/api/ckt/download/" + JSON_arr[i].id + "/" +JSON_arr[i].id
+                var delete_document = "Delete_document(this," + ID +")"
+
                 console.log(download_folder)
                 $('#table_file_View').append(" <tr id = " + JSON_arr[i].id + ">" +
                     "                                            <td>" +
@@ -1551,6 +1551,7 @@
     })
 </script>
 <script>
+
 
 </script>
 
