@@ -3,8 +3,7 @@ package com.Search_Thesis.Search_Thesis.Services;
 import com.Search_Thesis.Search_Thesis.Model.Document;
 import com.Search_Thesis.Search_Thesis.Model.Folder;
 import com.Search_Thesis.Search_Thesis.Model.Root_Folder;
-import com.Search_Thesis.Search_Thesis.Redis_Model.Document_info_redis_Services;
-import com.Search_Thesis.Search_Thesis.Redis_Model.Folder_model_redis;
+import com.Search_Thesis.Search_Thesis.Redis_Model.*;
 import com.Search_Thesis.Search_Thesis.resposity.Document_Repository;
 import com.Search_Thesis.Search_Thesis.resposity.Folder_Reids_respository;
 import com.Search_Thesis.Search_Thesis.resposity.Folder_Respository;
@@ -40,6 +39,12 @@ public class Edit_Document_Services {
     Document_info_redis_Services document_info_redis_services ;
 
     private Socket socket ;
+
+    @Autowired
+    Document_Service_redis document_service_redis ;
+
+    @Autowired
+    Folder_info_Services folder_info_services ;
 
 
     @Async
@@ -134,6 +139,11 @@ public class Edit_Document_Services {
         }
     }
 
+    @Async
+    public void Add_Document_to_Server() {
+
+    }
+
 
     public Boolean Update_folder_in_Server(  Folder folder , String newName) {
         String root_name = folder.getCategorydocument().getRoot_folder().getName() ;
@@ -171,47 +181,77 @@ public class Edit_Document_Services {
 
     }
     @Async
-    public void Delete_Document(List<String> id_Document , String id_folder ) {
-        List<Document> documentList =  new ArrayList<>() ;
-//        Runnable Thread = () ->{
-//            for(int  i = 0 ; i < id_Document.size() ; i++) {
-//                Document document =  document_repository.findByID(Integer.parseInt(id_Document.get(i))) ;
-//                document_repository.delete(document);
-//            }
-//
-//        } ;
-//        Thread.run();
+    public void Delete_Document(List<String> id_Document ) {
+        if (!id_Document.isEmpty()) {
+            List<Document> documentList = new ArrayList<>();
 
-        Document document_ = document_repository.findByID(Integer.parseInt(id_Document.get(0))) ;
-        Folder folder1 = folder_respository.findByIdFolder(document_.getId_folder()) ;
-        String Id  = String.valueOf(folder1.getContributor_ID());
 
-        id_Document.parallelStream().forEach(id->{
-            try {
+            Document document_ = document_repository.findByID(Integer.parseInt(id_Document.get(0)));
+            Folder folder1 = folder_respository.findByIdFolder(document_.getId_folder());
+            String Id = String.valueOf(folder1.getContributor_ID());
 
-                Document document = document_repository.findByID(Integer.valueOf(id));
-                if (document != null) {
-                    documentList.add(document);
+            id_Document.parallelStream().forEach(id -> {
+                try {
 
+                    Document document = document_repository.findByID(Integer.valueOf(id));
+                    if (document != null) {
+
+                        documentList.add(document);
+
+                    }
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
                 }
+            });
+
+            document_info_redis_services.save_folder_ID(Id, documentList);
+
+            document_info_redis_services.Expire(documentList);
+                    Runnable Thread = () ->{
+            for(int  i = 0 ; i < id_Document.size() ; i++) {
+                Document document =  document_repository.findByID(Integer.parseInt(id_Document.get(i))) ;
+                document_repository.delete(document);
             }
-            catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-        });
 
-        document_info_redis_services.save_folder_ID(Id , documentList);
+        } ;
+        Thread.run();
+        }
+    }
+    public void Delete_Folder(String id_Folder)
+    {
 
-        document_info_redis_services.Expire(documentList);
+        Folder folder1 = folder_respository.findByIdFolder(Integer.parseInt(id_Folder));
+
+
+        String Hash_key =  id_Folder+"_folder" ;
+
+        Document_redis document_redis =  document_service_redis.find(Hash_key ,  id_Folder) ;
+
+        List<Document> documentList =  new ArrayList<>() ;
+
+
+        if(document_redis != null) {
+            documentList =  document_redis.getDocuments() ;
+        }
+        else {
+            documentList =   document_repository.findById_folder(Integer.parseInt(id_Folder))  ;
+        }
+        folder_info_services.save_folder_ID(id_Folder ,  documentList);
+
+
+        Runnable Thread = () ->{
+
+            document_repository.deleteById_folder(Integer.parseInt(id_Folder));
+            folder_respository.deleteById(Integer.valueOf(id_Folder));
+
+        } ;Thread.run();
+
 
     }
 
-    public List<Document> load_document_in_Folder(int id) {
-        return document_repository.findById_folder(id) ;
+        public  void Delete_Document_In_Server(List<Document> documents){
+
+        }
     }
 
-    public Boolean deleteDocument_inFolder(int idFolder) {
-        return null ;
-    }
 
-}

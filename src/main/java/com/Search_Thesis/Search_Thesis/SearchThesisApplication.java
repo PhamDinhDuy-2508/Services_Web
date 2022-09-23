@@ -24,6 +24,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 public class SearchThesisApplication implements CommandLineRunner {
 
 
+
 	public static void main(String[] args) {
 		SpringApplication.run(SearchThesisApplication.class, args);
 	}

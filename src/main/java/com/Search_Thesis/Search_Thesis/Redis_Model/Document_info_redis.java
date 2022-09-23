@@ -5,20 +5,18 @@ import lombok.Data;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
-import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.List;
-@Component("document_redis_info")
 @Data
 @RedisHash("Document_info_redis")
 @EnableRedisRepositories
 @EnableAutoConfiguration
 public class Document_info_redis  implements Serializable {
+   private String ID ;
+   private  List<Document> document ;
 
-  private List<Document> document ;
-  private LocalDateTime  End_Date ;
+
 
 
 }

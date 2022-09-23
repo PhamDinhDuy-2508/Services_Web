@@ -24,6 +24,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Produces;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -74,9 +76,8 @@ public class Edit_Document_rest {
         Set<Category_document> list =  document_services_2.get_category_with_id_folder()  ;
 
         return ResponseEntity.ok(list) ;
+
     }
-
-
 
 
     @GetMapping("/Edit_Folder/{id_folder}")
@@ -160,33 +161,49 @@ public class Edit_Document_rest {
     @PostMapping("/deleteFolderRequest/{id_folder}/{id_document}")
 
     public void WriteCookies(HttpServletRequest request , HttpServletResponse response ,  @PathVariable String id_document, @PathVariable String id_folder) {
+        String delete_Cookie = "";
 
-        String delete_Cookie ="" ;
-        delete_Cookie = ReadCookies(request , "deleteRequest") ;
-        if(delete_Cookie.isEmpty()) {
-            delete_Cookie  = id_document ;
+        if(id_document.equals("all")) {
+            delete_Cookie = ReadCookies(request, "deleteRequest");
+
+            delete_Cookie = id_folder+"_all";
+
         }
         else {
-            delete_Cookie+= "_"+id_document ;
+            delete_Cookie = ReadCookies(request, "deleteRequest");
+            if (delete_Cookie.isEmpty()) {
+                delete_Cookie = id_document;
+            } else {
+                delete_Cookie += "_" + id_document;
 
+            }
         }
-        Cookie cookie1 =  new Cookie("deleteRequest" ,delete_Cookie) ;
+        Cookie cookie1 = new Cookie("deleteRequest", delete_Cookie);
         cookie1.setDomain("localhost");
         cookie1.setPath("/");
-        cookie1.setMaxAge(60*3600);
+        cookie1.setMaxAge(60 * 3600);
 
         response.addCookie(cookie1);
         Cookie[] allCookies = request.getCookies();
     }
+
     @DeleteMapping("/delete_folder/{id_folder}")
     public ResponseEntity deleteFolder(HttpServletResponse response ,  HttpServletRequest request, @PathVariable String id_folder  ) {
 
         String deleteList =    ReadCookies(request , "deleteRequest") ;
         deleteCookie(request , response , "deleteRequest");
+        List<String> myList = new ArrayList<String>(Arrays.asList(deleteList.split("_")));
 
-//        List<String> myList = new ArrayList<String>(Arrays.asList(deleteList.split("_")));
+        if(deleteList.equals(id_folder+"_all")) {
+            edit_document_services.Delete_Folder(id_folder);
+        }
+        else {
+
+            System.out.println(myList);
+            edit_document_services.Delete_Document(myList);
+
+        }
 //
-//        edit_document_services.Delete_Document_in_Server(myList , id_folder);
 
         return null ;
     }
@@ -211,8 +228,14 @@ public class Edit_Document_rest {
         catch (Exception e) {
             return  ;
         }
-
     }
+
+    @GetMapping("/history_load/{user_Id}")
+    public ResponseEntity<?> load_history(@PathVariable String user_Id) {
+
+        return  null ;
+    }
+
 }
 @Data
 class Edit_Get_method {

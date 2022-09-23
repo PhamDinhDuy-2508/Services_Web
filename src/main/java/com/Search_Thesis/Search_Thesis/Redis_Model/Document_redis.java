@@ -7,6 +7,7 @@ import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -17,6 +18,7 @@ public class Document_redis  implements Serializable {
 
     private int Id_folder ;
     private List<Document> documents ;
+    private LocalDateTime now ;
 
     @Override
     public String toString() {

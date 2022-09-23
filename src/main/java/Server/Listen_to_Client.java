@@ -1,5 +1,8 @@
 package Server;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -17,6 +20,8 @@ public class Listen_to_Client extends Thread {
     private PrintWriter outputWriter ;
 
     private BufferedReader inputReader ;
+
+    private  Delete_Document delete_document ;
 
     public Listen_to_Client(Socket socket, ArrayBlockingQueue<Listen_to_Client> arrayBlockingQueue) {
         super();
@@ -93,7 +98,26 @@ public class Listen_to_Client extends Thread {
     public void run() {
         listen_from_Client() ;
         super.run();
+
     }
+    public void Processing_request(String Request) {
+
+        JsonObject convertedObject = new Gson().fromJson(Request, JsonObject.class);
+        switch (convertedObject.get("ID").getAsString()) {
+            case "Delete_document" :  {
+                Delete_Document delete_document1 = new Delete_Document(convertedObject.getAsJsonArray("document"));
+                break;
+            }
+            default:{
+                break;
+            }
+        }
+
+
+
+    }
+
+
 
 
 }

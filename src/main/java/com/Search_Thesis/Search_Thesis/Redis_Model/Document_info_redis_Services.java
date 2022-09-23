@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 @Service
 public class Document_info_redis_Services implements   Services_Redis<Document_info_redis , List<Document>> {
@@ -17,22 +18,31 @@ public class Document_info_redis_Services implements   Services_Redis<Document_i
     @Autowired
     RedisTemplate redisTemplate  ;
 
-    @Autowired
-    Document_info_redis document_info_redis;
+
+    Document_info_redis document_info_redis =  new Document_info_redis();
 
     @Override
     public Document_info_redis find(String haskey, String ID) {
-        return null;
+        return (Document_info_redis) redisTemplate.opsForHash().values(Haskey);
     }
 
     @Override
     public Document_info_redis findProductById(String userid, int ID) {
-        return null;
+
+        return (Document_info_redis) redisTemplate.opsForHash().get(Haskey ,  userid);
+
     }
 
     @Override
-    public Boolean deleteProduct(String user_id, int id) {
-        return null;
+    public Boolean deleteProduct(String ID , int id) {
+        try {
+            redisTemplate.opsForHash().delete(this.Haskey, ID);
+            return true ;
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
     }
 
     @Override
@@ -56,10 +66,7 @@ public class Document_info_redis_Services implements   Services_Redis<Document_i
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime then = now.minusDays(7);
 
-        document_redis.setEnd_Date(then);
-
         return   document_redis ;
-
     }
 
     public void Expire( List<Document> documents){
@@ -70,6 +77,24 @@ public class Document_info_redis_Services implements   Services_Redis<Document_i
 
         document_redis =  Convert_to_Document_Redis(  documents) ;
 
-        redisTemplate.opsForHash().put("Expire" , now , document_redis);
+        document_redis.setID(now.toString());
+        System.out.println(document_redis.getDocument());
+
+
+        redisTemplate.opsForHash().put("1_Expire" , now, document_redis); ;
+        redisTemplate.opsForHash().values("1_Expire");
     }
+    public Set<?> getHashKey(String hashkey) {
+        return redisTemplate.opsForHash().keys(hashkey);
+
+    }
+
+    public Document_info_redis  findByTime(LocalDateTime localDateTime) {
+      return (Document_info_redis) redisTemplate.opsForHash().get("1_Expire" ,  localDateTime);
+    }
+    public void Delete_Expired_Data(LocalDateTime localDateTime){
+        redisTemplate.opsForHash().delete("1_Expire" ,  localDateTime) ;
+    }
+
+
 }

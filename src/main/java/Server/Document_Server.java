@@ -12,7 +12,7 @@ public  class Document_Server {
     public static void main(String [] argStrings ) {
 
         ExecutorService executorService =  Executors.newFixedThreadPool(3) ;
-        ArrayBlockingQueue<Listen_to_Client> listren_to_clients  = new ArrayBlockingQueue<>(3) ;
+        ArrayBlockingQueue<Listen_to_Client> listen_to_clients  = new ArrayBlockingQueue<>(3) ;
 
         try {
             ServerSocket serverSocket  =  new ServerSocket(2508) ;
@@ -23,8 +23,8 @@ public  class Document_Server {
             Scanner scanner = new Scanner(System.in) ;
 
 
-            Listen_to_Client listren_to_client =  new Listen_to_Client(serverSocket.accept(), listren_to_clients);
-            executorService.execute(listren_to_client);
+            Listen_to_Client listen_to_client =  new Listen_to_Client(serverSocket.accept(), listen_to_clients);
+            executorService.execute(listen_to_client);
 
 
             while(true ) {
@@ -32,8 +32,7 @@ public  class Document_Server {
                 String uString = scanner.nextLine() ;
 
                 if(!uString.isEmpty()) {
-                    System.out.println("check");
-                    listren_to_client.Send_Message_to_Client(uString);
+                    listen_to_client.Send_Message_to_Client(uString);
                 }
 
             }

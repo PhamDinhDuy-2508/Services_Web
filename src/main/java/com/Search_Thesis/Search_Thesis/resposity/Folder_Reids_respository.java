@@ -42,8 +42,8 @@ public  class  Folder_Reids_respository  {
         return redisTemplate.opsForHash().values(HASH_KEY);
     }
 
-    public Folder_Reids_respository findProductById(String user_id , int id){
-        HASH_KEY =  user_id+"_folder"  ;
+    public Folder_Reids_respository findProductById(String ID , int id){
+        HASH_KEY =  ID+"_folder"  ;
 
         return (Folder_Reids_respository) redisTemplate.opsForHash().get(HASH_KEY, id);
     }

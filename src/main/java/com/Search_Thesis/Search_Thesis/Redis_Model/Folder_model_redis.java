@@ -6,6 +6,7 @@ import lombok.Data;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
+import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.sql.Date;
@@ -14,7 +15,7 @@ import java.util.List;
 @RedisHash("Folder_info")
 @EnableRedisRepositories
 @EnableAutoConfiguration
-
+@Component("Folder_info")
 public class Folder_model_redis implements Serializable {
 
     private int idFolder  ;
