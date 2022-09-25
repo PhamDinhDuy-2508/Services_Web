@@ -31,7 +31,7 @@ public class Schedule_Expired {
     Expire_Services expire_services ;
 
     @Async
-    @Scheduled(fixedDelay = 1000)
+    @Scheduled(fixedDelay = 60*3600*1000)
     public void check_Expired() throws IOException {
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");

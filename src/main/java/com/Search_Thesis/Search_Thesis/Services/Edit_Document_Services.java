@@ -141,10 +141,7 @@ public class Edit_Document_Services {
 
     @Async
     public void Add_Document_to_Server() {
-
     }
-
-
     public Boolean Update_folder_in_Server(  Folder folder , String newName) {
         String root_name = folder.getCategorydocument().getRoot_folder().getName() ;
         String Category = folder.getCategorydocument().getCode()  ;
@@ -240,9 +237,14 @@ public class Edit_Document_Services {
 
 
         Runnable Thread = () ->{
-
-            document_repository.deleteById_folder(Integer.parseInt(id_Folder));
-            folder_respository.deleteById(Integer.valueOf(id_Folder));
+            System.out.println(id_Folder);
+            try {
+                document_repository.deleteById_folder(Integer.parseInt(id_Folder));
+            }
+            catch ( Exception e) {
+                System.out.println(e.getMessage());
+            }
+            folder_respository.deleteByIdFolder(Integer.valueOf(id_Folder));
 
         } ;Thread.run();
 

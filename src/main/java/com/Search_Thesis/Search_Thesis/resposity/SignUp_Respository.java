@@ -12,5 +12,4 @@ public interface SignUp_Respository extends JpaRepository<User  , Integer> {
     User  findByAccount(@Param("username") String username);
     User findByEmail(String email) ;
 
-
 }

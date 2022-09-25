@@ -96,5 +96,4 @@ public class Document_info_redis_Services implements   Services_Redis<Document_i
         redisTemplate.opsForHash().delete("1_Expire" ,  localDateTime) ;
     }
 
-
 }

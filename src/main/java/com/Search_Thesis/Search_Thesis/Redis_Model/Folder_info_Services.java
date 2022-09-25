@@ -31,8 +31,10 @@ public class Folder_info_Services implements  Services_Redis<Folder_model_redis 
 
     @Override
     public Folder_model_redis findProductById(String userid, int ID) {
+        Folder_model_redis folder_model_redis =  new Folder_model_redis() ;
+        folder_model_redis =  (Folder_model_redis) redisTemplate.opsForHash().get(Hash_Key ,  userid);
 
-        return (Folder_model_redis) redisTemplate.opsForHash().get(Hash_Key ,  userid);
+        return folder_model_redis ;
 
     }
 
@@ -53,8 +55,10 @@ public class Folder_info_Services implements  Services_Redis<Folder_model_redis 
         String url =  "D:\\Data\\Document_data\\"+root_name+"\\" + Category+"\\" +  folder_name;
         Folder_model_redis folder_model_redis  =  Convert_to_Document_Redis(folder1 ,  elemment ,  url) ;
         Expire(folder1 ,  elemment ,  url);
+        LocalDateTime localDateTime =  LocalDateTime.now() ;
+        String id =  folder1.getContributor_ID() + "_"+localDateTime.toString() ;
 
-        redisTemplate.opsForHash().put(this.Hash_Key , folder1.getContributor_ID() , folder_model_redis);
+        redisTemplate.opsForHash().put(this.Hash_Key , id  , folder_model_redis);
         redisTemplate.expire(ID , 7 , TimeUnit.DAYS) ;
 
 
@@ -90,8 +94,11 @@ public class Folder_info_Services implements  Services_Redis<Folder_model_redis 
 
     }
 
-    public Document_info_redis  findByTime(LocalDateTime localDateTime) {
-        return (Document_info_redis) redisTemplate.opsForHash().get("1_Expire" ,  localDateTime);
+    public Folder_model_redis findByTime(LocalDateTime localDateTime) {
+        Folder_model_redis folder_model_redis = ( Folder_model_redis) redisTemplate.opsForHash().get("1_Expire", localDateTime);
+
+
+        return folder_model_redis ;
     }
     public void Delete_Expired_Data(LocalDateTime localDateTime){
         redisTemplate.opsForHash().delete("1_Expire" ,  localDateTime) ;

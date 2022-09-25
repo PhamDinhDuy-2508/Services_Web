@@ -24,12 +24,21 @@ public class History_rest {
 
     @GetMapping("/load_history/{user_id}")
     public ResponseEntity Get_Edit_History(@PathVariable String user_id) {
-
-        history_services.Get_All_Edit_Service(user_id);
-
-        return null ;
+        try {
+            history_services.Get_History_Folder(user_id);
+            history_services.Get_History_Document(user_id);
+            return ResponseEntity.ok(history_services.getHashtable()) ;
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return  null  ;
+        }
     }
+    @GetMapping("/Backup_Documenrt/{user_id}")
+    public void Backup(@PathVariable String user_id){
 
+
+    }
 }
 @Data
 class Folder_History{

@@ -2,6 +2,7 @@ package com.Search_Thesis.Search_Thesis.resposity;
 
 import com.Search_Thesis.Search_Thesis.Model.Document;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -16,8 +17,9 @@ public interface Document_Repository extends JpaRepository<Document ,  Integer> 
     Document findByID(int ID) ;
 
     @Transactional
+    @Modifying
     @Query("DELETE  FROM Document u where u.Id_folder= :ID ")
-    void deleteById_folder(int ID) ;
+    int deleteById_folder(int ID) ;
 
 
 }

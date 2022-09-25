@@ -2,18 +2,22 @@ package com.Search_Thesis.Search_Thesis.Schedule;
 
 import com.Search_Thesis.Search_Thesis.Redis_Model.Document_info_redis;
 import com.Search_Thesis.Search_Thesis.Redis_Model.Document_info_redis_Services;
+import com.Search_Thesis.Search_Thesis.Redis_Model.Folder_info_Services;
+import com.Search_Thesis.Search_Thesis.Redis_Model.Folder_model_redis;
 import com.Search_Thesis.Search_Thesis.Server_Service.Message_to_Server;
 import com.Search_Thesis.Search_Thesis.Services.Edit_Document_Services;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.Socket;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Set;
 
 @Service
@@ -23,7 +27,16 @@ public class Expire_Services {
 
     @Autowired
     Edit_Document_Services edit_document_services ;
+
+    @Autowired
+    Folder_info_Services folder_info_services ;
     private  Message_to_Server  message_to_server ;
+
+    @Autowired
+    RedisTemplate redisTemplate ;
+    @Autowired
+    Folder_model_redis folder_model_redis ;
+
     private  Socket socket ;
 
     @PostConstruct
@@ -45,12 +58,13 @@ public class Expire_Services {
 
                 String message = Create_Json_Document(document_info_redis);
 
-                message_to_server.setMessageString(message);
 
                 list.remove(list.get(0));
 
                 Connect_to_Socket();
 
+                message_to_server.setMessageString(message);
+                message_to_server.Send_Message_to_Server();
                 document_info_redis_services.Delete_Expired_Data(test);
 
                 if (list.size() == 0) {
@@ -63,9 +77,7 @@ public class Expire_Services {
 
     }
     public void Connect_to_Socket() throws IOException {
-
             Create_test();
-            message_to_server.Send_Message_to_Server();
     }
 
     public String Create_Json_Document(Document_info_redis document_info_redis) {
@@ -74,36 +86,43 @@ public class Expire_Services {
         String json =  gson.toJson(document_info_redis) ;
         return json ;
     }
+    public String Create_Json_Folder(Folder_model_redis folder_model_redis) {
+        Gson gson =  new Gson() ;
+        String json =  gson.toJson(folder_model_redis) ;
+        return json ;
+    }
     public void Create_test() {
 
-       Set<LocalDateTime>  localDateTimes = (Set<LocalDateTime>) document_info_redis_services.getHashKey("1_Expire");
+        Set<LocalDateTime>  localDateTimes = (Set<LocalDateTime>) document_info_redis_services.getHashKey("1_Expire");
 
-       List<LocalDateTime>  list  =  localDateTimes.stream().toList();
-        System.out.println(list);
-       for (int i = 0; i < list.size() ; i++) {
+        Queue<LocalDateTime> queue = new LinkedList<>(localDateTimes) ;
+
+
+        while (queue.size() != 0 )
            try  {
-               LocalDateTime localDateTime  ;
 
-               DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
-
-                String formattedDateTime = list.get(i).format(formatter);
-               Document_info_redis document_info_redis =  document_info_redis_services.findByTime(list.get(i)) ;
+               Document_info_redis document_info_redis =  document_info_redis_services.findByTime(queue.peek()) ;
 
                String message = Create_Json_Document(document_info_redis) ;
 
-               message_to_server.setMessageString(message);
+               message_to_server.setMessageString( message);
+               System.out.println(document_info_redis);
+               message_to_server.Send_Message_to_Server();
 
+               queue.remove() ;
 
            }
            catch (Exception e) {
-               System.out.println(e.getMessage());
-               System.out.println(list.get(i).toLocalDate());
-//               document_info_redis_services.Delete_Expired_Data(list.get(i));
+               Folder_model_redis folder_model_redis1 =  folder_info_services.findByTime(queue.peek());
+               String message = Create_Json_Folder(folder_model_redis1) ;
 
-//               document_info_redis_services.deleteProduct(list.get(i).toString() , 2) ;
+               message_to_server.setMessageString( message);
+               message_to_server.Send_Message_to_Server();
+
+
+               queue.remove() ;
 
                continue;
-
 
 
            }
@@ -115,4 +134,4 @@ public class Expire_Services {
 
     }
 
-}
+
