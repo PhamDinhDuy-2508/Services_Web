@@ -30,6 +30,7 @@ public class History_Services {
 
     public  void Get_History_Document(String ID) {
         List<String> key = redisTemplate.opsForHash().keys("Delete_document").stream().toList();
+        System.out.println(key);
 
         List<Document_info_redis> documentList = new ArrayList<>();
 

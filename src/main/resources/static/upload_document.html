@@ -530,8 +530,11 @@ function back_to_document_page(){
         $("#label_file").append(names.toString())
     });
     function  check_folder()   {
-
+        if($('#folder_search').val() ==$('#add_folder_new').val() ) {
+            $('#folder_wrong').hide()
+        }
         async function check() {
+
             var url = "http://localhost:8080/api/ckt/check_folder?folder="+$('#add_folder_new').val()
             let response = await fetch(url);
             let y = await response.json();
@@ -546,11 +549,7 @@ function back_to_document_page(){
             }
         }
 
-
             check()
-
-
-
 
         }
 </script>

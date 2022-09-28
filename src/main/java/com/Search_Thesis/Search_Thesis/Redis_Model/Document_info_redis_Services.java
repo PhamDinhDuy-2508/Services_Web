@@ -90,7 +90,9 @@ public class Document_info_redis_Services implements   Services_Redis<Document_i
     }
 
     public Document_info_redis  findByTime(LocalDateTime localDateTime) {
-      return (Document_info_redis) redisTemplate.opsForHash().get("1_Expire" ,  localDateTime);
+        Document_info_redis document_info_redis1  = (Document_info_redis) redisTemplate.opsForHash().get("1_Expire" ,  localDateTime);
+        System.out.println(document_info_redis1);
+      return document_info_redis1;
     }
     public void Delete_Expired_Data(LocalDateTime localDateTime){
         redisTemplate.opsForHash().delete("1_Expire" ,  localDateTime) ;

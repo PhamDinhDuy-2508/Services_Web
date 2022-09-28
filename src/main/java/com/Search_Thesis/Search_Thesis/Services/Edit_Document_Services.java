@@ -179,6 +179,7 @@ public class Edit_Document_Services {
     }
     @Async
     public void Delete_Document(List<String> id_Document ) {
+        System.out.println(id_Document.size());
         if (!id_Document.isEmpty()) {
             List<Document> documentList = new ArrayList<>();
 
@@ -248,9 +249,7 @@ public class Edit_Document_Services {
 
         } ;Thread.run();
 
-
     }
-
         public  void Delete_Document_In_Server(List<Document> documents){
 
         }

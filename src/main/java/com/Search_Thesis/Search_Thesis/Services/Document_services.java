@@ -246,12 +246,12 @@ public class Document_services {
     @Async
     public CompletableFuture<Boolean> check_Category_Existed(String code) {
         try {
-            List<Category_document> categoryDocument = category_document_responsitory.findByCode(code)  ;
+            Category_document categoryDocument = category_document_responsitory.findByCode(code)  ;
 
             if (categoryDocument == null) {
                 return CompletableFuture.completedFuture(false);
             }
-            this.category_document = categoryDocument.get(0);
+            this.category_document = categoryDocument;
             return CompletableFuture.completedFuture(true) ;
         }
         catch (Exception e) {
@@ -263,7 +263,8 @@ public class Document_services {
     @Async
     public CompletableFuture<Boolean> check_Folder(String Code , String Title) {
         try {
-            Folder folder1 = folder_respository.findByTitleAndCode(Code , Title);
+            Folder folder1 =  folder_respository.findByTitleAndCode(Code , Title);
+            System.out.println(folder1.getIdFolder());
             if(folder1 == null) {
                 return  CompletableFuture.completedFuture(false) ;
             }
@@ -272,6 +273,7 @@ public class Document_services {
             }
         }
         catch (Exception e) {
+
             return  CompletableFuture.completedFuture(false)  ;
         }
     }
@@ -330,7 +332,8 @@ public class Document_services {
 
         String Folder_name =  upload_document_event.getCreate_folder().getFolder_name() ;
 
-        Folder folder1 = findByCodeAndTitle(category_name , Folder_name) ;
+        Folder folder1 = folder_respository.findByTitleAndCode(category_name , Folder_name) ;
+
 
         List<MultipartFile> multipartFiles =  new ArrayList<>() ;
 

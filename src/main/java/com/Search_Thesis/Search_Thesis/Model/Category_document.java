@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Set;
 
 @EnableAutoConfiguration
@@ -14,7 +15,7 @@ import java.util.Set;
 @Entity
 @Table(name = "category_document")
 
-public class Category_document {
+public class Category_document implements Serializable {
 
 
     @Id
@@ -85,13 +86,5 @@ public class Category_document {
         this.newfolder = newfolder;
     }
 
-    @Override
-    public String toString() {
-        return "Category_document{" +
-                "category_id=" + category_id +
-                ", name='" + name + '\'' +
-                ", code='" + code + '\'' +
-                ", root_folder=" + root_folder +
-                '}';
-    }
+
 }

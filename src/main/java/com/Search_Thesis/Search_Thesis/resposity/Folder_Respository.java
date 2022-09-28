@@ -18,6 +18,7 @@ public interface Folder_Respository  extends JpaRepository<Folder , Integer> {
 
     List<Folder> findbyCode(@Param("code") String code) ;
 
+    @Query("SELECT u FROM Folder u WHERE  u.title = :Title")
 
     Folder findByTitle(String Title) ;
     @Query("SELECT u FROM Folder u WHERE u.categorydocument.code = :Code and u.title = :Title")
@@ -25,6 +26,7 @@ public interface Folder_Respository  extends JpaRepository<Folder , Integer> {
     Folder findByTitleAndCode(String Code , String Title) ;
 
     Folder findByIdFolder(int ID) ;
+
     @Query("SELECT u FROM Folder u WHERE u.Contributor_ID= :Contributor_ID")
 
     List<Folder> findByContributor_ID(int Contributor_ID) ;
@@ -34,6 +36,7 @@ public interface Folder_Respository  extends JpaRepository<Folder , Integer> {
     @Query("delete from Folder b where b.idFolder=:id")
 
     void deleteByIdFolder(int id);
+
 
 
 

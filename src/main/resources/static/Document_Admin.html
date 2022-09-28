@@ -147,6 +147,7 @@
                             </a>
 
 
+
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                 <a class=" dropdown-item"  onclick="redirect_upload()" >
                                     <img src="img/upload.png" width="50" alt="post">
@@ -220,13 +221,21 @@
             </div>
             <div class="col-sm-8 tab-content no-bg no-border">
 
+                <nav aria-label="...">
+                    <ul class="pagination pagination-sm" id="page_number">
+<!--                        <li class="page-item"><a class="page-link"  tabindex="-1">1</a></li>-->
+<!--                        <li class="page-item"><a class="page-link" tabindex="-1" >2</a></li>-->
+<!--                        <li class="page-item"><a class="page-link" tabindex="-1" >3</a></li>-->
+                    </ul>
+                </nav>
                 <h1 class="text-dark" id="title_list"></h1>
                 <h4 class="text-info" id="amount"></h4>
 
 
-
                 <div class="tab-pane active documents documents-panel" id="folder_list">
+
                     <div class="document success">
+
                         <div class="document-body">
                             <i class="fa fa-file-excel-o text-success"></i>
                         </div>
@@ -261,11 +270,16 @@
                         <span class="document-name"> Word file 2017 </span>
                         <!--                            <span class="document-description"> 932 KB </span>-->
                     </div>
+
+
+            </div>
                 </div>
 
-                </div>
+
 
     </div>
+
+
             <div id="myModal" class="modal fade" role="dialog">
 
                 <div class="modal-dialog modal-lg">
@@ -1114,35 +1128,115 @@
             "mimeType": "multipart/form-data",
             "contentType": false,
         };
-
         $.ajax(settings).done(function (response) {
+            var url = new URL(window.location.href);
+            let params = new URLSearchParams(url.search);
+            var Json = JSON.parse(response)
+            var count = Math.ceil( (Json.length/5) )
+            // document.location.search = params;
+
+
             console.log(response);
             $('#folder_list').empty()
             var Json = JSON.parse(response)
             $('#title_list').text((event.target.innerHTML).toString())
             $('#amount').text("Tìm được " +Json.length.toString() + " folder")
+            $('#page_number').empty()
+            for ( let i = 0; i < count ; i++) {
+                var page_num =  i +1
+                var page_Code = Code+(page_num).toString()
+
+                var onclick =  "page_redirect("+page_num+"," + Code +")"
+                console.log(onclick)
+
+
+                var number ="<li class='page-item'><a class='page-link' tabindex='-1' onclick='"+ onclick + "'>"+ page_num+"</a></li>"
+                $('#page_number').append(number)
+                // document.getElementById(Json[i].idFolder).style.cursor = "pointer";
+            }
+
+        });  var settings = {
+            "url": "http://localhost:8080/api/ckt/pagination/1?Code="+Code,
+            "method": "GET",
+            "timeout": 0,
+            "headers": {
+                "Cookie": "SESSION=NjIxZGI4MTQtOTNhNC00NTExLWFmOGMtYTgwNTYxNjg4NDAz"
+            },
+        };
+
+        $.ajax(settings).done(function (response) {
+            console.log(Code)
+          console.log(response.content)
+           var Json = response.content
+            $('#folder_list').empty()
+            $('#title_list').text((event.target.innerHTML).toString())
+            // $('#amount').text("Tìm được " +Json.length.toString() + " folder")
             for ( let i = 0; i < Json.length ; i++) {
-                var onclick =  "onclick='show_folder(" + Json[i].idFolder +")'"
+                var onclick = "onclick='show_folder(" + Json[i].idFolder + ")'"
 
 
-               var folder =  "<div class='document' type='button' id='"+Json[i].idFolder +"'"+ onclick+ " data-toggle='modal' " + " data-target='#myModal'"+  "> " +
+                var folder = "<div class='document' type='button' id='" + Json[i].idFolder + "'" + onclick + " data-toggle='modal' " + " data-target='#myModal'" + "> " +
                     "                <div class='document-body'>" +
                     "                    <i class='fa fa-folder-open text-info '></i>" +
                     "                </div>" +
                     "                <div class='document-footer'>" +
-                    "                    <span class='document-name'>" +Json[i].title + " </span>" +
+                    "                    <span class='document-name'>" + Json[i].title + " </span>" +
                     "                  <span class='document-description link' >" + Json[i].publish_date + "</span>" +
                     "                </div>" +
                     "            </div>"
                 $('#folder_list').append(folder)
                 document.getElementById(Json[i].idFolder).style.cursor = "pointer";
+            }
+
+            });
 
 
+    }
+
+</script>
+<script>
+    function page_redirect(number_Code,Code){
+        var temp_1  = Code.innerHTML.split("(")[1]
+        var code =  temp_1.split(")")[0]
+        let page = (number_Code.toString())
+        number =  1
+        console.log( "http://localhost:8080/api/ckt/pagination/" +page+ "?Code=" +code)
+
+        var settings = {
+            "url": "http://localhost:8080/api/ckt/pagination/" + page + "?Code=" +code,
+            "method": "GET",
+            "timeout": 0,
+            "headers": {
+                "Cookie": "SESSION=NjIxZGI4MTQtOTNhNC00NTExLWFmOGMtYTgwNTYxNjg4NDAz"
+            },
+        };
+        // console.log(settings)
+
+        $.ajax(settings).done(function (response) {
+            console.log(Code)
+            console.log(response.content)
+            var Json = response.content
+            $('#folder_list').empty()
+            // $('#amount').text("Tìm được " +Json.length.toString() + " folder")
+            for ( let i = 0; i < Json.length ; i++) {
+                var onclick = "onclick='show_folder(" + Json[i].idFolder + ")'"
+
+
+                var folder = "<div class='document' type='button' id='" + Json[i].idFolder + "'" + onclick + " data-toggle='modal' " + " data-target='#myModal'" + "> " +
+                    "                <div class='document-body'>" +
+                    "                    <i class='fa fa-folder-open text-info '></i>" +
+                    "                </div>" +
+                    "                <div class='document-footer'>" +
+                    "                    <span class='document-name'>" + Json[i].title + " </span>" +
+                    "                  <span class='document-description link' >" + Json[i].publish_date + "</span>" +
+                    "                </div>" +
+                    "            </div>"
+                $('#folder_list').append(folder)
+                document.getElementById(Json[i].idFolder).style.cursor = "pointer";
             }
 
         });
     }
-
 </script>
 <script>
 function show_folder(ID) {
@@ -1333,6 +1427,9 @@ function show_folder(ID) {
                 });
         });
     });
+</script>
+<script>
+
 </script>
 <script>
     $(document).ready(function (){
