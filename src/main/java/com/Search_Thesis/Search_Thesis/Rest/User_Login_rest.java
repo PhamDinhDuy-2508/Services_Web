@@ -5,8 +5,10 @@ import com.Search_Thesis.Search_Thesis.Model.Authencation_Response;
 import com.Search_Thesis.Search_Thesis.Model.Login_info;
 import com.Search_Thesis.Search_Thesis.Model.User;
 import com.Search_Thesis.Search_Thesis.Services.Login_Services;
+import com.Search_Thesis.Search_Thesis.Services.Session_Service;
 import com.Search_Thesis.Search_Thesis.Services.customerDetailsServices;
 import com.Search_Thesis.Search_Thesis.resposity.SignIn_Respository;
+import com.Search_Thesis.Search_Thesis.resposity.User_respository;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -26,7 +28,6 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/ckt")
-@SessionAttributes
 
 
 public class User_Login_rest {
@@ -43,6 +44,14 @@ public class User_Login_rest {
     @Autowired
     private com.Search_Thesis.Search_Thesis.JWT.jwtUtils jwtUtils ;
 
+    @Autowired
+    private Session_Service session_service;
+
+    @Autowired
+    User_respository user_respository ;
+
+
+
     @PostMapping("/login")
     public boolean doCheckAccount (HttpServletRequest request) {
 
@@ -56,7 +65,7 @@ public class User_Login_rest {
 
 
     @PostMapping("/authencationRequest")
-    public ResponseEntity<?> doCheck(@RequestBody Authencation_Request authencation_request , HttpServletResponse response , HttpServletRequest request) throws  Exception {
+    public ResponseEntity  doCheck(@RequestBody Authencation_Request authencation_request , HttpServletResponse response , HttpServletRequest request) throws  Exception {
         Login_Services login_services = new Login_Services() ;
 
         customerDetailsServices customerDetailsServices = new customerDetailsServices(signIn_respository);
@@ -70,32 +79,59 @@ public class User_Login_rest {
 //            throw new Exception("Wrong password or username" , e) ;
 //        }
         try{
-            final UserDetails userDetails = customerDetailsServices.loadUserByUsername(authencation_request.getUsername()) ;
 
-            final  String jwt = jwtUtils.generateToken(userDetails) ;
+             UserDetails userDetails = customerDetailsServices.loadUserByUsername(authencation_request.getUsername()) ;
+             User user1 =  user_respository.findUsersByAccount(userDetails.getUsername()) ;
+            if(userDetails == null) {
+                System.out.println("NONE");
+                return ResponseEntity.notFound().build();
 
-            login_services.Create_Cookie("login_jwt" ,jwt, response,request);
-            login_services.Create_Cookie("save_pass" , authencation_request.getSave_pass(), response , request);
+            }
+            else {
+                final String jwt = jwtUtils.generateToken(userDetails ,  user1.getUser_id());
+
+                login_services.Create_Cookie("login_jwt", jwt, response, request);
+                login_services.Create_Cookie("save_pass", authencation_request.getSave_pass(), response, request);
+                System.out.println("Right");
+                return ResponseEntity.ok(new Authencation_Response("wrong"));
 
 
-            return ResponseEntity.ok(new Authencation_Response(jwt));
+            }
+
 
         }catch (Exception e) {
-            return ResponseEntity.ok(new Authencation_Response("Wrong"))  ;
+            System.out.println("Wrong");
+            return  ResponseEntity.notFound().build();
         }
     }
 
     @PostMapping("/save_session")
-    public  void save_session(@RequestBody JWT_response jwt_response , HttpServletRequest request ){
-       Login_Services login_services = new Login_Services();
-//       login_services.Create_Session("jwt_code" , authencation_response.getJwt(), request, response);
-        HttpSession httpSession = request.getSession(true);
-        httpSession.setAttribute("jwt_code" , jwt_response.getJwt());
+    public  void save_session(@RequestBody JWT_response jwt_response , HttpServletRequest request ,
+                              HttpSession session  ){
 
-        httpSession.setMaxInactiveInterval(60*3600);
-        HttpSession Session = request.getSession() ;
-        String test = (String) Session.getAttribute("jwt_code");
-        System.out.println(test);
+        HttpSession httpSession =  request.getSession(false);
+        Login_Services login_services = new Login_Services();
+        String token =  jwt_response.getJwt();
+        if(session.getAttribute("jwt_code") == null) {
+            System.out.println("NON EXISTED");
+            httpSession.setAttribute("jwt_code" , jwt_response.getJwt());
+            httpSession.setMaxInactiveInterval(60*3600);
+        }
+        else {
+
+            httpSession.setAttribute("jwt_code" , "");
+            httpSession.removeAttribute("jwt_code");
+            httpSession.setMaxInactiveInterval(0);
+            System.out.println(token);
+            httpSession.setAttribute("jwt_code" , token);
+            httpSession.setMaxInactiveInterval(60*3600);
+            System.out.println( httpSession.getAttribute("jwt_code"));
+
+
+
+
+        }
+
     }
 
     @GetMapping("/process")
@@ -133,6 +169,7 @@ public class User_Login_rest {
     public String readCookie(@CookieValue(name = "user-id", defaultValue = "default-user-id") String cookieName) {
         return String.format("value of the cookie with name user-id is: %s", cookieName);
     }
+
 
 }
 @Data

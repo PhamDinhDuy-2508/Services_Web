@@ -30,7 +30,7 @@ public class Sort_Alphabet  implements  Sort<List<Folder>>{
             for (int j  =   i +1   ; j < folders.size() ;j++ ) {
                 String name1   =  folder_array[i].getTitle() ;
                 String name2 =  folder_array[j].getTitle();
-                if(name1.compareTo(name2) > 0)  {
+                if(name1.compareTo(name2) < 0)  {
                     temp = folder_array[i];
                     folder_array[i]  = folder_array[j]; ;
                     folder_array[j] =  temp ;

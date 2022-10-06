@@ -15,7 +15,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @RequiredArgsConstructor
-
 @EnableJpaRepositories(basePackages = {"com.Search_Thesis.Search_Thesis.resposity" ,
 		"com.Search_Thesis.Search_Thesis.Services"}  ,
 		basePackageClasses = SignIn_Respository.class  )
@@ -51,4 +50,5 @@ public class SearchThesisApplication implements CommandLineRunner {
 //			System.out.println(p.getName());
 //		});
 	}
+
 }

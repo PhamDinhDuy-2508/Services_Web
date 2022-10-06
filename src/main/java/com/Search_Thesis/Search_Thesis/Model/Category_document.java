@@ -86,5 +86,8 @@ public class Category_document implements Serializable {
         this.newfolder = newfolder;
     }
 
-
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

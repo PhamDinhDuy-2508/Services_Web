@@ -12,7 +12,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-
 @Service
 public class Folder_info_Services implements  Services_Redis<Folder_model_redis ,List<Document>  > {
 
@@ -48,12 +47,13 @@ public class Folder_info_Services implements  Services_Redis<Folder_model_redis 
 
         Folder folder1 = folder_respository.findByIdFolder(Integer.parseInt(ID)) ;
 
-        String root_name =  folder1.getCategorydocument().getRoot_folder().getName() ;
+        String root_name = "Chuyen Nganh" ;
         String Category =  folder1.getCategorydocument().getCode() ;
         String folder_name =  folder1.getTitle() ;
+        int Category_ID = folder1.getCategorydocument().getCategory_id();
 
         String url =  "D:\\Data\\Document_data\\"+root_name+"\\" + Category+"\\" +  folder_name;
-        Folder_model_redis folder_model_redis  =  Convert_to_Document_Redis(folder1 ,  elemment ,  url) ;
+        Folder_model_redis folder_model_redis  =  Convert_to_Document_Redis(folder1    ,  elemment ,  url) ;
         Expire(folder1 ,  elemment ,  url);
 
         LocalDateTime localDateTime =  LocalDateTime.now() ;
@@ -63,13 +63,14 @@ public class Folder_info_Services implements  Services_Redis<Folder_model_redis 
         redisTemplate.expire(ID , 7 , TimeUnit.DAYS) ;
 
     }
-    public Folder_model_redis Convert_to_Document_Redis(Folder folder , List<Document> documents , String url) {
+    public Folder_model_redis Convert_to_Document_Redis(Folder folder ,  List<Document> documents , String url) {
 
         Folder_model_redis folder_model_redis =  new Folder_model_redis() ;
         folder_model_redis.setIdFolder(folder.getIdFolder());
         folder_model_redis.setDocumentList(documents);
         folder_model_redis.setTitle(folder.getTitle());
         folder_model_redis.setUrl(url);
+        folder_model_redis.setCategorydocument(folder.getCategorydocument());
 
 
         return   folder_model_redis ;
@@ -80,8 +81,7 @@ public class Folder_info_Services implements  Services_Redis<Folder_model_redis 
 
         Folder_model_redis  document_redis =  new Folder_model_redis() ;
 
-        document_redis =  Convert_to_Document_Redis( folder ,   documents , url) ;
-
+        document_redis =  Convert_to_Document_Redis( folder ,  documents , url) ;
 
 
         redisTemplate.opsForHash().put("1_Expire" , now, document_redis); ;

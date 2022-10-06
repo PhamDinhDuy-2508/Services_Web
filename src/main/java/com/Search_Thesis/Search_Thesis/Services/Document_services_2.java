@@ -1,16 +1,22 @@
 package com.Search_Thesis.Search_Thesis.Services;
 
 import com.Search_Thesis.Search_Thesis.Algorithm.Search_Document;
+import com.Search_Thesis.Search_Thesis.Algorithm.Sort_Alphabet;
+import com.Search_Thesis.Search_Thesis.Algorithm.Sort_Day;
 import com.Search_Thesis.Search_Thesis.Model.Category_document;
 import com.Search_Thesis.Search_Thesis.Model.Document;
 import com.Search_Thesis.Search_Thesis.Model.Folder;
 import com.Search_Thesis.Search_Thesis.Model.Root_Folder;
+import com.Search_Thesis.Search_Thesis.Redis_Model.Category_Redis;
+import com.Search_Thesis.Search_Thesis.Redis_Model.Category_redis_Services;
 import com.Search_Thesis.Search_Thesis.resposity.Category_document_Responsitory;
 import com.Search_Thesis.Search_Thesis.resposity.Document_Repository;
 import com.Search_Thesis.Search_Thesis.resposity.Folder_Respository;
 import com.Search_Thesis.Search_Thesis.resposity.Root_Responsitory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -26,6 +32,8 @@ import java.util.zip.ZipOutputStream;
 
 
 @Service
+@Scope("prototype")
+
 public class Document_services_2 {
     @Autowired
     ApplicationEventPublisher applicationEventPublisher ;
@@ -56,17 +64,13 @@ public class Document_services_2 {
 
     @Autowired
     Search_Document search_document ;
+
+    @Autowired
+    Category_redis_Services category_redis_services ;
     private Future<Set<Category_document>> get_Category_task ;
     private ExecutorService threadpool = Executors.newCachedThreadPool();
 
     private  HashMap<String ,  List<Folder>> Map_category_Folder ;
-
-
-
-
-
-
-
 
 
     HashMap<String ,  List<Category_document>> Hash_category_documentList =  new HashMap<>() ;
@@ -89,12 +93,14 @@ public class Document_services_2 {
         }
         return   category_documentList ;
     }
+    @Cacheable(value = "load_folder" , key = "#code")
     public List<Folder> load_folder(String code) {
 
         List<Folder> folder = folder_respository.findbyCode(code) ;
 
         return folder ;
     }
+    @Cacheable(value = "display_document" ,  key = "#ID")
     public List<Document> load_Document(String ID) {
         try {
             System.out.println(Integer.valueOf(ID));
@@ -224,4 +230,80 @@ public class Document_services_2 {
     public void setMap_category_Folder(HashMap<String, List<Folder>> map_category_Folder) {
         Map_category_Folder = map_category_Folder;
     }
+    @Cacheable(value = "pagination" ,key = "{#code ,  #page} ")
+    public List<Folder> pagination(String code , int page  , List<Folder> folderList) {
+        List<Folder> result = new ArrayList<>() ;
+        if(page*5 > folderList.size()) {
+            if(page == 1) {
+
+                for(int i = 0; i < folderList.size() ; i++) {
+                    result.add(folderList.get(i)) ;
+                }
+            }
+            else {
+
+                for(int i = (page-1)*5; i <  folderList.size()  ; i++) {
+                    System.out.println(folderList.get(i).getTitle());
+                    result.add(folderList.get(i)) ;
+                }
+            }
+        }
+        else {
+            for(int i = page-1; i <(page)*5 ; i++) {
+                result.add(folderList.get(i)) ;
+            }
+        }
+        return  result ;
+    }
+    @Cacheable(value = "Filter" , key = "{#signal  , #code}")
+    public List<Folder> Filter(String code ,  String signal) {
+        List<Folder> folderList = new ArrayList<>();
+
+        Category_Redis category_redis = category_redis_services.find("Category", code);
+
+        folderList = category_redis.getFolderList();
+        try {
+
+            switch (signal) {
+                case "AZ": {
+                    System.out.println("AZ");
+
+                    Sort_Alphabet sort_alphabet = new Sort_Alphabet();
+
+                    sort_alphabet.Filter(folderList);
+
+                    return(sort_alphabet.get_Result());
+                }
+                case "ZA" :{
+                    System.out.println("ZA");
+                    List<Folder> folderList1 = new ArrayList<>();
+
+                    Sort_Alphabet sort_alphabet = new Sort_Alphabet();
+
+                    sort_alphabet.Reverse(folderList);
+
+                    return (sort_alphabet.get_Result());
+                }
+                case ("Date"): {
+                    System.out.println("Date");
+                    List<Folder> folderList1 = new ArrayList<>();
+
+                    Sort_Day sort_alphabet = new Sort_Day();
+
+                    sort_alphabet.Filter(folderList);
+
+                    return (sort_alphabet.get_Result());
+                }
+                default: {
+                    return (null);
+                }
+            }
+
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return (folderList);
+        }
+    }
+
 }

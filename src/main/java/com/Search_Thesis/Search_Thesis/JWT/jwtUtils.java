@@ -36,10 +36,11 @@ public class jwtUtils {
         return extractExpiration(token).before(new Date());
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(UserDetails userDetails , int ID) {
         Map<String, Object> claims = new HashMap<>();
 
         claims.put("password" , userDetails.getPassword()) ;
+        claims.put("id" ,ID )  ;
 
         return createToken(claims, userDetails.getUsername());
     } public String generateToken(User userDetails) {

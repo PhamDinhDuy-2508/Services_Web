@@ -14,6 +14,7 @@ import com.Search_Thesis.Search_Thesis.resposity.Document_Repository;
 import com.Search_Thesis.Search_Thesis.resposity.Folder_Respository;
 import com.Search_Thesis.Search_Thesis.resposity.Root_Responsitory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
@@ -85,6 +86,7 @@ public class Document_services {
         return root_responsitory.findRoot_FolderByIdById(Integer.valueOf(ID));
 
     }
+    @Cacheable(value = "load_category", key = "#ID")
     public List<Category_document> load_category(int ID){
 
 

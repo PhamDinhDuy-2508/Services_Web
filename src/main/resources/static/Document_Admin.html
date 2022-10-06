@@ -158,6 +158,7 @@
                                     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSQAxqAhaXY94tcr-focyqTqda1fH1JjIwhQ&usqp=CAU" width="50" alt="post">
                                     <i class="text-black-50">  Edit </i>
                                 </a>
+
                             </div>
 
                             </div>
@@ -228,8 +229,40 @@
 <!--                        <li class="page-item"><a class="page-link" tabindex="-1" >3</a></li>-->
                     </ul>
                 </nav>
-                <h1 class="text-dark" id="title_list"></h1>
+                <a>
+                </a>
+                    <div class="input-group">
+                        <h1 class="text-dark" id="title_list"></h1>
+
+<!--                        <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />-->
+<!--                        <button type="button" class="btn btn-outline-primary">search</button>-->
+                        <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton"  data-toggle="dropdown"  aria-expanded="false">
+                            Lọc
+                        </button>
+
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" onclick="Filter('AZ')">A->Z</a>
+                            <a class="dropdown-item" onclick="Filter('ZA')">Z<-A</a>
+                            <a class="dropdown-item" onclick="Filter('DateI')">Date: Giảm dần</a>
+                            <a class="dropdown-item" onclick="Filter('DateE')">Date: Tăng dần</a>
+                        </div>
+
+                    </div>
+<!--                <div class="dropdown">-->
+<!--                    <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+<!--                        Lọc-->
+<!--                    </button>-->
+<!--                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">-->
+<!--                        <a class="dropdown-item" onclick="Filter('AZ')">A->Z</a>-->
+<!--                        <a class="dropdown-item" onclick="Filter('ZA')">Z<-A</a>-->
+<!--                        <a class="dropdown-item" onclick="Filter('DateI')">Date: Giảm dần</a>-->
+<!--                        <a class="dropdown-item" onclick="Filter('DateE')">Date: Tăng dần</a>-->
+
+<!--                    </div>-->
+<!--                </div>-->
+
                 <h4 class="text-info" id="amount"></h4>
+
 
 
                 <div class="tab-pane active documents documents-panel" id="folder_list">
@@ -1112,11 +1145,22 @@
 </script>
 <script>
     function lang1(event) {
+
         var target = event.target || event.srcElement;
 
         // alert(event.target.text())
         var text = (event.target.innerHTML).toString().split("(")
         var Code = text[text.length-1].replace(')' ,'')
+        var url =  "http://localhost:8080/document"
+        const queryString = window.location.search;
+// ?product=shirt&color=blue&newuser&size=m
+
+        const urlParams = new URLSearchParams(queryString);
+        var url_value = urlParams.get("token")
+
+
+        window.history.pushState("object or string", "Title", url+"?code="+Code+"&page=1"+"&Filter=default");
+
         var settings = {
             "url": "http://localhost:8080/api/ckt/display_folder/" + Code,
             "method": "GET",
@@ -1129,47 +1173,83 @@
             "contentType": false,
         };
         $.ajax(settings).done(function (response) {
+
             var url = new URL(window.location.href);
             let params = new URLSearchParams(url.search);
             var Json = JSON.parse(response)
-            var count = Math.ceil( (Json.length/5) )
+            let amount = Number(Json.amount)
+            let count = Math.ceil( amount/5)
             // document.location.search = params;
 
 
-            console.log(response);
             $('#folder_list').empty()
             var Json = JSON.parse(response)
             $('#title_list').text((event.target.innerHTML).toString())
-            $('#amount').text("Tìm được " +Json.length.toString() + " folder")
+            $('#amount').text("Tìm được " +Json.amount + " folder")
             $('#page_number').empty()
             for ( let i = 0; i < count ; i++) {
                 var page_num =  i +1
-                var page_Code = Code+(page_num).toString()
+                var onclick =  "page_redirect("+page_num+")"
 
-                var onclick =  "page_redirect("+page_num+"," + Code +")"
-                console.log(onclick)
+                var number ="<li class='page-item'><a class='page-link' tabindex='-1' onclick='"+ onclick + "'>"+ page_num+"</a></li>"
+                $('#page_number').append(number)
+            }
+            redirect_first_page( Code , "default")
+
+
+
+        });
+    }
+</script>
+<script>
+    function  reload_page(page , code , Filter){
+        var settings = {
+            "url": "http://localhost:8080/api/ckt/display_folder/" + code,
+            "method": "GET",
+            "timeout": 0,
+            "headers": {
+                "Cookie": "SESSION=OWE1NDJkY2ItMjdjMy00MWQ3LTg3OTctN2I4NTY1YTYyMzM4"
+            },
+            "processData": false,
+            "mimeType": "multipart/form-data",
+            "contentType": false,
+        };
+        console.log(settings)
+        $.ajax(settings).done(function (response) {
+
+            var Json = JSON.parse(response)
+            let amount = Number(Json.amount)
+            let count = Math.ceil( amount/5)
+
+            $('#folder_list').empty()
+            $('#title_list').text(Json.name)
+            $('#amount').text("Tìm được " +Json.amount + " folder")
+            $('#page_number').empty()
+            for ( let i = 0; i < count ; i++) {
+                var page_num =  i +1
+
+                var onclick =  "page_redirect("+page_num+")"
 
 
                 var number ="<li class='page-item'><a class='page-link' tabindex='-1' onclick='"+ onclick + "'>"+ page_num+"</a></li>"
                 $('#page_number').append(number)
-                // document.getElementById(Json[i].idFolder).style.cursor = "pointer";
             }
 
-        });  var settings = {
-            "url": "http://localhost:8080/api/ckt/pagination/1?Code="+Code,
+
+        });
+        var settings = {
+            "url": "http://localhost:8080/api/ckt/pagination/"+page+"?Code="+code+"&Filter="+Filter ,
             "method": "GET",
             "timeout": 0,
             "headers": {
                 "Cookie": "SESSION=NjIxZGI4MTQtOTNhNC00NTExLWFmOGMtYTgwNTYxNjg4NDAz"
             },
         };
+        console.log(settings)
 
         $.ajax(settings).done(function (response) {
-            console.log(Code)
-          console.log(response.content)
-           var Json = response.content
+            var Json = response
             $('#folder_list').empty()
-            $('#title_list').text((event.target.innerHTML).toString())
             // $('#amount').text("Tìm được " +Json.length.toString() + " folder")
             for ( let i = 0; i < Json.length ; i++) {
                 var onclick = "onclick='show_folder(" + Json[i].idFolder + ")'"
@@ -1188,22 +1268,19 @@
                 document.getElementById(Json[i].idFolder).style.cursor = "pointer";
             }
 
-            });
-
+        });
 
     }
-
 </script>
-<script>
-    function page_redirect(number_Code,Code){
-        var temp_1  = Code.innerHTML.split("(")[1]
-        var code =  temp_1.split(")")[0]
-        let page = (number_Code.toString())
-        number =  1
-        console.log( "http://localhost:8080/api/ckt/pagination/" +page+ "?Code=" +code)
 
+<script>
+    function  redirect_first_page(Code , Filter) {
+        var urlParams = new URLSearchParams(window.location.search);
+        var newParams = urlParams.toString()
+
+        let fil = urlParams.get("Filter")
         var settings = {
-            "url": "http://localhost:8080/api/ckt/pagination/" + page + "?Code=" +code,
+            "url": "http://localhost:8080/api/ckt/pagination/1?Code=" +Code+"&Filter=" + Filter ,
             "method": "GET",
             "timeout": 0,
             "headers": {
@@ -1214,8 +1291,7 @@
 
         $.ajax(settings).done(function (response) {
             console.log(Code)
-            console.log(response.content)
-            var Json = response.content
+            var Json = response
             $('#folder_list').empty()
             // $('#amount').text("Tìm được " +Json.length.toString() + " folder")
             for ( let i = 0; i < Json.length ; i++) {
@@ -1235,6 +1311,55 @@
                 document.getElementById(Json[i].idFolder).style.cursor = "pointer";
             }
 
+        });
+    }
+
+    function page_redirect(number_Code){
+        let page = (number_Code.toString())
+        let urlParams = new URLSearchParams(window.location.search);
+        console.log(urlParams.toString())
+        var url ="http://localhost:8080/document"
+
+        console.log(urlParams)
+        var filter =  urlParams.get("Filter")
+        var code = urlParams.get("code")
+        window.history.pushState("object or string", "Title", url+"?code="+code+"&page="+page+"&Filter="+filter);
+        code = urlParams.get("code")
+
+
+
+        console.log( "http://localhost:8080/api/ckt/pagination/" +page+ "?Code=" +code+"&Filter="+filter)
+
+        var settings = {
+            "url": "http://localhost:8080/api/ckt/pagination/"+page+ "?Code=" +code+"&Filter="+filter,
+            "method": "GET",
+            "timeout": 0,
+            "headers": {
+                "Cookie": "SESSION=NjIxZGI4MTQtOTNhNC00NTExLWFmOGMtYTgwNTYxNjg4NDAz"
+            },
+        };
+        // console.log(settings)
+
+        $.ajax(settings).done(function (response) {
+            var Json = response
+            $('#folder_list').empty()
+            // $('#amount').text("Tìm được " +Json.length.toString() + " folder")
+            for ( let i = 0; i < Json.length ; i++) {
+                var onclick = "onclick='show_folder(" + Json[i].idFolder + ")'"
+
+
+                var folder = "<div class='document' type='button' id='" + Json[i].idFolder + "'" + onclick + " data-toggle='modal' " + " data-target='#myModal'" + "> " +
+                    "                <div class='document-body'>" +
+                    "                    <i class='fa fa-folder-open text-info '></i>" +
+                    "                </div>" +
+                    "                <div class='document-footer'>" +
+                    "                    <span class='document-name'>" + Json[i].title + " </span>" +
+                    "                  <span class='document-description link' >" + Json[i].publish_date + "</span>" +
+                    "                </div>" +
+                    "            </div>"
+                $('#folder_list').append(folder)
+                document.getElementById(Json[i].idFolder).style.cursor = "pointer";
+            }
         });
     }
 </script>
@@ -1288,8 +1413,31 @@ function show_folder(ID) {
 }
 </script>
 <script>
-    function display_folder() {
-        alert("sjow")
+    function Filter(signal) {
+        if(signal == "AZ") {
+            $('#dropdownMenuButton').text("A->Z")
+        }
+        else  if(signal == "ZA") {
+            $('#dropdownMenuButton').text("Z->A")
+        }
+        else  if(signal=="DateI"){
+            $('#dropdownMenuButton').text("Date: Giảm dần")
+
+        }else  if(signal=="DateE"){
+            $('#dropdownMenuButton').text("Date: Tăng dần")
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set("Filter" , signal)
+        var code = urlParams.get("code")
+        var newParams = urlParams.toString()
+        var filter =  urlParams.get("Filter")
+
+        window.history.pushState("object or string", "Title", "http://localhost:8080/document?"  + newParams);
+        redirect_first_page(code , filter)
+
+
+
     }
 </script>
 <script>
@@ -1382,7 +1530,6 @@ function show_folder(ID) {
 <script>
     $(document).ready(function () {
 
-
         $("#search_document").on("input", function () {
             console.log( $(this).val())
             code = $('#ID_Folder').text()
@@ -1395,7 +1542,6 @@ function show_folder(ID) {
                     "Content-Type": "application/json",
                     "Cookie": "SESSION=Y2I4ZGE4YjAtMjk5OC00MGE0LTk4MzUtYzc2MWIyMGFhNDM4"
                 },
-
             };
 
             $.ajax(settings).done(function (response) {
@@ -1467,12 +1613,82 @@ function show_folder(ID) {
     })
 </script>
 <script>
+    $(document).ready(function (){
+        console.log("test")
+        const api_url =
+            "http://localhost:8080/home/get_session";
+        var settings = {
+            "url": "http://localhost:8080/home/get_session",
+            "method": "GET",
+            "timeout": 0,
+
+        };
+
+        $.ajax(settings).done(function (response) {
+            console.log(response);
+            if(response ==  null) {
+                $('#login').show()
+                $('#user').hide()
+                $('#say_hello').hide()
+
+            }
+            else if(response!= null) {
+                set_Info(response)
+
+            }
+
+        });
+
+        async function getapi(url) {
+
+            // Storing response
+            const response = await fetch(url);
+            var data = await response.json();
+            const object = JSON.parse(JSON.stringify(data)) ;
+            console.log(object)
+            if(object.jwt != "null") {
+                set_Info(object.jwt)
+            }
+            else {
+                $('#login').show()
+                $('#user').hide()
+                $('#say_hello').hide()
+
+            }
+
+
+            // Storing data in form of JSON
+            var data = await response.json();
+            console.log(data);
+            if (response) {
+                console.log(response)
+            }
+        }
+    })
+</script>
+
+
+<script>
     function  redirect_to_profle_page(){
         var  title = $('#user').text();
         var  username = title.slice(10,title.length)
 
         window.location.href="http://localhost:8080/profile?username="+username
     }
+</script>
+<script>
+    $(document).ready(function (){
+        const queryString = window.location.search;
+        console.log(queryString);
+        const urlParams = new URLSearchParams(queryString);
+        if(urlParams.get("code") != null) {
+            let code =  urlParams.get("code")
+            let page1 = urlParams.get("page")
+            let filter =  urlParams.get("Filter")
+            reload_page(page1 ,  code ,  filter)
+        }
+    })
+
 </script>
 <script>
     function  set_Info(username){

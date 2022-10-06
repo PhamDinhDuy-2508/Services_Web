@@ -123,13 +123,14 @@ public class Edit_Document_Services {
 
             folder_model_redis.setIdFolder(folder_model_redis.getIdFolder());
             folder_model_redis.setDocumentList(documentList);
-            folder_model_redis.setCategorydocument(folder_model_redis.getCategorydocument());
-            folder_model_redis.setCategorydocument(folder_model_redis.getCategorydocument());
+            folder_model_redis.setCategorydocument(folder.getCategorydocument());
+
             folder_model_redis.setPublish_date(folder.getPublish_date());
 
             folder_model_redis.setTitle(folder_model_redis.getTitle());
 
             folder_model_redis.setUrl(url);
+            System.out.println(folder_model_redis.getCategorydocument());
 
             folder_reids_respository.save(HASHKEY, folder_model_redis);
             return  true ;

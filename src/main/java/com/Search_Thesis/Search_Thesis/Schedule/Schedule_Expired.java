@@ -40,6 +40,6 @@ public class Schedule_Expired {
 
         Set<LocalDateTime> Time_Expired  = (Set<LocalDateTime>) document_info_redis_services.getHashKey("1_Expire");
 //        expire_services.Delete(now);
-        expire_services.Connect_to_Socket();
+//        expire_services.Connect_to_Socket();
     }
 }

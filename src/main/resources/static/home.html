@@ -90,7 +90,7 @@
 
                         <!--                        <li class="nav-item"><a class="nav-link" href="/blog">Blog</a></li>-->
 
-<!--                        <li class="nav-item"><a class="nav-link" href="contact.html">Liên hệ</a></li>-->
+                        <!--                        <li class="nav-item"><a class="nav-link" href="contact.html">Liên hệ</a></li>-->
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
 
@@ -130,13 +130,13 @@
                     <img src="img/blog/cat-post/cat-post-3.jpg" alt="post">
                     <a href="/blog">
 
-                    <div class="categories_details" >
-                        <div class="categories_text">
+                        <div class="categories_details" >
+                            <div class="categories_text">
                                 <h5>Blog</h5>
-                            <div class="border_line"></div>
-                            <p>Nơi chia sẻ kinh nghiệm làm việc và học tập</p>
+                                <div class="border_line"></div>
+                                <p>Nơi chia sẻ kinh nghiệm làm việc và học tập</p>
+                            </div>
                         </div>
-                    </div>
                     </a>
 
                 </div>
@@ -148,7 +148,7 @@
                     <div class="categories_details">
                         <div class="categories_text">
 
-                                <h5>Tài Liệu</h5>
+                            <h5>Tài Liệu</h5>
                             <div class="border_line"></div>
                         </div>
                     </div>
@@ -290,34 +290,56 @@
         console.log("test")
         const api_url =
             "http://localhost:8080/home/get_session";
+        var settings = {
+            "url": "http://localhost:8080/home/get_session",
+            "method": "GET",
+            "timeout": 0,
 
-// Defining async function
-        async function getapi(url) {
+        };
 
-            // Storing response
-            const response = await fetch(url);
-            var data = await response.json();
-            const object = JSON.parse(JSON.stringify(data)) ;
-            console.log(object)
-            if(object.jwt != "null") {
-                set_Info(object.jwt)
-            }
-            else {
+        $.ajax(settings).done(function (response) {
+            console.log(response)
+            console.log(JSON.parse(JSON.stringify(response)));
+            if(response ==  null) {
                 $('#login').show()
                 $('#user').hide()
                 $('#say_hello').hide()
 
             }
+            else if(response!= null) {
+                set_Info(response)
 
-
-            // Storing data in form of JSON
-            var data = await response.json();
-            console.log(data);
-            if (response) {
-                console.log(response)
             }
-        }
-        getapi(api_url)
+
+        });
+
+// Defining async function
+//         async function getapi(url) {
+//
+//             // Storing response
+//             const response = await fetch(url);
+//             var data = await response.json();
+//             const object = JSON.parse(JSON.stringify(data)) ;
+//             console.log(object)
+//             if(object.jwt != "null") {
+//                 set_Info(object.jwt)
+//             }
+//             else {
+//                 $('#login').show()
+//                 $('#user').hide()
+//                 $('#say_hello').hide()
+//
+//             }
+//
+//
+//             // Storing data in form of JSON
+//             var data = await response.json();
+//             console.log(data);
+//             if (response) {
+//                 console.log(response)
+//             }
+//         }
+//         getapi(api_url)
     })
 </script>
 <script>

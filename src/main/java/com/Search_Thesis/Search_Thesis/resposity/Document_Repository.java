@@ -21,6 +21,10 @@ public interface Document_Repository extends JpaRepository<Document ,  Integer> 
     @Query("DELETE  FROM Document u where u.Id_folder= :ID ")
     int deleteById_folder(int ID) ;
 
+    @Transactional
+    List<Document> save(Iterable<Document> entities) ;
+
+
 
 }
 

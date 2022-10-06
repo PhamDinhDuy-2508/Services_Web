@@ -261,14 +261,18 @@
 
     fetch("http://localhost:8080/api/ckt/authencationRequest", requestOptions)
             .then(response =>{
-                if(response!= "Wrong") {
+              console.log(response)
+              alert(response.status)
+                if(response.status != 404) {
+
                   save_session()
                   window.location.href= "http://localhost:8080/home"
                 }
+                else {
+                  alert("Tài KHoảng hoặc mật khẩu sai")
+                }
 
             })
-            .then(result => console.log(result))
-            .catch(error => console.log('error', error));
   }
 
 </script>

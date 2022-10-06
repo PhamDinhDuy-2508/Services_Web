@@ -13,16 +13,17 @@ import com.Search_Thesis.Search_Thesis.Services.Document_services;
 import com.Search_Thesis.Search_Thesis.Services.Document_services_2;
 import com.Search_Thesis.Search_Thesis.Services.Session_Service;
 import com.Search_Thesis.Search_Thesis.Services.Session_Service_2;
+import com.Search_Thesis.Search_Thesis.resposity.Category_document_Responsitory;
 import com.Search_Thesis.Search_Thesis.resposity.Folder_Reids_respository;
 import com.Search_Thesis.Search_Thesis.resposity.Folder_Respository;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.Data;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +33,8 @@ import java.util.List;
 import java.util.concurrent.*;
 
 @RestController
+@Scope("prototype")
+
 
 @RequestMapping("/api/ckt")
 
@@ -59,6 +62,8 @@ public class Document_rest {
     Document_services_2 document_services_2;
     @Autowired
     Folder_Reids_respository folder_reids_respository;
+    @Autowired
+    Category_document_Responsitory category_document_responsitory ;
 
     List<Category_document> list_category = new ArrayList<>();
     ExecutorService threadpool = Executors.newCachedThreadPool();
@@ -228,31 +233,41 @@ public class Document_rest {
     }
 
     @GetMapping("/display_folder/{code}")
-    public ResponseEntity<List<Folder>> display_folder(@PathVariable("code") String code) {
-
+    public ResponseEntity display_folder(@PathVariable("code") String code) {
         try {
+            Category_document categoryDocument =   category_document_responsitory.findByCode(code) ;
+
            Category_Redis  category_redis = category_redis_services.find("Category", code);
 
             if (category_redis == null) {
                 List<Folder> list = document_services_2.load_folder(code);
-
+                JSONObject json = new JSONObject();
+                json.put("amount", list.size());
+                json.put("name" , categoryDocument.getName()) ;
                 category_redis_services.save_folder_ID(code, list);
-                return ResponseEntity.ok(list);
+                String message = json.toString();
+
+
+                return ResponseEntity.ok(message);
             } else {
 
                 List<Folder> list = category_redis.getFolderList();
-                return ResponseEntity.ok(list);
+                JSONObject json = new JSONObject();
+                json.put("amount", list.size());
+                json.put("name" , categoryDocument.getName()) ;
+
+                String message = json.toString();
+
+
+                return ResponseEntity.ok(message);
             }
 
         } catch (Exception e) {
-            System.out.println("asdasd");
-            List<Folder> list = document_services_2.load_folder(code);
             System.out.println(e.getMessage());
 
             return ResponseEntity.notFound().build();
         }
     }
-
     @GetMapping("/display_document")
     public ResponseEntity<List<Document>> display_document(
             @RequestParam("ID") String ID, HttpServletRequest request) {
@@ -296,40 +311,25 @@ public class Document_rest {
         });
     }
 
-
     @GetMapping("/pagination/{page_num}")
-    public ResponseEntity Page(@PathVariable String page_num , @RequestParam("Code") String code) {
+    public ResponseEntity Page(@PathVariable String page_num , @RequestParam("Code") String code , @RequestParam("Filter") String filter) {
 
         int page =  Integer.parseInt(page_num) ;
-
         Category_Redis category_redis  = category_redis_services.find("Category" , code) ;
 
-        if(page*5 > category_redis.getFolderList().size()) {
-            if(page == 1) {
-                Page<Folder> folderPage = folder_respository.findAll(PageRequest.of(Integer.parseInt(page_num), category_redis.getFolderList().size()));
-                return ResponseEntity.ok(folderPage) ;
-            }
-            else {
+        if(filter.equals("default")) {
+            List<Folder> folders =  category_redis.getFolderList() ;
 
-                int amount  =  category_redis.getFolderList().size() ;
-
-                int present_amount =amount - 5 ;
-
-                Page<Folder> folderPage = folder_respository.findAll(PageRequest.of(Integer.parseInt(page_num),  present_amount)) ;
-                return ResponseEntity.ok(folderPage) ;
-
-
-            }
+            return ResponseEntity.ok( document_services_2.pagination( code , page ,  folders)) ;
         }
-        else {
-            Page<Folder> folderPage = folder_respository.findAll(PageRequest.of(Integer.parseInt(page_num), 5));
-            return ResponseEntity.ok(folderPage) ;
+        else  {
+            List<Folder> folders  =  document_services_2.Filter(code , filter) ;
+            return ResponseEntity.ok(document_services_2.pagination(code ,page , folders)) ;
         }
 
     }
-
-    @GetMapping("/filter/{CatrgoryCode}")
-    public ResponseEntity Filter(@RequestParam("signal") String signal, @PathVariable String CatrgoryCode) {
+    @GetMapping("/filter/{CatrgoryCode}/{page_num}")
+    public ResponseEntity Filter(@RequestParam("signal") String signal, @PathVariable String CatrgoryCode, @PathVariable String page_num) {
         List<Folder> folderList = new ArrayList<>();
 
         Category_Redis category_redis = category_redis_services.find("Category", CatrgoryCode);
@@ -337,40 +337,40 @@ public class Document_rest {
         folderList = category_redis.getFolderList();
         try {
 
-            switch (signal) {
-                case "AZ": {
-                    System.out.println("AZ");
-                    List<Folder> folderList1 = new ArrayList<>();
+                switch (signal) {
+                    case "AZ": {
+                        System.out.println("AZ");
+                        List<Folder> folderList1 = new ArrayList<>();
 
-                    Sort_Alphabet sort_alphabet = new Sort_Alphabet();
+                        Sort_Alphabet sort_alphabet = new Sort_Alphabet();
 
-                    sort_alphabet.Filter(folderList);
+                        sort_alphabet.Filter(folderList);
 
-                    return ResponseEntity.ok(sort_alphabet.get_Result());
+                        return ResponseEntity.ok(sort_alphabet.get_Result());
+                    }
+                    case "ZA" :{
+                        List<Folder> folderList1 = new ArrayList<>();
+
+                        Sort_Alphabet sort_alphabet = new Sort_Alphabet();
+
+                        sort_alphabet.Reverse(folderList);
+
+                        return ResponseEntity.ok(sort_alphabet.get_Result());
+                    }
+                    case ("Date"): {
+                        System.out.println("Date");
+                        List<Folder> folderList1 = new ArrayList<>();
+
+                        Sort_Day sort_alphabet = new Sort_Day();
+
+                        sort_alphabet.Filter(folderList);
+
+                        return ResponseEntity.ok(sort_alphabet.get_Result());
+                    }
+                    default: {
+                        return ResponseEntity.ok(null);
+                    }
                 }
-                case "ZA" :{
-                    List<Folder> folderList1 = new ArrayList<>();
-
-                    Sort_Alphabet sort_alphabet = new Sort_Alphabet();
-
-                    sort_alphabet.Reverse(folderList);
-
-                    return ResponseEntity.ok(sort_alphabet.get_Result());
-                }
-                case ("Date"): {
-                    System.out.println("Date");
-                    List<Folder> folderList1 = new ArrayList<>();
-
-                    Sort_Day sort_alphabet = new Sort_Day();
-
-                    sort_alphabet.Filter(folderList);
-
-                    return ResponseEntity.ok(sort_alphabet.get_Result());
-                }
-                default: {
-                    return ResponseEntity.ok(null);
-                }
-            }
         }
         catch (Exception e) {
             return ResponseEntity.ok(folderList);
@@ -382,6 +382,12 @@ public class Document_rest {
 class check{
     private String Root_id ;
     private String code ;
+}
+@Data
+class Pagination{
+    private  int number_of_page ;
+    private List<Folder> list ;
+
 }
 
 

@@ -25,7 +25,6 @@ public class Document {
 
     @Autowired
     JWT_Services jwt_services;
-    private final static String ERROR_PATH = "/error";
 
 
     @RequestMapping("/document")

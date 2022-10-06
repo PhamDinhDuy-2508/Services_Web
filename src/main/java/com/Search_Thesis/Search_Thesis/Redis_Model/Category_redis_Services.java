@@ -2,6 +2,7 @@ package com.Search_Thesis.Search_Thesis.Redis_Model;
 
 import com.Search_Thesis.Search_Thesis.Model.Folder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,7 @@ public class Category_redis_Services implements Services_Redis<Category_Redis , 
         super();
     }
 
+    @Cacheable(value = "Category_Redis" , key = "{#haskey , #ID}")
     @Override
     public Category_Redis find(String haskey, String ID) {
         Category_Redis category_redis =  new Category_Redis() ;

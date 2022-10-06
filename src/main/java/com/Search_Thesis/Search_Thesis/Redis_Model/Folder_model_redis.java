@@ -35,4 +35,6 @@ public class Folder_model_redis implements Serializable {
 
     private  String url ;
 
+
+
 }

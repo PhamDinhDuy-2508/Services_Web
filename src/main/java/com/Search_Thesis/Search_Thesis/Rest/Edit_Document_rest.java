@@ -4,6 +4,8 @@ import com.Search_Thesis.Search_Thesis.Model.Category_document;
 import com.Search_Thesis.Search_Thesis.Model.Document;
 import com.Search_Thesis.Search_Thesis.Model.Folder;
 import com.Search_Thesis.Search_Thesis.Model.User;
+import com.Search_Thesis.Search_Thesis.Redis_Model.Category_Redis;
+import com.Search_Thesis.Search_Thesis.Redis_Model.Category_redis_Services;
 import com.Search_Thesis.Search_Thesis.Redis_Model.Document_Service_redis;
 import com.Search_Thesis.Search_Thesis.Redis_Model.Document_redis;
 import com.Search_Thesis.Search_Thesis.Services.Document_services;
@@ -16,6 +18,7 @@ import com.Search_Thesis.Search_Thesis.resposity.User_respository;
 import lombok.Data;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,6 +53,8 @@ public class Edit_Document_rest {
     Edit_Document_Services edit_document_services ;
     @Autowired
     Document_Service_redis document_service_redis ;
+    @Autowired
+    Category_redis_Services category_redis_services ;
 
     @Autowired
     User user ;
@@ -204,9 +209,26 @@ public class Edit_Document_rest {
 
         }
 //
-
         return null ;
     }
+    @Cacheable(value = "pagination"  , key = "{#page_num  ,  #code ,  #filter}")
+    @GetMapping("pagination/{page_num}/{code}/{filter}")
+    public ResponseEntity pagination_document(@PathVariable String page_num, @PathVariable String code, @PathVariable String filter) {
+        int page =  Integer.parseInt(page_num) ;
+        Category_Redis category_redis  = category_redis_services.find("Category" , code) ;
+
+        if(filter.equals("default")) {
+            List<Folder> folders =  category_redis.getFolderList() ;
+
+            return ResponseEntity.ok( document_services_2.pagination(code , page ,  folders)) ;
+        }
+        else  {
+            List<Folder> folders  =  document_services_2.Filter(code , filter) ;
+            return ResponseEntity.ok(document_services_2.pagination(code , page , folders)) ;
+        }
+
+    }
+
     public void deleteCookie( HttpServletRequest request  , HttpServletResponse response , String name) {
         Cookie[] cookies = request.getCookies();
         try {
@@ -229,13 +251,6 @@ public class Edit_Document_rest {
             return  ;
         }
     }
-
-    @GetMapping("/history_load/{user_Id}")
-    public ResponseEntity<?> load_history(@PathVariable String user_Id) {
-
-        return  null ;
-    }
-
 }
 @Data
 class Edit_Get_method {

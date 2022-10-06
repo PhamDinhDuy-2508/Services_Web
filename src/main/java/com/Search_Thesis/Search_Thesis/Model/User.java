@@ -3,14 +3,19 @@ package com.Search_Thesis.Search_Thesis.Model;
 
 import lombok.Data;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.WebApplicationContext;
 
 import javax.persistence.*;
 
 @Entity
 @Data
 @Component("User")
-
+@Scope(
+        value = WebApplicationContext.SCOPE_SESSION,
+        proxyMode = ScopedProxyMode.TARGET_CLASS)
 @EnableAutoConfiguration
 @Table(name = "User")
 public class User {
