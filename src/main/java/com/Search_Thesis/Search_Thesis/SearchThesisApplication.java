@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 //@SpringBootApplication(scanBasePackages = {"com.Search_Thesis.Search_Thesis.resposity" ,
@@ -14,6 +15,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 //scanBasePackageClasses = {SignIn_Respository.class})
 
 @SpringBootApplication
+@EnableCaching
+
 @RequiredArgsConstructor
 @EnableJpaRepositories(basePackages = {"com.Search_Thesis.Search_Thesis.resposity" ,
 		"com.Search_Thesis.Search_Thesis.Services"}  ,

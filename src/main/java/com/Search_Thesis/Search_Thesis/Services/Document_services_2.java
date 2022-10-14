@@ -230,7 +230,7 @@ public class Document_services_2 {
     public void setMap_category_Folder(HashMap<String, List<Folder>> map_category_Folder) {
         Map_category_Folder = map_category_Folder;
     }
-    @Cacheable(value = "pagination" ,key = "{#code ,  #page} ")
+//    @Cacheable(value = "pagination" ,key = "{#code ,  #page} ")
     public List<Folder> pagination(String code , int page  , List<Folder> folderList) {
         List<Folder> result = new ArrayList<>() ;
         if(page*5 > folderList.size()) {
@@ -249,7 +249,8 @@ public class Document_services_2 {
             }
         }
         else {
-            for(int i = page-1; i <(page)*5 ; i++) {
+            for(int i = (page-1)*5; i <(page)*5 ; i++) {
+                System.out.println(i);
                 result.add(folderList.get(i)) ;
             }
         }

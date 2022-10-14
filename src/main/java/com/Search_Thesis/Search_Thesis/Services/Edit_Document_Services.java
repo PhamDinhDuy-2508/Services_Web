@@ -4,11 +4,10 @@ import com.Search_Thesis.Search_Thesis.Model.Document;
 import com.Search_Thesis.Search_Thesis.Model.Folder;
 import com.Search_Thesis.Search_Thesis.Model.Root_Folder;
 import com.Search_Thesis.Search_Thesis.Redis_Model.*;
-import com.Search_Thesis.Search_Thesis.resposity.Document_Repository;
-import com.Search_Thesis.Search_Thesis.resposity.Folder_Reids_respository;
-import com.Search_Thesis.Search_Thesis.resposity.Folder_Respository;
-import com.Search_Thesis.Search_Thesis.resposity.Root_Responsitory;
+import com.Search_Thesis.Search_Thesis.resposity.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +45,13 @@ public class Edit_Document_Services {
     @Autowired
     Folder_info_Services folder_info_services ;
 
+    @Autowired
+    RedisTemplate redisTemplate ;
+    @Autowired
+    Document_services document_services ;
+    @Autowired
+    Category_document_Responsitory category_document_responsitory ;
+
 
     @Async
     public CompletableFuture<Boolean> update(int ID , String name ){
@@ -79,6 +85,7 @@ public class Edit_Document_Services {
             Future<List<Document>> get_document_task = threadpool.submit(callable) ;
 
             folder = folder_respository.findByIdFolder(ID);
+
             name =  folder.getTitle() ;
 
             Root_Folder root_folder = root_responsitory.findRoot_FolderByIdById(folder.getCategorydocument() .getRoot_folder().getId()) ;
@@ -97,6 +104,9 @@ public class Edit_Document_Services {
 
 
             folder_respository.deleteByIdFolder(ID);
+            String Code =  folder.getCategorydocument().getCode() ;
+
+            document_services.Delete_Cachce_Category(Code);
 
 
             return CompletableFuture.completedFuture(true) ;
@@ -179,15 +189,18 @@ public class Edit_Document_Services {
 
     }
     @Async
-    public void Delete_Document(List<String> id_Document ) {
+    @CacheEvict(value = "display_document" , key = "#id_Folder")
+    public void Delete_Document(List<String> id_Document  , String id_Folder) {
         System.out.println(id_Document.size());
         if (!id_Document.isEmpty()) {
             List<Document> documentList = new ArrayList<>();
+            System.out.println(id_Document);
 
 
             Document document_ = document_repository.findByID(Integer.parseInt(id_Document.get(0)));
             Folder folder1 = folder_respository.findByIdFolder(document_.getId_folder());
             String Id = String.valueOf(folder1.getContributor_ID());
+            System.out.println("ID" + Id);
 
             id_Document.parallelStream().forEach(id -> {
                 try {
@@ -205,24 +218,39 @@ public class Edit_Document_Services {
 
             document_info_redis_services.save_folder_ID(Id, documentList);
 
-            document_info_redis_services.Expire(documentList);
+            document_info_redis_services.Expire(documentList, id_Folder);
                     Runnable Thread = () ->{
             for(int  i = 0 ; i < id_Document.size() ; i++) {
                 Document document =  document_repository.findByID(Integer.parseInt(id_Document.get(i))) ;
                 document_repository.delete(document);
             }
+                        System.out.println(id_Folder);
+            document_services.Delete_Document_Cache(id_Folder);
 
+            List<Document> documents  =  document_repository.findById_folder(Integer.parseInt(id_Folder)) ;
+            document_services.Update_Cache_Document(documents , id_Folder) ;
+//            update_to_Cache_Document(documents) ;
         } ;
         Thread.run();
         }
     }
-    public void Delete_Folder(String id_Folder)
+
+    @Async
+    public void Change_Name(String name , String ID){
+       folder =  folder_respository.findByIdFolder(Integer.parseInt(ID)) ;
+       folder.setTitle(name);
+       folder_respository.save(folder) ;
+    }
+    @CacheEvict(value = "category_redis" ,  key = "{#code}")
+
+    public void Delete_Folder(String id_Folder , String code)
     {
+        System.out.println("Delete folder" + code +  id_Folder);
 
         Folder folder1 = folder_respository.findByIdFolder(Integer.parseInt(id_Folder));
 
+        String Hash_key = id_Folder+"_folder" ;
 
-        String Hash_key =  id_Folder+"_folder" ;
 
         Document_redis document_redis =  document_service_redis.find(Hash_key ,  id_Folder) ;
 
@@ -235,6 +263,7 @@ public class Edit_Document_Services {
         else {
             documentList =   document_repository.findById_folder(Integer.parseInt(id_Folder))  ;
         }
+//        redisTemplate.opsForHash().put("Folder_delete" , id_Folder , documentList);
         folder_info_services.save_folder_ID(id_Folder ,  documentList);
 
 
@@ -249,11 +278,13 @@ public class Edit_Document_Services {
             folder_respository.deleteByIdFolder(Integer.valueOf(id_Folder));
 
         } ;Thread.run();
+        document_services.Delete_Cachce_Category(folder1.getCategorydocument().getCode());
 
     }
         public  void Delete_Document_In_Server(List<Document> documents){
 
         }
+
     }
 
 

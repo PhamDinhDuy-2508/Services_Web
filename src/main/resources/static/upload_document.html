@@ -479,6 +479,15 @@ function back_to_document_page(){
     }
 
 </script>
+<script>
+    function  get_Cookie(cname) {
+        let a = `; ${document.cookie}`.match(`;\\s*${cname}=([^;]+)`);
+        var value =  a.splice('=')[1]
+        return value
+
+
+    }
+</script>
 
 <script>
     function add_box(tail, filename){
@@ -541,11 +550,11 @@ function back_to_document_page(){
             if(y == true) {
                 $("#check_folder").show()
             }
+
             else if(y == false) {
                 create_folder()
                 $("#check_folder").hide()
                 $('#save_change_folder_new').attr("data-dismiss","modal");
-
             }
         }
 
@@ -716,6 +725,8 @@ function back_to_document_page(){
 
     }
     function  document_submit(){
+        var token =  get_Cookie("login_jwt")
+
 
         var settings = {
             "url": "http://localhost:8080/api/ckt/create_folder",
@@ -748,6 +759,7 @@ function back_to_document_page(){
             }
 
             var signal =  true
+            var token =  get_Cookie("login_jwt")
 
             jQuery.each(jQuery('#file_input')[0].files, function(i, file) {
 
@@ -787,9 +799,10 @@ function back_to_document_page(){
 
     }
     function create_folder(){
+        var token =  get_Cookie('login_jwt')
         console.log($('#category_list').text())
         var settings = {
-            "url": "http://localhost:8080/api/ckt/create_new_folder",
+            "url": "http://localhost:8080/api/ckt/create_new_folder?token="+token,
             "method": "POST",
             "timeout": 0,
             "headers": {

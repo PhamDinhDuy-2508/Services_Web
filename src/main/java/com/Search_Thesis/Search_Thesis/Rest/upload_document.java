@@ -3,6 +3,7 @@ package com.Search_Thesis.Search_Thesis.Rest;
 import com.Search_Thesis.Search_Thesis.Event.Upload_document_Event;
 import com.Search_Thesis.Search_Thesis.Model.Create_folder;
 import com.Search_Thesis.Search_Thesis.Services.Document_services;
+import com.Search_Thesis.Search_Thesis.Services.JWT_Services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
@@ -28,10 +29,14 @@ public class upload_document
 
     @Autowired
     Create_folder create_folder ;
+    @Autowired
+    JWT_Services jwt_services ;
 
     @PostMapping ("/create_folder")
-    public void create_folder_DIRECTORY(@RequestBody Create_folder create_folder) throws IOException {
+    public void create_folder_DIRECTORY(@RequestBody Create_folder create_folder ) throws IOException {
+
         this.create_folder =  create_folder ;
+
 
         document_services.Create_Folder_Directory(create_folder.getRoot_name() ,
                 create_folder.getCode() ,  create_folder.getFolder_name());
@@ -54,6 +59,7 @@ public class upload_document
             message = "Uploaded the files successfully: " + fileNames;
         }
         catch (Exception e) {
+            System.out.println(e.getMessage());
 
             message = "Fail to upload files!";
 

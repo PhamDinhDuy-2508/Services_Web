@@ -3,6 +3,8 @@ package com.Search_Thesis.Search_Thesis.Rest;
 import com.Search_Thesis.Search_Thesis.Model.Document;
 import com.Search_Thesis.Search_Thesis.Model.Folder;
 import com.Search_Thesis.Search_Thesis.Redis_Model.Document_Service_redis;
+import com.Search_Thesis.Search_Thesis.Redis_Model.Document_info_redis;
+import com.Search_Thesis.Search_Thesis.Redis_Model.Folder_model_redis;
 import com.Search_Thesis.Search_Thesis.Services.History_Services;
 import com.Search_Thesis.Search_Thesis.Services.JWT_Services;
 import com.Search_Thesis.Search_Thesis.resposity.Document_Repository;
@@ -38,40 +40,39 @@ public class History_rest {
 
     @GetMapping("/load_history/{token}")
     public ResponseEntity Get_Edit_History(@PathVariable String token) {
+
         jwt_services.setJwt(token);
         JSONObject jsonObject = jwt_services.getPayload();
 
         int ID = (int) jsonObject.get("id");
-        String user_id = String.valueOf(ID) ;
+        String user_id = String.valueOf(ID)  ;
 
         try {
-            history_services.Get_History_Folder(user_id);
-            history_services.Get_History_Document(user_id);
+            List<Document> list =  new ArrayList<>() ;
 
-            Contributor_History contributor_history =   history_services.contributor_history(user_id , history_services.getHashtable() ) ;
+             List<Folder_model_redis> folder_model_redis =  history_services.Get_History_Folder(user_id);
+             List<Document_info_redis> document_info_redis = history_services.Get_History_Document(user_id);
 
-            contributor_history.setID(Integer.parseInt(user_id));
-            contributor_history.setHashtable(history_services.getHashtable());
+            history_services.Set_Contributor_History(String.valueOf(ID), document_info_redis , folder_model_redis );
 
-            String message;
-            JSONObject json = new JSONObject();
-            json.put("Folder", contributor_history.getHashtable().get("folder"));
-            List<Object> t =  new ArrayList<>() ;
-            t.add(contributor_history.getHashtable().get("folder")) ;
-            t.add(contributor_history.getHashtable().get("document")) ;
+            History_response history_response =  new History_response() ;
+            history_response.setFolder_histories(folder_model_redis);
+            for (Document_info_redis document_info_redis1 : document_info_redis ) {
+                list.add(document_info_redis1.getDocument().get(0)) ;
+            }
+            history_response.setDocument_histories(list);
 
-            return ResponseEntity.ok(t) ;
+            return ResponseEntity.ok(history_response) ;
 
         }
-
         catch (Exception e) {
             System.out.println(e.getMessage());
             return  null  ;
         }
-
     }
     @GetMapping("/Backup_Document/{type_of_file}/{IdOfFile}")
     public void Backup(@PathVariable String type_of_file  , @RequestParam("token") String token, @PathVariable String IdOfFile) throws InterruptedException {
+        System.out.println(token);
 
         jwt_services.setJwt(token);
 
@@ -95,4 +96,17 @@ class Folder_History{
 class Document_Histoty{
     private  int amount ;
     private  List<Document> documentList ;
+}
+@Data
+class History_response{
+    private List<Document> document_histories ;
+    private  List<Folder_model_redis> folder_histories ;
+
+    @Override
+    public String toString() {
+        return "History_response{" +
+                "document_histories=" + document_histories +
+                ", folder_histories=" + folder_histories +
+                '}';
+    }
 }

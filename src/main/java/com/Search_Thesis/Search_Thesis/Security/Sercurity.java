@@ -63,7 +63,7 @@ public class Sercurity extends WebSecurityConfigurerAdapter {
                 antMatchers("/load_user_token_Edit_page" , "/login" ,"/blog", "/sign_up","/reset_pass","/reset_pass/**",
                           "/profile/**","/forgot_password/**" ,"/home/**" ,"/api/ckt/**", "/css/**" , "/fonts/**" , "/img/**" ,"/js/**"
                         ,"/document/**" ,
-                        "/document_upload" ,"/load_user_token" ,"/edit_document/**"  ,"/contact")
+                        "/document_upload" ,"/load_user_token" ,"/Q&A","/edit_document/**"  ,"/contact")
                 .permitAll().
                 anyRequest().authenticated().and().
 

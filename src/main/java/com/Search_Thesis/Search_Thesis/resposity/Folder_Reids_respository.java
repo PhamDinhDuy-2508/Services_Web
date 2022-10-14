@@ -36,8 +36,8 @@ public  class  Folder_Reids_respository  {
         return folder ;
     }
 
-    public List<Folder> find(String userid){
-        HASH_KEY =  userid+"_folder"  ;
+    public List<Folder> find(String id_folder){
+        HASH_KEY =  id_folder+"_folder"  ;
 
         return redisTemplate.opsForHash().values(HASH_KEY);
     }

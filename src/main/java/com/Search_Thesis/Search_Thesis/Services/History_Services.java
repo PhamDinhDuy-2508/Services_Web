@@ -10,7 +10,6 @@ import com.Search_Thesis.Search_Thesis.Rest.Contributor_History;
 import com.Search_Thesis.Search_Thesis.resposity.Document_Repository;
 import com.Search_Thesis.Search_Thesis.resposity.Folder_Respository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Async;
@@ -41,14 +40,12 @@ public class History_Services {
     private Hashtable hashtable = new Hashtable<>();
 
 
-    public void Get_History_Document(String ID) {
+    public List<Document_info_redis> Get_History_Document(String ID) {
+        System.out.println( "DeleteDocument " + redisTemplate.opsForHash().keys("Delete_document").stream().toList());
+
         List<String> key = redisTemplate.opsForHash().keys("Delete_document").stream().toList();
-        System.out.println(key);
 
-        List<Document_info_redis> documentList = new ArrayList<>();
-
-        List<String> name_of_document = new ArrayList<>();
-
+        List<Document_info_redis> document_info_redisList =  new ArrayList<>() ;
 
         for (String ignored : key) {
 
@@ -60,14 +57,17 @@ public class History_Services {
 
                 this.hashtable.put("document", document_info_redis.getDocument());
 
+                document_info_redisList.add(document_info_redis) ;
 
             }
+
+
         }
-        System.out.println(this.hashtable);
-        ;
+        return  document_info_redisList ;
+
     }
 
-    public void Get_History_Folder(String ID) {
+    public List<Folder_model_redis> Get_History_Folder(String ID) {
 
         List<String> key = redisTemplate.opsForHash().keys("Delete_folder").stream().toList();
 
@@ -83,32 +83,27 @@ public class History_Services {
                 document_info_redis = folder_info_services.findProductById(ignored, 0);
                 System.out.println(folder_info_services.findProductById(ignored, 0));
                 folderList.add(document_info_redis);
-
-                this.hashtable.put("folder", folderList);
-
             }
         }
-    }
+        return folderList ;
 
-    @Cacheable(value = "contributor_history", key = "#User_Id")
-    public Contributor_History contributor_history(String User_Id, Hashtable hashtable) {
-        Contributor_History contributor_history = new Contributor_History();
-
-        if (!check_Data_Existed_In_redis(User_Id)) {
-
-            redisTemplate.opsForHash().put("contributor_history", User_Id, hashtable);
-        } else {
-            redisTemplate.opsForHash().put("contributor_history", User_Id, hashtable);
-            Hashtable hashtable1 = (Hashtable) redisTemplate.opsForHash().get("contributor_history", User_Id);
-            contributor_history.setID(Integer.parseInt(User_Id));
-            contributor_history.setHashtable(hashtable1);
-        }
-
-        return contributor_history;
     }
     public Hashtable getHashtable() {
 
         return hashtable;
+    }
+    public void Set_Contributor_History(String ID , List<Document_info_redis> History_document ,  List<Folder_model_redis> History_Folder) {
+        Hashtable hashtable1 =  new Hashtable<>() ;
+
+        hashtable1.put("document" , History_document) ;
+        hashtable1.put("folder" , History_Folder) ;
+
+        Contributor_History contributor_history =  new Contributor_History() ;
+        contributor_history.setID(Integer.parseInt(ID));
+        contributor_history.setHashtable(hashtable);
+
+        redisTemplate.opsForHash().put("contributor_history" , ID ,  hashtable1 );
+
     }
 
     public boolean check_Data_Existed_In_redis(String userID) {
@@ -126,13 +121,20 @@ public class History_Services {
 
     @Async
     public void Backup_to_Databases(String user_id, String Type_of_data, String ID) throws InterruptedException {
-        Hashtable hashtable1 = (Hashtable) redisTemplate.opsForHash().get("contributor_history", user_id);
-        System.out.println(redisTemplate.opsForHash().get("contributor_history", user_id));
+        System.out.println(user_id);
+        Hashtable hashtable1 = (Hashtable) redisTemplate.opsForHash().get("contributor_history" , "1");
         if (Type_of_data.equals("document")) {
-            List<Document> list = (List<Document>) hashtable1.get(Type_of_data);
+//            hashtable1 =  contributor_history.getHashtable() ;
+            List<Document_info_redis>  document_info_redis = (List<Document_info_redis>) hashtable1.get("document");
+
+            Document_info_redis document_info_redis1 =  document_info_redis.get(0) ;
+
+            List<Document> list = document_info_redis1.getDocument() ;
+
             Thread thread =  new Thread(()->{
                 Update_DocumentHistory_Redis(user_id, "document", ID);
             }) ;
+
             thread.start();
 
             for (Document document : list) {
@@ -143,7 +145,6 @@ public class History_Services {
             }
             thread.join();
 
-//           Update_History_Redis(user_id ,  "document" , ID);
         } else {
             Hashtable hashtable2 = (Hashtable) redisTemplate.opsForHash().get("contributor_history", user_id);
             if (hashtable2 == null) {
@@ -155,6 +156,7 @@ public class History_Services {
             for (Folder_model_redis folder_model_rediss : folder_model_redis) {
 
                 int ID_Folder = Integer.parseInt(ID);
+                System.out.println(ID_Folder);
 
                 if (folder_model_rediss.getIdFolder() == ID_Folder) {
 
@@ -173,14 +175,14 @@ public class History_Services {
                 Backup.Insert_Folder_into_database(folder_respository, folder_model_redis1, user_id);
             }
             synchronized (thread2) {
-                int id_folder = folder_model_redis1.getIdFolder();
-                Backup.Insert_document_into_database(document_repository, String.valueOf(id_folder));
+                List<Document> documents =  Backup.Insert_document_into_database(  folder_respository , document_repository,folder_model_redis1);
             }
+
             thread.start();
             thread2.start();
+
             String id_folder = String.valueOf(folder_model_redis1.getIdFolder());
             Update_HistoryFolder_Redis(user_id, "folder", id_folder);
-
         }
 
     }
@@ -217,16 +219,18 @@ public class History_Services {
     public void Update_DocumentHistory_Redis(String user_id, String type_of_file, String ID) {
 
         Hashtable hashtable1 = (Hashtable) redisTemplate.opsForHash().get("contributor_history", user_id);
-        List<Document> list = (List<Document>) hashtable1.get(type_of_file);
+        List<Document_info_redis> list = (List<Document_info_redis>) hashtable1.get(type_of_file);
 
         List<Document> list_old = new ArrayList<>();
-        list.parallelStream().forEach(folder_model_redis -> {
-            list_old.add(folder_model_redis);
-        });
-        for (Document folder_model_redis : list) {
+        list_old =   list.get(0).getDocument() ;
+
+        for (Document folder_model_redis : list_old) {
             if (folder_model_redis.getID() == Integer.valueOf(ID)) {
-                list.remove(folder_model_redis);
-                hashtable1.remove(type_of_file, folder_model_redis);
+                hashtable1.remove("document", list);
+
+                list_old.remove(folder_model_redis);
+                list.get(0).setDocument(list_old);
+                hashtable1.remove("document", list);
                 break;
             }
         }
@@ -234,13 +238,13 @@ public class History_Services {
         Set<String> list1 = (Set<String>) redisTemplate.opsForHash().keys("Delete_document");
         for (String x : list1) {
             Document_info_redis folder_model_redis = (Document_info_redis) redisTemplate.opsForHash().get("Delete_document", x);
-//            System.out.println(folder_model_redis.getDocument().get(0) + ID);
             if (folder_model_redis.getDocument().get(0).getID() == Integer.valueOf( ID) ) {
                 redisTemplate.opsForHash().delete("Delete_document", x);
             }
         }
 
     }
+
 }
 
 
@@ -264,17 +268,26 @@ public class History_Services {
             }
         }
 
-        public static void Insert_document_into_database(Document_Repository document_repository, String id_folder) {
+        public static List<Document> Insert_document_into_database(Folder_Respository folder_respository,Document_Repository document_repository ,Folder_model_redis folder_model_redis) {
+            String Title = folder_model_redis.getTitle() ;
+            String Code =  folder_model_redis.getCategorydocument().getCode() ;
 
-            List<Document> documents = document_repository.findById_folder(Integer.parseInt(id_folder));
-            try {
-                for (Document document : documents) {
-                    document_repository.save(document);
+            Folder folder =  folder_respository.findByTitleAndCode(  Code , Title) ;
+            int id =  folder.getIdFolder() ;
+            List<Document> documentList = folder_model_redis.getDocumentList();
+
+            if(!documentList.isEmpty()) {
+                try {
+                    for (Document document : documentList) {
+                        document.setId_folder(id);
+                        document.setID(0);
+                        document_repository.save(document);
+                    }
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
                 }
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
             }
-
+        return documentList ;
         }
 
     }

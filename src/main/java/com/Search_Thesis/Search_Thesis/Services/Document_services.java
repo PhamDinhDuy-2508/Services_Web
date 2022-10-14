@@ -14,8 +14,10 @@ import com.Search_Thesis.Search_Thesis.resposity.Document_Repository;
 import com.Search_Thesis.Search_Thesis.resposity.Folder_Respository;
 import com.Search_Thesis.Search_Thesis.resposity.Root_Responsitory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.context.event.EventListener;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
@@ -30,8 +32,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 @Service
 public class Document_services {
@@ -51,7 +52,9 @@ public class Document_services {
     Search_category search_category ;
 
     @Autowired
-    Search_Folder search_folder ;
+   Search_Folder search_folder ;
+    @Autowired
+    RedisTemplate redisTemplate ;
 
     @Autowired
     Folder_Respository folder_respository ;
@@ -61,6 +64,8 @@ public class Document_services {
 
     @Autowired
     Document_Repository document_repository ;
+    ExecutorService threadpool = Executors.newCachedThreadPool();
+
 
 
     private  Thread Search_document ;
@@ -86,7 +91,6 @@ public class Document_services {
         return root_responsitory.findRoot_FolderByIdById(Integer.valueOf(ID));
 
     }
-    @Cacheable(value = "load_category", key = "#ID")
     public List<Category_document> load_category(int ID){
 
 
@@ -180,7 +184,6 @@ public class Document_services {
     @EventListener
     @Async
     public void Create_Folder(Create_folder_Event create_folder_event) {
-        System.out.println(Thread.currentThread().getName());
 
         try {
 
@@ -197,6 +200,7 @@ public class Document_services {
             category_document.setNewfolder(Collections.singleton(folder));
 
             folder.setCategorydocument(category_document);
+            folder.setContributor_ID(Integer.valueOf( create_folder_event.getCreate_folder().getUser_id()));
 
             category_document.setRoot_folder(root_folder);
 
@@ -207,6 +211,7 @@ public class Document_services {
             Create_Folder_Directory(create_folder_event.getCreate_folder().getRoot_name()  ,
                                      create_folder_event.getCreate_folder().getCode() ,
                                     create_folder_event.getCreate_folder().getFolder_name());
+            Update_Cache_Folder(folder) ;
 
         }
 
@@ -267,6 +272,7 @@ public class Document_services {
         try {
             Folder folder1 =  folder_respository.findByTitleAndCode(Code , Title);
             System.out.println(folder1.getIdFolder());
+
             if(folder1 == null) {
                 return  CompletableFuture.completedFuture(false) ;
             }
@@ -275,21 +281,28 @@ public class Document_services {
             }
         }
         catch (Exception e) {
+            System.out.println(e.getMessage());
 
             return  CompletableFuture.completedFuture(false)  ;
         }
     }
+    public void Delete_Document_Cache(String ID){
+        redisTemplate.delete("display_document::"+ID) ;
+    }
 
 
 
-    public String Create_File(String root , String category , String folder , String filename , MultipartFile multipartFile) throws IOException {
+    public synchronized String Create_File(String root , String category , String folder , String filename , MultipartFile multipartFile) throws IOException {
+        String Folder_Path = "D:\\Data\\Document_data\\" + root+"\\"+ category+"\\"+folder+"\\"+filename ;
+
 
 //        Create_Folder_Directory(root , category ,  folder) ;
         if(multipartFile.getSize()==0) {
+            System.out.println(Folder_Path);
+            System.out.println(multipartFile.getSize());
             return null ;
         }
 
-        String Folder_Path = "D:\\Data\\Document_data\\" + root+"\\"+ category+"\\"+folder+"\\"+filename ;
 
 
         File document_root_directory = new File(Folder_Path) ;
@@ -318,14 +331,22 @@ public class Document_services {
             stream.close();
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
+            System.out.println("Folder " + Folder_Path);
+            System.out.println("Error" + e.getMessage());
+            return Folder_Path;
         }
+        System.out.println(Folder_Path);
+
         return Folder_Path ;
+    }
+
+    @CacheEvict(value = "category_redis" , key = "{#Code}")
+    public void Delete_Cachce_Category(String Code) {
+
     }
     @EventListener
     @Async
-    public void Create_Document(Upload_document_Event upload_document_event) throws IOException {
+    public synchronized void Create_Document(Upload_document_Event upload_document_event) throws IOException, InterruptedException {
 
 
         String root_name = upload_document_event.getCreate_folder().getRoot_name() ;
@@ -337,23 +358,64 @@ public class Document_services {
         Folder folder1 = folder_respository.findByTitleAndCode(category_name , Folder_name) ;
 
 
+
         List<MultipartFile> multipartFiles =  new ArrayList<>() ;
+        List<Document> documentList =  new ArrayList<>() ;
 
         for(MultipartFile multipartFile  : upload_document_event.getMultipartFile()) {
 
-            try {
-                String file_path = Create_File(root_name ,  category_name , Folder_name , multipartFile.getOriginalFilename() , multipartFile);
-                if(file_path != null) {
-                    document = create_Document_info(multipartFile.getOriginalFilename() ,  file_path , folder1) ;
-                    document_repository.save(document) ;
+
+            Thread thread =  new Thread(()->{
+                try {
+
+                    String  file_path = Create_File(root_name ,  category_name , Folder_name , multipartFile.getOriginalFilename() , multipartFile);
+                    if(file_path != null) {
+                        document = create_Document_info(multipartFile.getOriginalFilename(), file_path, folder1);
+                        document_repository.save(document);
+                        documentList.add(document);
+                        System.out.println(file_path);
+                    }
+
+
+                } catch (IOException e) {
+                    System.out.println("Error" + e.getMessage());
                 }
 
-            } catch (IOException e) {
+            }) ;
+            thread.start();
+//            Future<?> futureTask = threadpool.submit(() -> {
+//                String file_path = null;
+//                try {
+//                } catch (IOException e) {
+//                    throw new RuntimeException(e);
+//                }
+//
+//                System.out.println("Thread_Cjild" + Thread.currentThread().getName());
+//
+//                document = create_Document_info(multipartFile.getOriginalFilename() ,  file_path , folder1) ;
+//                document_repository.save(document) ;
+//                documentList.add(document) ;
+//                return  ;
+//            });
+//            while(!futureTask.isDone()) {
+//                wait();
+//            }
 
-                System.out.println(e.getMessage());
+            continue;
 
-            }
+//                    synchronized (thread){
+//                        System.out.println("Thread_child" + Thread.currentThread().getName());
+//                        document = create_Document_info(multipartFile.getOriginalFilename() ,  file_path , folder1) ;
+//                        document_repository.save(document) ;
+//                        documentList.add(document) ;
+//                    }thread.start();
+
+
         }
+        Delete_Cachce_Category(category_name);
+
+        Update_Cache_Document(documentList , String.valueOf( folder1.getIdFolder()) ) ;
+
     }
 
     public Document create_Document_info(String file_name , String file_path , Folder folder) {
@@ -371,7 +433,118 @@ public class Document_services {
 
         return document1 ;
     }
+    @CachePut("load_folder")
+    public  Folder Update_Cache_Folder(Folder newest_Document){
 
+        return newest_Document ;
+    }
 
+    @CachePut("display_document")
+    @CacheEvict(value = "display_document" , key = "{#ID}")
+    public  List<Document> Update_Cache_Document( List<Document> newest_Document ,String ID){
+
+        return newest_Document ;
+    }
 
 }
+// producer
+class Send_File implements   Runnable {
+    private  final BlockingDeque<MultipartFile>  multipartFileBlockingDeque ;
+    private List<MultipartFile> multipartFile ;
+    @Autowired
+    Upload_document_Event upload_document_event ;
+    @Autowired
+    Folder_Respository folder_respository ;
+
+    public Send_File(BlockingDeque<MultipartFile> multipartFileBlockingDeque , List<MultipartFile> multipartFile) {
+        this.multipartFileBlockingDeque = multipartFileBlockingDeque;
+        this.multipartFile =  multipartFile ;
+    }
+    @Override
+    public void run() {
+
+        List<MultipartFile> multipartFiles =  new ArrayList<>() ;
+        List<Document> documentList =  new ArrayList<>() ;
+        try {
+            while(true) {
+                if(multipartFile.size() == 0) {
+                    break;
+                }
+                MultipartFile multipartFile1 = multipartFile.get(0) ;
+                send_File(multipartFile1);
+
+                multipartFile.remove(0) ;
+                wait();
+
+            }
+
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    public void send_File(MultipartFile multipartFile) {
+        this.multipartFileBlockingDeque.add(multipartFile);
+    }
+}
+class processing_FILE implements  Runnable {
+    private  final  BlockingDeque<MultipartFile> multipartFiles ;
+    @Autowired
+    Document_Repository document_repository ;
+    @Autowired
+    Folder_Respository folder_respository ;
+    @Autowired
+    Document_services document_services ;
+    @Autowired
+    Upload_document_Event upload_document_event ;
+    private  String path   ;
+    private  Folder folder ;
+    public processing_FILE(BlockingDeque<MultipartFile> multipartFiles , String path , Folder folder) {
+
+        this.multipartFiles = multipartFiles;
+
+        this.path =  path ;
+        this.folder =  folder ;
+    }
+
+    @Override
+    public void run() {
+        try {
+
+            Processing_File(multipartFiles.take());
+
+        } catch (InterruptedException e) {
+
+            notifyAll();
+            throw new RuntimeException(e);
+
+        }
+        notifyAll();
+
+    }
+    public void Processing_File(MultipartFile multipartFile)  {
+        try {
+            String root_name = upload_document_event.getCreate_folder().getRoot_name() ;
+
+            String category_name = upload_document_event.getCreate_folder().getCode() ;
+
+            String Folder_name =  upload_document_event.getCreate_folder().getFolder_name() ;
+
+            Folder folder1 = folder_respository.findByTitleAndCode(category_name , Folder_name) ;
+            if(this.path != null) {
+                String file_path = document_services.Create_File(root_name ,  category_name , Folder_name , multipartFile.getOriginalFilename() , multipartFile);
+
+                Document document = document_services.create_Document_info(multipartFile.getOriginalFilename() ,  file_path , folder1) ;
+
+                document_repository.save(document) ;
+
+            }
+
+        } catch (IOException e) {
+
+            System.out.println(e.getMessage());
+        }
+
+    }
+}
+

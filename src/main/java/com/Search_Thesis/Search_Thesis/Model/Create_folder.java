@@ -25,6 +25,8 @@ public class Create_folder  {
     private String root_name;
     @NotBlank
     private String folder_name;
+    @NotBlank
+    private  String user_id ;
 
     @Override
     public String toString() {

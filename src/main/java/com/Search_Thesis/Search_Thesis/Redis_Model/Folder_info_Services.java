@@ -46,6 +46,7 @@ public class Folder_info_Services implements  Services_Redis<Folder_model_redis 
     public void save_folder_ID(String ID, List<Document> elemment) {
 
         Folder folder1 = folder_respository.findByIdFolder(Integer.parseInt(ID)) ;
+        System.out.println( folder_respository.findByIdFolder(Integer.parseInt(ID)) );
 
         String root_name = "Chuyen Nganh" ;
         String Category =  folder1.getCategorydocument().getCode() ;

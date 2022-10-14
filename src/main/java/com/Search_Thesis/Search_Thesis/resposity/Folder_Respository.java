@@ -20,7 +20,7 @@ public interface Folder_Respository  extends JpaRepository<Folder , Integer> {
 
     @Query("SELECT u FROM Folder u WHERE  u.title = :Title")
 
-    Folder findByTitle(String Title) ;
+    List<Folder> findByTitle(String Title) ;
     @Query("SELECT u FROM Folder u WHERE u.categorydocument.code = :Code and u.title = :Title")
 
     Folder findByTitleAndCode(String Code , String Title) ;

@@ -9,10 +9,7 @@ import com.Search_Thesis.Search_Thesis.Redis_Model.Category_Redis;
 import com.Search_Thesis.Search_Thesis.Redis_Model.Category_redis_Services;
 import com.Search_Thesis.Search_Thesis.Redis_Model.Document_Service_redis;
 import com.Search_Thesis.Search_Thesis.Redis_Model.Document_redis;
-import com.Search_Thesis.Search_Thesis.Services.Document_services;
-import com.Search_Thesis.Search_Thesis.Services.Document_services_2;
-import com.Search_Thesis.Search_Thesis.Services.Session_Service;
-import com.Search_Thesis.Search_Thesis.Services.Session_Service_2;
+import com.Search_Thesis.Search_Thesis.Services.*;
 import com.Search_Thesis.Search_Thesis.resposity.Category_document_Responsitory;
 import com.Search_Thesis.Search_Thesis.resposity.Folder_Reids_respository;
 import com.Search_Thesis.Search_Thesis.resposity.Folder_Respository;
@@ -69,6 +66,9 @@ public class Document_rest {
     ExecutorService threadpool = Executors.newCachedThreadPool();
     private List<Document> documentList;
     Future<List<Folder>> futureTask;
+
+    @Autowired
+    JWT_Services jwt_services ;
 
     List<Folder> list_folder = new ArrayList<>();
 
@@ -177,8 +177,8 @@ public class Document_rest {
 
     @GetMapping("/check_folder")
     public ResponseEntity check_folder(@RequestParam("folder") String folder) {
-
-        Folder folder1 = folder_respository.findByTitle(folder);
+        System.out.println(folder);
+        List<Folder> folder1 = folder_respository.findByTitle(folder);
         if (folder == null) {
             return ResponseEntity.ok(true);
         } else {
@@ -188,11 +188,15 @@ public class Document_rest {
     }
 
     @PostMapping("/create_new_folder")
-    public void create_folder(@RequestBody Create_folder Create_folder) {
+    public void create_folder(@RequestBody Create_folder Create_folder , @RequestParam("token") String token) {
+        jwt_services.setJwt(token);
+        JSONObject jsonObject = jwt_services.getPayload();
+        int user_id = (int) jsonObject.get("id");
+        Create_folder.setUser_id(String.valueOf(user_id));
 
+        Category_document categoryDocument =  category_document_responsitory.findByCode(Create_folder.getCode()) ;
+        Create_folder.setName(categoryDocument.getName());
         try {
-
-
             applicationEventPublisher.publishEvent(new Create_folder_Event(this, Create_folder));
 
         } catch (Exception e) {

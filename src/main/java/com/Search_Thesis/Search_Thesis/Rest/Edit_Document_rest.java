@@ -18,11 +18,12 @@ import com.Search_Thesis.Search_Thesis.resposity.User_respository;
 import lombok.Data;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -55,13 +56,23 @@ public class Edit_Document_rest {
     Document_Service_redis document_service_redis ;
     @Autowired
     Category_redis_Services category_redis_services ;
+    @Autowired
+    CacheManager  cacheManager;
 
     @Autowired
     User user ;
+    @PostConstruct
+    public void Cache_Clear() {
+        for(String name:cacheManager.getCacheNames()){
+            System.out.println(name);           // clear cache by name
+        }
+
+    }
 
     @GetMapping("/displayfolder/{code}")
     public ResponseEntity display_document(@PathVariable String code) {
         List<Folder> folderList =  document_services_2.getMap_category_Folder().get(code) ;
+        System.out.println(folderList);
 
 
         return  ResponseEntity.ok(folderList) ;
@@ -191,27 +202,43 @@ public class Edit_Document_rest {
         response.addCookie(cookie1);
         Cookie[] allCookies = request.getCookies();
     }
+    @DeleteMapping("/Reject_Change")
+    public void clear_deleteRequest(HttpServletRequest request , HttpServletResponse response) {
 
-    @DeleteMapping("/delete_folder/{id_folder}")
-    public ResponseEntity deleteFolder(HttpServletResponse response ,  HttpServletRequest request, @PathVariable String id_folder  ) {
+        deleteCookie(request , response ,"deleteRequest" );
+
+    }
+
+    @PostMapping ("change_name/{new_name}")
+    public void Change_name(@PathVariable String new_name ,  @RequestParam("ID")  String id) {
+        edit_document_services.Change_Name(new_name , id);
+    }
+
+    @DeleteMapping("/save_change/{code}/{id_folder}/{change_name}")
+    public ResponseEntity deleteFolder(HttpServletResponse response , HttpServletRequest request, @PathVariable String id_folder, @PathVariable String change_name, @PathVariable String code) {
+        System.out.println("DELETE_DOCUMENT");
 
         String deleteList =    ReadCookies(request , "deleteRequest") ;
-        deleteCookie(request , response , "deleteRequest");
+
         List<String> myList = new ArrayList<String>(Arrays.asList(deleteList.split("_")));
+        if(!change_name.equals( "None")) {
+            edit_document_services.Change_Name(change_name  , id_folder);
+        }
 
         if(deleteList.equals(id_folder+"_all")) {
-            edit_document_services.Delete_Folder(id_folder);
+            edit_document_services.Delete_Folder(id_folder, code);
         }
         else {
 
             System.out.println(myList);
-            edit_document_services.Delete_Document(myList);
-
+            edit_document_services.Delete_Document(myList , id_folder);
         }
+        deleteCookie(request , response ,"deleteRequest" );
+
 //
         return null ;
     }
-    @Cacheable(value = "pagination"  , key = "{#page_num  ,  #code ,  #filter}")
+//    @Cacheable(value = "pagination"  , key = "{#page_num  ,  #code ,  #filter}")
     @GetMapping("pagination/{page_num}/{code}/{filter}")
     public ResponseEntity pagination_document(@PathVariable String page_num, @PathVariable String code, @PathVariable String filter) {
         int page =  Integer.parseInt(page_num) ;

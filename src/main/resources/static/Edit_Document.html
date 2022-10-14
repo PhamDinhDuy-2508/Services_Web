@@ -428,7 +428,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Thay Đổi</button>
+                            <a type="button" class="btn btn-primary"onclick="change()">Thay Đổi</a>
                         </div>
                     </div>
                 </div>
@@ -1136,6 +1136,10 @@
             </p>
         </div>
     </div>
+
+
+    <!-- Modal -->
+
 </footer>
 <!-- End footer Area -->
 
@@ -1154,7 +1158,19 @@
 <script src="js/gmaps.min.js"></script>
 <script src="js/main.js"></script>
 
+<script>
+    function  change() {
+        var id_folder =  $("#ID_Folder_1").text()
+        var name  = $("#Folder-name").val()
+        console.log(id_folder)
+        if(name ===null) {
+            name =  "None"
+        }
+        alert("Oke")
+        Save_change(id_folder  , name )
+    }
 
+</script>
 <script>
     $.fn.extend({
         treed: function (o) {
@@ -1281,7 +1297,6 @@
         }
 
 
-
         var settings = {
             "url": "http://localhost:8080/api/ckt/display_category/"+token,
             "method": "GET",
@@ -1405,7 +1420,7 @@
                     "\n" +
                     "                        </h5>\n" +
                     "                        <p class=\"card-text\">"+ Json[i].publish_date+ "</p>\n" +
-                    "                        <a " +  View_folder +   "class=\"card-link text-primary mt-20\" style='cursor: pointer ; width: 8rem ; border-radius: 5px;height: 8rem' data-toggle='modal'    data-target='#myModal'> Xem</a>\n" +
+                    // "                        <a " +  View_folder +   "class=\"card-link text-primary mt-20\" style='cursor: pointer ; width: 8rem ; border-radius: 5px;height: 8rem' data-toggle='modal'    data-target='#myModal'> Xem</a>\n" +
                     "                        <a " +  edit_folder +   "class=\"card-link mt-20\" style='cursor: pointer ; width: 8rem ; border-radius: 5px;height: 8rem' data-toggle='modal'  data-target='#EditFolder'>Chỉnh Sửa</a>\n" +
                     "                        <a " +  delete_folder +   "class=\"card-link text-danger mt-20\" style='cursor: pointer ; width: 8rem ; border-radius: 5px;height: 8rem'>Xóa</a>\n" +
                     "                    </div>\n" +
@@ -1416,6 +1431,7 @@
             }
             var url_upload = "href='/document_upload"+window.location.search+"'"
             console.log(window.location.search)
+
             $('#folder_list').append(" <div class='btn-group'>" +
                 "                    <a class='btn-outline-info'" +  url_upload+ " style='border-radius: 60px' >" +
                 "                        <i> <img src='img/plus.png' width='30' > </i>" +
@@ -1462,7 +1478,7 @@
             for (let i = 0; i < Json.length; i++) {
 
                 var onclick = "onclick='show_folder(" + Json[i].idFolder + ")'"
-                var delete_folder =  "onclick = 'delete_folder(" + Json[i].idFolder+")'"
+                var delete_folder =  "onclick = 'save_delete_folder_(" + Json[i].idFolder+",)'"
                 var edit_folder =  "onclick = 'Edit_Folder(" + Json[i].idFolder+ ")'"
                 var View_folder =  "onclick = 'View_Folder(" + Json[i].idFolder+")'"
 
@@ -1485,7 +1501,7 @@
                     "\n" +
                     "                        </h5>\n" +
                     "                        <p class=\"card-text\">"+ Json[i].publish_date+ "</p>\n" +
-                    "                        <a " +  View_folder +   "class=\"card-link text-primary mt-20\" style='cursor: pointer ; width: 8rem ; border-radius: 5px;height: 8rem' data-toggle='modal'    data-target='#myModal'> Xem</a>\n" +
+                    // "                        <a " +  View_folder +   "class=\"card-link text-primary mt-20\" style='cursor: pointer ; width: 8rem ; border-radius: 5px;height: 8rem' data-toggle='modal'    data-target='#myModal'> Xem</a>\n" +
                     "                        <a " +  edit_folder +   "class=\"card-link mt-20\" style='cursor: pointer ; width: 8rem ; border-radius: 5px;height: 8rem' data-toggle='modal'  data-target='#EditFolder'>Chỉnh Sửa</a>\n" +
                     "                        <a " +  delete_folder +   "class=\"card-link text-danger mt-20\" style='cursor: pointer ; width: 8rem ; border-radius: 5px;height: 8rem'>Xóa</a>\n" +
                     "                    </div>\n" +
@@ -1518,6 +1534,93 @@
         }
     })
 
+</script>
+<script>
+
+function  save_delete_document(id_folder,Id) {
+
+    var settings = {
+        "url": "http://localhost:8080/api/ckt/deleteFolderRequest/"+id_folder+"/"+Id,
+        "method": "POST",
+        "timeout": 0,
+        "processData": false,
+        "mimeType": "multipart/form-data",
+        "contentType": false,
+        "data": form
+    };
+
+    $.ajax(settings).done(function (response) {
+        console.log(response);
+    });
+}
+</script>
+
+<script>
+    function Save_change(id_folder , new_name){
+        const queryString = window.location.search;
+        console.log(queryString);
+        const urlParams = new URLSearchParams(queryString);
+            let code = urlParams.get("code")
+        console.log(new_name.length)
+        if(new_name.length == 0 ) {
+            new_name =  "None"
+        }
+
+        alert("http://localhost:8080/api/ckt/save_change/"+code+"/"+id_folder+"/"+new_name)
+
+
+        var settings = {
+            "url": "http://localhost:8080/api/ckt/save_change/"+code+"/"+id_folder+"/"+new_name,
+            "method": "DELETE",
+            "timeout": 0,
+            "processData": false,
+            "mimeType": "multipart/form-data",
+            "contentType": false,
+        };
+
+        $.ajax(settings).done(function (response) {
+            console.log(response);
+        });
+    }
+</script>
+
+<script>
+    function save_delete_folder_(ID) {
+
+        var settings = {
+            "url": "http://localhost:8080/api/ckt/deleteFolderRequest/"+ID+"/all",
+            "method": "POST",
+            "timeout": 0,
+            "processData": false,
+            "mimeType": "multipart/form-data",
+            "contentType": false,
+        };
+
+        $.ajax(settings).done(function (response) {
+            console.log(response);
+        });
+
+
+        if( confirm("Bạn có muốn xóa thư mục " +  ID ) == true) {
+            Save_change(ID , "None")
+        }
+        else {
+            // alert("Oke")
+
+            var settings = {
+                "url": "http://localhost:8080/api/ckt/Reject_Change",
+                "method": "DELETE",
+                "timeout": 0,
+                "processData": false,
+                "mimeType": "multipart/form-data",
+                "contentType": false,
+            };
+
+            $.ajax(settings).done(function (response) {
+                console.log(response);
+            });
+        }
+    }
 </script>
 <script>
     function  reload_page(page , code , Filter){
@@ -1597,7 +1700,7 @@
                         "\n" +
                         "                        </h5>\n" +
                         "                        <p class=\"card-text\">"+ Json[i].publish_date+ "</p>\n" +
-                        "                        <a " +  View_folder +   "class=\"card-link text-primary mt-20\" style='cursor: pointer ; width: 8rem ; border-radius: 5px;height: 8rem' data-toggle='modal'    data-target='#myModal'> Xem</a>\n" +
+                        // "                        <a " +  View_folder +   "class=\"card-link text-primary mt-20\" style='cursor: pointer ; width: 8rem ; border-radius: 5px;height: 8rem' data-toggle='modal'    data-target='#myModal'> Xem</a>\n" +
                         "                        <a " +  edit_folder +   "class=\"card-link mt-20\" style='cursor: pointer ; width: 8rem ; border-radius: 5px;height: 8rem' data-toggle='modal'  data-target='#EditFolder'>Chỉnh Sửa</a>\n" +
                         "                        <a " +  delete_folder +   "class=\"card-link text-danger mt-20\" style='cursor: pointer ; width: 8rem ; border-radius: 5px;height: 8rem'>Xóa</a>\n" +
                         "                    </div>\n" +
@@ -1618,15 +1721,17 @@
 
     }
 </script>
+<script>
+</script>
 
 
 <script>
     function delete_folder(ID){
-        alert(ID)
+       save_delete_folder_(ID)
     }
     function Edit_Folder(ID) {
         var settings = {
-            "url": "http://localhost:8080/api/ckt/Edit_Folder/" + ID ,
+            "url": "http://localhost:8080/api/ckt/display_document?ID=" + ID ,
             "method": "GET",
             "timeout": 0,
             "headers": {
@@ -1638,9 +1743,13 @@
         };
 
         $.ajax(settings).done(function (response) {
-             response_json = JSON.parse(response)
-            name =  response_json.name
-            List_file  =  response_json.document
+            console.log(response)
+
+            $('#table_file_View').empty()
+
+            JSON_arr = JSON.parse(response)
+            console.log(JSON_arr)
+            List_file  =  JSON_arr
             // console.log(name ,  List_file)
             var onclick =  "/api/ckt/download_zip/"+ID
             $('#ID_Folder_1').text(ID)
@@ -1658,7 +1767,10 @@
             for (var i = 0; i < List_file.length; i++) {
                 name =  name.replace(/\s/g ,'')
                 var download_folder = "/api/ckt/download/" + List_file[i].id + "/" +List_file[i].id
-                console.log(download_folder)
+                var _delete_Document =  "onclick = 'Del_Document(" +List_file[i].id+")'"
+
+
+
                 $('#table_fil_folder').append(" <tr id = " + List_file[i].id + ">" +
                     "                                            <td>" +
                     "                                            <a  target='_blank' rel='noopener noreferrer' href='/api/ckt/Preview_file/" + List_file[i].id + "' class = 'text-dark stretched-link'>" + List_file[i].title +
@@ -1669,7 +1781,7 @@
                     "                                                <i> <img src='img/download.png' width='20'></i>" +
 
                     "                                            </a>" +
-                    "                                            <a type='button' role='button' href='' class = 'btn btn-outline-danger'>" +
+                    "                                            <a type='button' role='button'"+ _delete_Document + " class = 'btn btn-outline-danger'>" +
                     "                                                <i> <img src='img/delete.png' width='20'></i>" +
 
                     "                                            </a>" +
@@ -1679,6 +1791,29 @@
             }
 
         });
+
+    }
+    function Del_Document(ID){
+        var id_folder = $('#ID_Folder_1').text()
+        alert(ID)
+        alert(id_folder)
+        if(ID != null) {
+            var settings = {
+                "url": "http://localhost:8080/api/ckt/deleteFolderRequest/" + id_folder + "/" + ID,
+                "method": "POST",
+                "timeout": 0,
+                "processData": false,
+                "mimeType": "multipart/form-data",
+                "contentType": false,
+            };
+            $.ajax(settings).done(function (response) {
+                console.log(response);
+            });
+
+        }
+
+
+
     }
     function View_Folder(ID){
         var settings = {
@@ -1711,7 +1846,6 @@
                 var name = JSON_arr[i].title
                 name =  name.replace(/\s/g ,'')
                 var download_folder = "/api/ckt/download/" + JSON_arr[i].id + "/" +JSON_arr[i].id
-                var delete_document = "Delete_document(this," + ID +")"
 
                 console.log(download_folder)
                 $('#table_file_View').append(" <tr id = " + JSON_arr[i].id + ">" +
@@ -1730,6 +1864,26 @@
     }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+<script>
+    $('#EditFolder').on('hidden.bs.modal', function () {
+        var settings = {
+            "url": "http://localhost:8080/api/ckt/Reject_Change",
+            "method": "DELETE",
+            "timeout": 0,
+            "processData": false,
+            "mimeType": "multipart/form-data",
+            "contentType": false,
+        };
+
+        $.ajax(settings).done(function (response) {
+
+            console.log(response);
+        });
+    })
+</script>
+<script>
+
+</script>
 
 <script>
     function  get_Cookie(cname) {
@@ -1739,11 +1893,13 @@
 
     }
 </script>
-<script >
+<script type="text/javascript" >
 function  Load_History() {
 
     var token = get_Cookie("login_jwt")
     console.log(token)
+
+
 
     var settings = {
         "url": "http://localhost:8080/api/ckt/load_history/"+token,
@@ -1758,32 +1914,43 @@ function  Load_History() {
     };
 
     $.ajax(settings).done(function (response) {
-        for (let i = 0  ; i < response[0].length ; i++ ) {
-            console.log(response[0])
-            console.log(response[0][i].name)
-            $('#table_History').append(" <tr id = " + response[0][i].idFolder + ">" +
+        console.log(response)
+        var document_history = response.document_histories
+        var document_folder = response.folder_histories
+
+
+        console.log(document_history.length)
+        console.log(document_history)
+        $('#table_History').empty()
+
+        for (let i = 0  ; i < document_folder.length ; i++ ) {
+            var type_ID  =document_folder[i].idFolder
+
+
+            var backup_folder =  "onclick = 'Backup_database_folder("+type_ID+")'"
+
+            $('#table_History').append(" <tr id = " + document_folder[i].idFolder + ">" +
                 "                                            <td width='80%'> " +
-                "                                            <a  target='_blank' rel='noopener noreferrer' href='' class = 'text-dark stretched-link'>Folder : " +response[0][i].title +
+                "                                            <a  target='_blank' rel='noopener noreferrer' href='' class = 'text-dark stretched-link'>Folder : " +document_folder[i].title +
                 "                                            </a>" +
                 "                                            </td>" +
                 "                                            <td width='20%'>" +
-                "                                            <a type='button' role='button' href='' class = 'btn btn-outline-primary'>" +
+                "                                            <a type='button' role='button' "+backup_folder +" class = 'btn btn-outline-primary'>" +
                 "                                                <i> <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjJeL_L-SNFHInEXuT8ZPqEzUuyySgdOe1EcIuh68&s' width='25'></i>" +
                 "                                            </a>" +
                 "                                            </td>" +
                 "                                        </tr>")
 
         }
-        for (let i = 0  ; i < response[1].length ; i++ ) {
-            console.log(response[1])
-            console.log(response[1][i].name)
-            $('#table_History').append(" <tr id = " + response[0][i].idFolder + ">" +
+        for (let i = 0  ; i < document_history.length ; i++ ) {
+            var backup_folder =  "onclick = 'Backup_database_document(" + document_history[i].id+ ")'"
+            $('#table_History').append(" <tr id = " +   document_history[i].id + ">" +
                 "                                            <td width='80%'> " +
-                "                                            <a  target='_blank' rel='noopener noreferrer' href='' class = 'text-dark stretched-link'>Document : " +response[0][i].title +
+                "                                            <a  target='_blank' rel='noopener noreferrer' href='' class = 'text-dark stretched-link'>Document : " + document_history[i].title +
                 "                                            </a>" +
                 "                                            </td>" +
                 "                                            <td width='20%'>" +
-                "                                            <a type='button' role='button' href='' class = 'btn btn-outline-primary'>" +
+                "                                            <a type='button' id='backup_button' role='button' " +backup_folder+ " class = 'btn btn-outline-primary'>" +
                 "                                                <i> <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjJeL_L-SNFHInEXuT8ZPqEzUuyySgdOe1EcIuh68&s' width='25'></i>" +
                 "                                            </a>" +
                 "                                            </td>" +
@@ -1792,6 +1959,51 @@ function  Load_History() {
         }
     });
 }
+</script>
+<script type="text/javascript">
+    function Backup_database_document(type_ID) {
+        var token =  get_Cookie("login_jwt")
+
+        var settings = {
+            "url": "http://localhost:8080/api/ckt/Backup_Document/document/"+type_ID+"?token="+token,
+            "method": "GET",
+            "timeout": 0,
+            "headers": {
+                "Authorization": "Basic aGllcHNpOjEyMw==",
+                "Content-Type": "application/json"
+            },
+
+        };
+
+        $.ajax(settings).done(function (response) {
+            console.log(response);
+        });
+    }
+    function Backup_database_folder(type_ID) {
+        var token =  get_Cookie("login_jwt")
+
+
+        var settings = {
+            "url": "http://localhost:8080/api/ckt/Backup_Document/folder/"+type_ID+"?token="+token,
+            "method": "GET",
+            "timeout": 0,
+            "headers": {
+                "Authorization": "Basic aGllcHNpOjEyMw==",
+                "Content-Type": "application/json"
+            },
+
+        };
+
+        $.ajax(settings).done(function (response) {
+            console.log(response);
+        });
+
+    }
+</script>
+<script>
+    $("#table_History").on("click", "#backup_button", function() {
+        $(this).closest("tr").remove();
+    });
 </script>
 <script>
     $(document).ready(function () {
@@ -1846,6 +2058,27 @@ function  Load_History() {
 
         });
     })
+</script>
+<script>
+    function Backup_Data(type , id) {
+        var settings = {
+            "url": "http://localhost:8080/api/ckt/Backup_Document/folder/2582?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoaWVwc2lydWEiLCJwYXNzd29yZCI6Intub29wfTI1MDgyMDAwIiwiaWQiOjEsImV4cCI6MTY2NDk3ODg4OSwiaWF0IjoxNjY0OTQyODg5fQ.0VJ1TPHpxQHDsYMN_gZexy8bcDz10h0MlYr8Ea86OJ_ADEM3SOf6_aUdF6827vBXA0Gc3f-dpJrneIPq0U1LYg",
+            "method": "GET",
+            "timeout": 0,
+            "headers": {
+                "Authorization": "Basic aGllcHNpOjEyMw==",
+                "Content-Type": "application/json",
+                "Cookie": "SESSION=NzhhMzdjMDYtNTM1Yi00YmI4LTk0NGItODViYWJiMGM3MWEx"
+            },
+            "data": JSON.stringify({
+                "email": "hiepsirua75@gmail.com"
+            }),
+        };
+
+        $.ajax(settings).done(function (response) {
+            console.log(response);
+        });
+    }
 </script>
 <script>
     $(document).ready(function () {
@@ -1905,8 +2138,7 @@ function  Load_History() {
         });
     })
 </script>
-<script>
-
+</script>
 
 </script>
 
