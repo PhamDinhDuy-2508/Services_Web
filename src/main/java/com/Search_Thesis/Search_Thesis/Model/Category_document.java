@@ -23,7 +23,7 @@ public class Category_document implements Serializable {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name ="category_id" )
 
-    private  int category_id = 0 ;
+    private  int category_id =0 ;
 
     @Column
     @Expose

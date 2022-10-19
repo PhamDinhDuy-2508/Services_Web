@@ -1,6 +1,7 @@
 package com.Search_Thesis.Search_Thesis.Model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Scope;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Data
@@ -20,6 +22,7 @@ import javax.persistence.*;
 @Table(name = "User")
 public class User {
     private static final long serialVersionUID = -297553281792804396L;
+
 
     @Column
     private String first_name  ;
@@ -67,6 +70,13 @@ public class User {
 
     @Column
     private String resettoken= "" ;
+
+    @OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER, mappedBy = "creator")
+    @JsonIgnore
+    private Set<Question> questionList ;
+
+
+
 
     @Override
     public String toString() {

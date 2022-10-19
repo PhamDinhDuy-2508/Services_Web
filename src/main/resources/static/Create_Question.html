@@ -1,0 +1,390 @@
+<!DOCTYPE HTML>
+<html lang="zxx" class="no-js">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font: 16px Arial;
+        }
+
+        /*the container must be positioned relative:*/
+        .autocomplete {
+            position: relative;
+            display: inline-block;
+        }
+
+        input {
+            border: 1px solid transparent;
+            background-color: #f1f1f1;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        input[type=text] {
+            background-color: #f1f1f1;
+            width: 100%;
+        }
+
+        input[type=submit] {
+            background-color: DodgerBlue;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .autocomplete-items {
+            position: absolute;
+            border: 1px solid #d4d4d4;
+            border-bottom: none;
+            border-top: none;
+            z-index: 99;
+            /*position the autocomplete items to be the same width as the container:*/
+            top: 100%;
+            left: 0;
+            right: 0;
+        }
+
+        .autocomplete-items div {
+            padding: 10px;
+            cursor: pointer;
+            background-color: #fff;
+            border-bottom: 1px solid #d4d4d4;
+        }
+
+        /*when hovering an item:*/
+        .autocomplete-items div:hover {
+            background-color: #e9e9e9;
+        }
+
+        /*when navigating through the items using the arrow keys:*/
+        .autocomplete-active {
+            background-color: DodgerBlue !important;
+            color: #ffffff;
+        }
+    </style>
+    <!-- Favicon-->
+    <link rel="shortcut icon" href="img/applie_science.png ">
+    <!-- Author Meta -->
+    <meta name="author" content="CodePixar">
+    <!-- Meta Description -->
+    <meta name="description" content="">
+    <!-- Meta Keyword -->
+    <meta name="keywords" content="">
+    <!-- meta character set -->
+    <meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!-- Font Icon -->
+    <link rel="stylesheet" href="fonts/material-icon/css/material-design-iconic-font.min.css">
+
+    <!-- Main css -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Site Title -->
+    <title>CKT Service login</title>
+
+    <!--
+        CSS
+        ============================================= -->
+    <link rel="stylesheet" href="css/linearicons.css">
+    <link rel="stylesheet" href="css/owl.carousel.css">
+    <link rel="stylesheet" href="css/themify-icons.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/nice-select.css">
+    <link rel="stylesheet" href="css/nouislider.min.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src ="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"></script>
+    <script src="js/editor.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+    <script>
+        $(document).ready(function() {
+            $("#txtEditor").Editor();
+            $("#email").hide()
+        });
+    </script>
+    <script>
+
+        </script>
+<!--    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">-->
+    <link href="css/editor.css" type="text/css" rel="stylesheet"/>
+<!--    <title>LineControl | v1.1.0</title>-->
+</head>
+<body>
+
+<header class="header_area sticky-header">
+        <nav class="navbar navbar-expand-lg navbar-light main_box">
+            <div class="container">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <a class="navbar-brand logo_h" href="index.html"><img src="img/applie_science.png"  width="70" alt=""></a>
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav menu_nav ml-auto">
+
+
+                        <li class="nav-item submenu dropdown ">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                               aria-expanded="false">Login Page</a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item active"><a class="nav-link" href="login.html">Login</a></li>
+                                <li class="nav-item"><a class="nav-link" href="tracking.html">Tracking</a></li>
+                                <li class="nav-item"><a class="nav-link" href="elements.html">Elements</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item"><a class="nav-link" href=/home>Trang Chủ</a></li>
+
+                        <li class="nav-item"><a class="nav-link" href="/question">Câu hỏi</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+
+</header>
+<section class="banner-area organic-breadcrumb">
+<!--    <div class="container">-->
+<!--        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">-->
+<!--            <div class="col-first">-->
+<!--                <h1>Register</h1>-->
+<!--                <nav class="d-flex align-items-center">-->
+<!--                    <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>-->
+<!--                    <a href="category.html">Register</a>-->
+<!--                </nav>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<div class="main">
+
+
+
+        <!-- <img src="images/signup-bg.jpg" alt=""> -->
+        <div class="container">
+
+
+            <div class="signup-content">
+                <h2 class="form-title text-dark ">Đặt Câu hỏi</h2>
+
+
+
+                <h3 class="form-title text-dark ">Tiêu đề</h3>
+
+                <div class="form-group">
+                    <input type="text" class="form-input" name="name" id="Title" placeholder="Tiêu đề"/>
+                </div>
+                <h3 class="form-title text-dark ">Gắn thẻ</h3>
+
+                <div>
+                    <input type="text" class="form-input" name="name" id="category" placeholder="Gắn thẻ"/>
+                </div>
+                <h3 class="form-title text-dark ">Tên hiển thị</h3>
+
+                <div>
+                    <input type="text" class="form-input" id="name_user" placeholder="Tên"/>
+                </div>
+                <h3 class="form-title text-dark "> nội dung chi tiết</h3>
+
+                <div class="container-fluid">
+
+        <div class="row">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 nopadding">
+                        <textarea id="txtEditor"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+                <div class="form-check form-switch">
+                    <input  class="form-check-input" type="checkbox" name="sendmail" id="sendmail" class="agree-term" onclick="senmail()" />
+                    <label for="sendmail" class=" text-dark"><span><span></span></span>
+                        Gửi Email mỗi khi có câu trả lời hoặc bình luận mới
+                    </label>
+                </div>
+                <div class="form-group">
+                    <input type="email" class="form-input" name="email" id="email" placeholder="Your Email"/>
+                </div>
+                <div class="form-group">
+                    <button type="submit" name="submit" id="submit" class="primary-btn" onclick="create_question()"  >Đăng</button>
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+
+</div>
+</div>
+
+
+
+
+<div class="container-fluid footer">
+    <p class="pull-right">&copy; Suyati Technologies <script>document.write(new Date().getFullYear())</script>. All rights reserved.</p>
+</div>
+
+
+
+<script>
+function  create_question() {
+    var title = $("#Title").val()
+    var category = $("#category").val()
+    var content = $("#txtEditor").Editor("getText")
+    var name_display = $("#name_user").val()
+    var email =  $("#email").val()
+    var settings = {
+        "url": "http://localhost:8080/api/ckt/create_question/?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoaWVwc2lydWEiLCJwYXNzd29yZCI6Intub29wfSQyYSQxMiRrR3JGcUtQWndYZDFGLkFVLzBoNDd1ZDl1aG4vUFlJdlNTUzBibzkva3hPLlluVi81T0RiSyIsImlkIjoxLCJleHAiOjE2NjYxODYwOTEsImlhdCI6MTY2NjE1MDA5MX0.YKPYDV1kvzdcn5uFDkZ0p9froCV0dLfP2BMSlpjVeJMn43-BmoWGiHcA4VsP47LGJnGGsS02w9QhaQJw1Y_Yjg",
+        "method": "POST",
+        "timeout": 0,
+        "headers": {
+            "Content-Type": "application/json",
+            "Cookie": "SESSION=NDE3MTg0YWUtNjFmMi00OWM2LTk5NjItMWFmOGIzYTkwOGMx"
+        },
+        "data": JSON.stringify({
+            "Title": title,
+            "Content": content,
+            "Category": category,
+            "name_display":name_display,
+            "email_send": email
+        }),
+
+    };
+    console.log(title , content ,category ,name_display )
+
+
+
+}
+
+</script>
+    <script>function autocomplete(inp, arr) {
+        /*the autocomplete function takes two arguments,
+        the text field element and an array of possible autocompleted values:*/
+        var currentFocus;
+        /*execute a function when someone writes in the text field:*/
+        inp.addEventListener("input", function(e) {
+            var a, b, i, val = this.value;
+            /*close any already open lists of autocompleted values*/
+            closeAllLists();
+            if (!val) { return false;}
+            currentFocus = -1;
+            /*create a DIV element that will contain the items (values):*/
+            a = document.createElement("DIV");
+            a.setAttribute("id", this.id + "autocomplete-list");
+            a.setAttribute("class", "autocomplete-items");
+            /*append the DIV element as a child of the autocomplete container:*/
+            this.parentNode.appendChild(a);
+            /*for each item in the array...*/
+            for (i = 0; i < arr.length; i++) {
+                /*check if the item starts with the same letters as the text field value:*/
+                if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                    /*create a DIV element for each matching element:*/
+                    b = document.createElement("DIV");
+                    /*make the matching letters bold:*/
+                    b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                    b.innerHTML += arr[i].substr(val.length);
+                    /*insert a input field that will hold the current array item's value:*/
+                    b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                    /*execute a function when someone clicks on the item value (DIV element):*/
+                    b.addEventListener("click", function(e) {
+                        /*insert the value for the autocomplete text field:*/
+                        inp.value = this.getElementsByTagName("input")[0].value;
+                        /*close the list of autocompleted values,
+                        (or any other open lists of autocompleted values:*/
+                        closeAllLists();
+                    });
+                    a.appendChild(b);
+                }
+            }
+        });
+        /*execute a function presses a key on the keyboard:*/
+        inp.addEventListener("keydown", function(e) {
+            var x = document.getElementById(this.id + "autocomplete-list");
+            if (x) x = x.getElementsByTagName("div");
+            if (e.keyCode == 40) {
+                /*If the arrow DOWN key is pressed,
+                increase the currentFocus variable:*/
+                currentFocus++;
+                /*and and make the current item more visible:*/
+                addActive(x);
+            } else if (e.keyCode == 38) { //up
+                /*If the arrow UP key is pressed,
+                decrease the currentFocus variable:*/
+                currentFocus--;
+                /*and and make the current item more visible:*/
+                addActive(x);
+            } else if (e.keyCode == 13) {
+                /*If the ENTER key is pressed, prevent the form from being submitted,*/
+                e.preventDefault();
+                if (currentFocus > -1) {
+                    /*and simulate a click on the "active" item:*/
+                    if (x) x[currentFocus].click();
+                }
+            }
+        });
+        function addActive(x) {
+            /*a function to classify an item as "active":*/
+            if (!x) return false;
+            /*start by removing the "active" class on all items:*/
+            removeActive(x);
+            if (currentFocus >= x.length) currentFocus = 0;
+            if (currentFocus < 0) currentFocus = (x.length - 1);
+            /*add class "autocomplete-active":*/
+            x[currentFocus].classList.add("autocomplete-active");
+        }
+        function removeActive(x) {
+            /*a function to remove the "active" class from all autocomplete items:*/
+            for (var i = 0; i < x.length; i++) {
+                x[i].classList.remove("autocomplete-active");
+            }
+        }
+        function closeAllLists(elmnt) {
+            /*close all autocomplete lists in the document,
+            except the one passed as an argument:*/
+            var x = document.getElementsByClassName("autocomplete-items");
+            for (var i = 0; i < x.length; i++) {
+                if (elmnt != x[i] && elmnt != inp) {
+                    x[i].parentNode.removeChild(x[i]);
+                }
+            }
+        }
+        /*execute a function when someone clicks in the document:*/
+        document.addEventListener("click", function (e) {
+            closeAllLists(e.target);
+        });
+
+    </script>
+<script>
+
+function senmail() {
+    if(    $('#sendmail').is(':checked') ) {
+        $("#email").show()
+
+    }
+    else {
+        $("#email").hide()
+
+    }
+
+}
+</script>
+</html>

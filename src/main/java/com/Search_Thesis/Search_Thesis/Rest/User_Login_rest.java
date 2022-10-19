@@ -1,9 +1,11 @@
 package com.Search_Thesis.Search_Thesis.Rest;
 
+import com.Search_Thesis.Search_Thesis.JWT.JwtTokenProvider;
 import com.Search_Thesis.Search_Thesis.Model.Authencation_Request;
 import com.Search_Thesis.Search_Thesis.Model.Authencation_Response;
 import com.Search_Thesis.Search_Thesis.Model.Login_info;
 import com.Search_Thesis.Search_Thesis.Model.User;
+import com.Search_Thesis.Search_Thesis.Security.CustomerDetails;
 import com.Search_Thesis.Search_Thesis.Services.Login_Services;
 import com.Search_Thesis.Search_Thesis.Services.Session_Service;
 import com.Search_Thesis.Search_Thesis.Services.customerDetailsServices;
@@ -15,12 +17,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -35,8 +38,7 @@ public class User_Login_rest {
     @Autowired
     private User user ;
 
-    @Autowired
-    private AuthenticationManager authenticationManager  ;
+
 
    private UserDetailsService userDetailsService ;
     @Autowired
@@ -49,20 +51,62 @@ public class User_Login_rest {
 
     @Autowired
     User_respository user_respository ;
+    @Autowired
+    AuthenticationManager authenticationManager;
+    @Autowired
+    private JwtTokenProvider tokenProvider;
+//    @Autowired
+//    PasswordEncoder passwordEncoder;
+
 
 
 
     @PostMapping("/login")
-    public boolean doCheckAccount (HttpServletRequest request) {
 
-        Login_Services login_services =  new Login_Services() ;
-        Cookie[] allCookies = request.getCookies();
+    public ResponseEntity< ? > doCheckAccount (@RequestBody Authencation_Request loginRequest) {
 
-        return true ;
+        String jwt = "" ;
+
+
+            try {
+                Authentication authentication = authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                loginRequest.getUsername(),
+                                loginRequest.getPassword()
+                        )
+                );
+                System.out.println("TTTT" + authentication);
+                jwt = tokenProvider.generateToken((CustomerDetails) authentication.getPrincipal());
+
+            }
+            catch (Exception e) {
+//                System.out.println("Test " + authenticationManager.authenticate(
+//                        new UsernamePasswordAuthenticationToken(
+//                                loginRequest.getUsername(),
+//                                loginRequest.getPassword()
+//                        )));
+
+                System.out.println(e.getMessage());
+            }
+
+//            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            System.out.println(jwt);
+
+
+
+
+        // Nếu không xảy ra exception tức là thông tin hợp lệ
+        // Set thông tin authentication vào Security Context
+
+        // Trả về jwt cho người dùng.
+        JWT_response  jwt_response =  new JWT_response() ;
+
+        jwt_response.setJwt(jwt);
+
+
+        return ResponseEntity.ok(jwt_response);
     }
-
-
-
 
     @PostMapping("/authencationRequest")
     public ResponseEntity  doCheck(@RequestBody Authencation_Request authencation_request , HttpServletResponse response , HttpServletRequest request) throws  Exception {
@@ -92,12 +136,9 @@ public class User_Login_rest {
 
                 login_services.Create_Cookie("login_jwt", jwt, response, request);
                 login_services.Create_Cookie("save_pass", authencation_request.getSave_pass(), response, request);
-                System.out.println("Right");
+
                 return ResponseEntity.ok(new Authencation_Response("wrong"));
-
-
             }
-
 
         }catch (Exception e) {
             System.out.println("Wrong");
@@ -126,10 +167,6 @@ public class User_Login_rest {
             httpSession.setAttribute("jwt_code" , token);
             httpSession.setMaxInactiveInterval(60*3600);
             System.out.println( httpSession.getAttribute("jwt_code"));
-
-
-
-
         }
 
     }
@@ -176,6 +213,11 @@ public class User_Login_rest {
 @Component("jwt_response")
  class JWT_response{
     String jwt ;
+}
+@Data
+class loginrequest{
+    String username ;
+    String password ;
 }
 
 

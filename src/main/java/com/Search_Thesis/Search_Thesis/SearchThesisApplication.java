@@ -1,12 +1,15 @@
 package com.Search_Thesis.Search_Thesis;
 
 import com.Search_Thesis.Search_Thesis.resposity.SignIn_Respository;
+import com.Search_Thesis.Search_Thesis.resposity.User_respository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 //@SpringBootApplication(scanBasePackages = {"com.Search_Thesis.Search_Thesis.resposity" ,
 //		"com.Search_Thesis.Search_Thesis.Services" ,"com.Search_Thesis.Search_Thesis.Model" ,
@@ -25,7 +28,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 public class SearchThesisApplication implements CommandLineRunner {
 
-
+	@Autowired
+	User_respository user_respository ;
+	@Autowired
+	PasswordEncoder passwordEncoder ;
 
 	public static void main(String[] args) {
 		SpringApplication.run(SearchThesisApplication.class, args);
@@ -33,6 +39,11 @@ public class SearchThesisApplication implements CommandLineRunner {
 //	private  final Root_Responsitory root_responsitory ;
 	@Override
 	public void run(String... args) throws Exception {
+//		User user =  new User() ;
+//		user.setAccount("PhamDinhDuy2508");
+//		user.setPassword(passwordEncoder.encode("25082000"));
+//		user_respository.save(user) ;
+
 
 //		Root_Folder root_folder =  new Root_Folder() ;
 //		root_folder.setId(2);
