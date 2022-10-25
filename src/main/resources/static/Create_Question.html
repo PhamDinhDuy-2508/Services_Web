@@ -252,8 +252,9 @@ function  create_question() {
     var content = $("#txtEditor").Editor("getText")
     var name_display = $("#name_user").val()
     var email =  $("#email").val()
+    var token =  get_Cookie("login_jwt")
     var settings = {
-        "url": "http://localhost:8080/api/ckt/create_question/?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoaWVwc2lydWEiLCJwYXNzd29yZCI6Intub29wfSQyYSQxMiRrR3JGcUtQWndYZDFGLkFVLzBoNDd1ZDl1aG4vUFlJdlNTUzBibzkva3hPLlluVi81T0RiSyIsImlkIjoxLCJleHAiOjE2NjYxODYwOTEsImlhdCI6MTY2NjE1MDA5MX0.YKPYDV1kvzdcn5uFDkZ0p9froCV0dLfP2BMSlpjVeJMn43-BmoWGiHcA4VsP47LGJnGGsS02w9QhaQJw1Y_Yjg",
+        "url": "http://localhost:8080/api/ckt/create_question/?token=" +  token,
         "method": "POST",
         "timeout": 0,
         "headers": {
@@ -269,23 +270,27 @@ function  create_question() {
         }),
 
     };
-    console.log(title , content ,category ,name_display )
-
-
+    $.ajax(settings).done(function (response) {
+        console.log(response);
+        alert(response)
+    });
 
 }
 
+
 </script>
-    <script>function autocomplete(inp, arr) {
-        /*the autocomplete function takes two arguments,
+    <script>function autocomplete(inarr) {
+        /*the autocomplete function tp, akes two arguments,
         the text field element and an array of possible autocompleted values:*/
         var currentFocus;
         /*execute a function when someone writes in the text field:*/
-        inp.addEventListener("input", function(e) {
+        inp.addEventListener("input", function (e) {
             var a, b, i, val = this.value;
             /*close any already open lists of autocompleted values*/
             closeAllLists();
-            if (!val) { return false;}
+            if (!val) {
+                return false;
+            }
             currentFocus = -1;
             /*create a DIV element that will contain the items (values):*/
             a = document.createElement("DIV");
@@ -305,7 +310,7 @@ function  create_question() {
                     /*insert a input field that will hold the current array item's value:*/
                     b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
                     /*execute a function when someone clicks on the item value (DIV element):*/
-                    b.addEventListener("click", function(e) {
+                    b.addEventListener("click", function (e) {
                         /*insert the value for the autocomplete text field:*/
                         inp.value = this.getElementsByTagName("input")[0].value;
                         /*close the list of autocompleted values,
@@ -317,7 +322,7 @@ function  create_question() {
             }
         });
         /*execute a function presses a key on the keyboard:*/
-        inp.addEventListener("keydown", function(e) {
+        inp.addEventListener("keydown", function (e) {
             var x = document.getElementById(this.id + "autocomplete-list");
             if (x) x = x.getElementsByTagName("div");
             if (e.keyCode == 40) {
@@ -341,6 +346,7 @@ function  create_question() {
                 }
             }
         });
+
         function addActive(x) {
             /*a function to classify an item as "active":*/
             if (!x) return false;
@@ -351,12 +357,14 @@ function  create_question() {
             /*add class "autocomplete-active":*/
             x[currentFocus].classList.add("autocomplete-active");
         }
+
         function removeActive(x) {
             /*a function to remove the "active" class from all autocomplete items:*/
             for (var i = 0; i < x.length; i++) {
                 x[i].classList.remove("autocomplete-active");
             }
         }
+
         function closeAllLists(elmnt) {
             /*close all autocomplete lists in the document,
             except the one passed as an argument:*/
@@ -367,13 +375,16 @@ function  create_question() {
                 }
             }
         }
+
         /*execute a function when someone clicks in the document:*/
         document.addEventListener("click", function (e) {
             closeAllLists(e.target);
         });
+    }
 
     </script>
 <script>
+
 
 function senmail() {
     if(    $('#sendmail').is(':checked') ) {
@@ -387,4 +398,11 @@ function senmail() {
 
 }
 </script>
+    <script>
+        function  get_Cookie(cname) {
+            let a = `; ${document.cookie}`.match(`;\\s*${cname}=([^;]+)`);
+            var value =  a.splice('=')[1]
+            return value
+        }
+    </script>
 </html>

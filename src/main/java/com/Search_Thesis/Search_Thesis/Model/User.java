@@ -20,7 +20,7 @@ import java.util.Set;
         proxyMode = ScopedProxyMode.TARGET_CLASS)
 @EnableAutoConfiguration
 @Table(name = "User")
-public class User {
+public class User  {
     private static final long serialVersionUID = -297553281792804396L;
 
 
@@ -74,6 +74,11 @@ public class User {
     @OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER, mappedBy = "creator")
     @JsonIgnore
     private Set<Question> questionList ;
+
+
+    @OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER, mappedBy = "user")
+    @JsonIgnore
+    private  Set<Reply> replySet ;
 
 
 

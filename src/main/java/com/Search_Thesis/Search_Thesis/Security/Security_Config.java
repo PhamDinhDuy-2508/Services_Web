@@ -63,7 +63,7 @@ public class Security_Config  extends WebSecurityConfigurerAdapter {
                 antMatchers("/load_user_token_Edit_page" , "/login" ,"/blog", "/sign_up","/reset_pass","/reset_pass/**",
                           "/profile/**","/forgot_password/**" ,"/home/**" ,"/api/ckt/**", "/css/**" , "/fonts/**" , "/img/**" ,"/js/**"
                         ,"/document/**" ,
-                        "/document_upload" ,"/load_user_token" , "/Create_question/**", "/question/**","/edit_document/**"  ,"/contact")
+                        "/document_upload" ,"/question_info/**","/load_user_token" , "/Create_question/**", "/question/**","/edit_document/**"  ,"/contact")
                 .permitAll().
                 anyRequest().authenticated().and().
 

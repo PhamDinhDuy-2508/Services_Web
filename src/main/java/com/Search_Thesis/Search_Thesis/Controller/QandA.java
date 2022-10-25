@@ -15,6 +15,11 @@ public class QandA {
     public String  QandA(){
       return "Q&A.html" ;
     }
+    @RequestMapping("/question_info")
+    public String  Display_detail(){
+        return "question.html" ;
+    }
+
 
     @RequestMapping("/Create_question")
 

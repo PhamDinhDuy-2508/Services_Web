@@ -1,6 +1,8 @@
 package com.Search_Thesis.Search_Thesis.Config;
 
 import com.Search_Thesis.Search_Thesis.Filter.Document_Filter;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock;
 import org.springframework.boot.autoconfigure.cache.RedisCacheManagerBuilderCustomizer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -14,6 +16,7 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -29,7 +32,9 @@ import java.time.Duration;
 
     public class WebConfig implements WebMvcConfigurer {
 
-        @Override
+
+
+    @Override
         public void addViewControllers(ViewControllerRegistry registry) {
         }
 
@@ -44,6 +49,7 @@ import java.time.Duration;
 
             return  registrationBean ;
         }
+
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
         JedisConnectionFactory jedisConFactory
@@ -54,7 +60,6 @@ import java.time.Duration;
         jedisConFactory.getPoolConfig().setMinIdle(10);
         return jedisConFactory;
     }
-
     @Bean
     public RedisTemplate<String, Object> redisTemplate() {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
@@ -63,6 +68,23 @@ import java.time.Duration;
 
         return template;
     }
+    @Bean
+    public CommonsMultipartResolver multipartResolver() {
+        CommonsMultipartResolver resolver = new CommonsMultipartResolver() ;
+        resolver.setDefaultEncoding("UTF-8");
+        return  resolver ;
+    }
+    @Bean
+    public Cloudinary cloudinary () {
+        Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+                "cloud_name" ,"digdf0acz" ,
+                        "api_key" ,"313475329574338" ,
+                        "api_secret" ,"PXQS7oQfMZhCgXFSIQWpeBgEWOc" ,
+                        "secure" ,true
+        )) ;
+        return cloudinary ;
+    }
+
 //    @Bean
 //    public JedisConnectionFactory connectionFactory() {
 //        RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();

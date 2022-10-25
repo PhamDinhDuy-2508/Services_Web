@@ -96,7 +96,7 @@ public class download_document_rest {
 //                        System.out.println("Thread1" + Thread.currentThread().getId());
 //
 //                        response.setStatus(HttpServletResponse.SC_OK);
-//                        response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + zipFileName + "\"") ;
+//                        response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename='" + zipFileName + "\"") ;
 //                        System.out.println("Done!!!");
 //
 //                        return null;

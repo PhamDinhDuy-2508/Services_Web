@@ -2,13 +2,12 @@ package com.Search_Thesis.Search_Thesis.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.annotations.Expose;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -17,13 +16,15 @@ import java.util.List;
 @Entity
 @Table(name = "question")
 @EnableAutoConfiguration
-public class Question {
+public class Question implements Serializable {
     @Id
     @Expose
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id_question")
 
     private  int Question_id = 0 ;
+
+
 
     @Column(name = "Date_create")
 
@@ -56,17 +57,23 @@ public class Question {
     @JoinColumn(name = "Creator_id"  , referencedColumnName = "user_id" ,columnDefinition = "json"
             , nullable = true)
     private User creator;
+    @Transient
     @ManyToMany(mappedBy = "questionList")
 
     private List<Category_Question> category_questions ;
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @EqualsAndHashCode.Exclude
 
-    @ToString.Exclude
-    @JoinTable(name = "reply_question", //Tạo ra một join Table tên là "address_person"
-            joinColumns = @JoinColumn(name = "id_ques"),  // TRong đó, khóa ngoại chính là address_id trỏ tới class hiện tại (Address)
-            inverseJoinColumns = @JoinColumn(name = "id_reply") )//Khóa ngoại thứ 2 trỏ tới thuộc tính ở dưới (Person)
+    @OneToMany(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY, mappedBy = "question")
+    @JsonIgnore
     private Collection< Reply  > reply ;
+    public Collection<Reply> getReply() {
+        return reply;
+    }
+
+    public void setReply(Collection<Reply> reply) {
+        this.reply = reply;
+    }
+
+
 
     public int getQuestion_id() {
         return Question_id;
@@ -133,8 +140,10 @@ public class Question {
                 ", Title='" + Title + '\'' +
                 ", View=" + View +
                 ", Vote=" + Vote +
+                ", Email='" + Email + '\'' +
                 ", creator=" + creator +
                 ", category_questions=" + category_questions +
+                ", reply=" + reply +
                 '}';
     }
 
@@ -145,7 +154,6 @@ public class Question {
 //    public void setReply(Collection<Reply> reply) {
 //        this.reply = reply;
 //    }
-
 
     public List<Category_Question> getCategory_questions() {
         return category_questions;

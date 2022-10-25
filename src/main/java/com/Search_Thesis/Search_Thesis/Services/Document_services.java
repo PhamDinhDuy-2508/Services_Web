@@ -348,7 +348,6 @@ public class Document_services {
     @Async
     public synchronized void Create_Document(Upload_document_Event upload_document_event) throws IOException, InterruptedException {
 
-
         String root_name = upload_document_event.getCreate_folder().getRoot_name() ;
 
         String category_name = upload_document_event.getCreate_folder().getCode() ;
@@ -356,7 +355,6 @@ public class Document_services {
         String Folder_name =  upload_document_event.getCreate_folder().getFolder_name() ;
 
         Folder folder1 = folder_respository.findByTitleAndCode(category_name , Folder_name) ;
-
 
 
         List<MultipartFile> multipartFiles =  new ArrayList<>() ;
