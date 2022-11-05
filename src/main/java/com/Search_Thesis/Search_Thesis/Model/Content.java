@@ -28,14 +28,14 @@ public class Content {
         this.content = question.getContent();
     }
     public void find_src() {
-        List<Integer> pos = native_Search(this.content , "src='") ;
-        System.out.println(this.content);
+        List<Integer> pos = native_Search(this.content , "src=") ;
+
 
         for (Integer i: pos) {
             int pos_ = i ;
             int count = 0  ;
             String imgsrc = "" ;
-            while (!String.valueOf(content.charAt(pos_)).equals("'") ) {
+            while (content.charAt(pos_) != '"' ) {
                 imgsrc +=  String.valueOf(content.charAt(pos_)) ;
                 count++ ;
                 pos_++ ;
@@ -49,6 +49,7 @@ public class Content {
 
 
             String res =  this.content.substring(i , pos_) ;
+            System.out.println(res);
             this.map_src_image.put(i ,   tem[tem.length-1]) ;
         }
 
@@ -66,16 +67,23 @@ public class Content {
         List<Integer> result = new ArrayList<>() ;
         int l1 = pat.length();
         int l2 = txt.length();
+        System.out.println(l1 + ","+ l2);
+        System.out.println(pat);
+        System.out.println(txt);
+
         int i = 0, j = l2 - 1;
 
         for (i = 0, j = l2 - 1; j < l1;) {
 
             if (txt.equals(pat.substring(i, j + 1))) {
+                System.out.println( pat.substring(i, j + 1)  );
+
                 result.add(i+5) ;
             }
             i++;
             j++;
         }
+        System.out.println(result);
         return result ;
 
     }

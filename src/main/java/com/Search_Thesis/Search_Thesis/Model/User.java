@@ -2,7 +2,6 @@ package com.Search_Thesis.Search_Thesis.Model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -10,19 +9,163 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 @Entity
-@Data
 @Component("User")
 @Scope(
         value = WebApplicationContext.SCOPE_SESSION,
         proxyMode = ScopedProxyMode.TARGET_CLASS)
 @EnableAutoConfiguration
 @Table(name = "User")
-public class User  {
+public class User  implements Serializable {
+
     private static final long serialVersionUID = -297553281792804396L;
 
+    public String getFirst_name() {
+        return first_name;
+    }
+
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
+    }
+
+    public String getLast_name() {
+        return last_name;
+    }
+
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return Phone;
+    }
+
+    public void setPhone(String phone) {
+        Phone = phone;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return State;
+    }
+
+    public void setState(String state) {
+        State = state;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public int getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getHome_number() {
+        return Home_number;
+    }
+
+    public void setHome_number(String home_number) {
+        Home_number = home_number;
+    }
+
+    public String getStreet() {
+        return Street;
+    }
+
+    public void setStreet(String street) {
+        Street = street;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getResettoken() {
+        return resettoken;
+    }
+
+    public void setResettoken(String resettoken) {
+        this.resettoken = resettoken;
+    }
+
+    public Set<Question> getQuestionList() {
+        return questionList;
+    }
+
+    public void setQuestionList(Set<Question> questionList) {
+        this.questionList = questionList;
+    }
+
+    public Set<Reply> getReplySet() {
+        return replySet;
+    }
+
+    public void setReplySet(Set<Reply> replySet) {
+        this.replySet = replySet;
+    }
 
     @Column
     private String first_name  ;
@@ -55,6 +198,7 @@ public class User  {
 
     @Column(name = "account")
     private String account ;
+    @JsonIgnore
 
     private String   password ;
 
@@ -65,8 +209,10 @@ public class User  {
 
     @Column(name = "country")
     private String country ;
+    @JsonIgnore
 
     private  String role ;
+    @JsonIgnore
 
     @Column
     private String resettoken= "" ;
@@ -80,27 +226,8 @@ public class User  {
     @JsonIgnore
     private  Set<Reply> replySet ;
 
+    @OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER, mappedBy = "user_comment")
+    @JsonIgnore
+    private List<Comment_Reply_Question> comment_reply_questionList ;
 
-
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "first_name='" + first_name + '\'' +
-                ", last_name='" + last_name + '\'' +
-                ", email='" + email + '\'' +
-                ", Phone='" + Phone + '\'' +
-                ", city='" + city + '\'' +
-                ", State='" + State + '\'' +
-                ", province='" + province + '\'' +
-                ", sex='" + sex + '\'' +
-                ", user_id=" + user_id +
-                ", account='" + account + '\'' +
-                ", password='" + password + '\'' +
-                ", Home_number='" + Home_number + '\'' +
-                ", Street='" + Street + '\'' +
-                ", country='" + country + '\'' +
-                ", role='" + role + '\'' +
-                '}';
-    }
 }

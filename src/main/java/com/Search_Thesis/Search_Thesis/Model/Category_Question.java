@@ -10,6 +10,8 @@ import java.util.List;
 @Component
 
 public class Category_Question {
+    private static final long  serialVersionUID = -297553281792804396L;
+
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Expose

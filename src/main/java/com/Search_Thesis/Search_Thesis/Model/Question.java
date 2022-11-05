@@ -1,6 +1,7 @@
 package com.Search_Thesis.Search_Thesis.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.gson.annotations.Expose;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -12,11 +13,13 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-@Component("question")
+@Component
 @Entity
 @Table(name = "question")
 @EnableAutoConfiguration
-public class Question implements Serializable {
+public class Question    implements Serializable {
+    private static final long  serialVersionUID = 297553281792804396L;
+
     @Id
     @Expose
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -51,9 +54,10 @@ public class Question implements Serializable {
         Email = email;
     }
 
-    @ManyToOne(cascade = CascadeType.MERGE , fetch = FetchType.LAZY)
+    @ManyToOne(  fetch = FetchType.EAGER)
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL)
-    @JsonIgnore
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+
     @JoinColumn(name = "Creator_id"  , referencedColumnName = "user_id" ,columnDefinition = "json"
             , nullable = true)
     private User creator;
@@ -62,8 +66,10 @@ public class Question implements Serializable {
 
     private List<Category_Question> category_questions ;
 
-    @OneToMany(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY, mappedBy = "question")
     @JsonIgnore
+
+    @OneToMany( fetch = FetchType.LAZY, mappedBy = "question")
+//    @JsonIgnore
     private Collection< Reply  > reply ;
     public Collection<Reply> getReply() {
         return reply;
@@ -131,21 +137,6 @@ public class Question implements Serializable {
         this.creator = creator;
     }
 
-    @Override
-    public String toString() {
-        return "Question{" +
-                "Question_id=" + Question_id +
-                ", Date_Create=" + Date_Create +
-                ", content='" + content + '\'' +
-                ", Title='" + Title + '\'' +
-                ", View=" + View +
-                ", Vote=" + Vote +
-                ", Email='" + Email + '\'' +
-                ", creator=" + creator +
-                ", category_questions=" + category_questions +
-                ", reply=" + reply +
-                '}';
-    }
 
     //    public Collection<Reply> getReply() {
 //        return reply;
@@ -162,4 +153,6 @@ public class Question implements Serializable {
     public void setCategory_questions(List<Category_Question> category_questions) {
         this.category_questions = category_questions;
     }
+
+
 }

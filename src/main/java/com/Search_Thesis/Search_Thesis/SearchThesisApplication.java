@@ -1,6 +1,5 @@
 package com.Search_Thesis.Search_Thesis;
 
-import com.Search_Thesis.Search_Thesis.resposity.SignIn_Respository;
 import com.Search_Thesis.Search_Thesis.resposity.User_respository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +7,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 //@SpringBootApplication(scanBasePackages = {"com.Search_Thesis.Search_Thesis.resposity" ,
@@ -21,9 +19,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableCaching
 
 @RequiredArgsConstructor
-@EnableJpaRepositories(basePackages = {"com.Search_Thesis.Search_Thesis.resposity" ,
-		"com.Search_Thesis.Search_Thesis.Services"}  ,
-		basePackageClasses = SignIn_Respository.class  )
+//@EnableJpaRepositories(basePackages = {"com.Search_Thesis.Search_Thesis.resposity" ,
+//		"com.Search_Thesis.Search_Thesis.Services"}  ,
+//		basePackageClasses = SignIn_Respository.class  )
 
 
 public class SearchThesisApplication implements CommandLineRunner {

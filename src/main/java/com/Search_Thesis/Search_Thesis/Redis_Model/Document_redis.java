@@ -15,11 +15,9 @@ import java.util.List;
 @EnableRedisRepositories
 @EnableAutoConfiguration
 public class Document_redis  implements Serializable {
-
     private int Id_folder ;
     private List<Document> documents ;
     private LocalDateTime now ;
-
     @Override
     public String toString() {
         return "Document_redis{" +

@@ -112,23 +112,23 @@
 <div class="container">
     <div class="row">
         <!-- Main content -->
-        <div class="col-lg-9 mb-3 " >
+        <div class="col-lg-9 mb-3"  >
 
             <!-- End of post 1 -->
-            <div class="card row-hover pos-relative py-3 px-3 mb-3 border-warning border-top-0 border-right-0 border-bottom-0 rounded-0" >
+            <div class="card row-hover pos-relative py-3 px-3 mb-3 border-primary border-top-10 border-right-10 border-bottom-10 rounded-10"  style="border-bottom-color: #0b0b0b" >
                 <h1 class="text-black" id="title"></h1>
 
 
 
-                <div class="row align-items-center">
+                <div class="row align-items-center" >
                     <div class="col-md-8 mb-3 mb-sm-0">
-                        <p class="text-sm"><span class="op-6">Posted</span> <a class="text-black" href="#">20 minutes</a> <span class="op-6">ago by</span> <a class="text-black" href="#">KenyeW</a></p>
+                        <p class="text-sm"><span class="op-6">Posted</span> <a class="text-black" id="date_create" href="#">20 minutes</a> <span class="op-6">ago by</span> <a class="text-black" href="#" id="creator">KenyeW</a></p>
                     </div>
-                    <div class="col px-1"> <i class="ion-ios-eye-outline icon-1x"></i> <span class="d-block text-sm">290 Views</span> </div>
-                    <h5 class="text-black" >Câu hỏi</h5>
+                    <div class="col px-1"> <i class="ion-ios-eye-outline icon-1x"></i> <span class="d-block text-sm" id="view">290 Views</span> </div>
+                    <h4 class="text-primary" >Câu hỏi</h4>
 
 
-                    <p class="text-sm" id="question">
+                    <p class="text-black" id="question">
                         <!--                <div> testAPi1234<div><img src='data:image/png;base64,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'><br></div></div>-->
 
 
@@ -147,10 +147,142 @@
 
 
         </div>
-            <div class="card row-hover pos-relative py-3 px-3 mb-3 border-warning border-top-0 border-right-0 border-bottom-0 rounded-0" >
+            <div class="panel">
+                <div class="panel-body" id="comment">
+                    <!-- Newsfeed Content -->
+                    <!--===================================================-->
+<!--                    <div class="media-block">-->
+<!--                        <a class="media-left" href="#"><img class="img-circle img-sm" alt="Profile Picture" src="https://png.pngtree.com/png-vector/20190114/ourlarge/pngtree-vector-avatar-icon-png-image_313572.jpg" width="40"></a>-->
+<!--                        <div class="media-body">-->
+<!--                            <div class="mar-btm">-->
+<!--                                <a href="#" class="btn-link text-semibold media-heading box-inline">Lisa D.</a>-->
+<!--                                <p class="text-muted text-sm"><i class="fa fa-mobile fa-lg"></i> - From Mobile - 11 min ago</p>-->
+<!--                            </div>-->
+<!--                            <p>consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>-->
+<!--                            <div class="pad-ver">-->
+<!--                                <div class="btn-group">-->
+<!--                                    <a class="btn btn-sm btn-default btn-hover-success" href="#"><i class="fa fa-thumbs-up"></i></a>-->
+<!--                                    <a class="btn btn-sm btn-default btn-hover-danger" href="#"><i class="fa fa-thumbs-down"></i></a>-->
+<!--                                </div>-->
+<!--                                <a class="btn btn-sm btn-default btn-hover-primary" href="#">Comment</a>-->
+<!--                            </div>-->
+<!--                            <hr>-->
+
+<!--                            &lt;!&ndash; Comments &ndash;&gt;-->
+<!--                            <div>-->
+<!--                                <div class="media-block">-->
+<!--                                    <a class="media-left" href="#"><img class="img-circle img-sm" alt="Profile Picture" src="https://png.pngtree.com/png-vector/20190114/ourlarge/pngtree-vector-avatar-icon-png-image_313572.jpg" width="40"></a>-->
+<!--                                    <div class="media-body">-->
+<!--                                        <div class="mar-btm">-->
+<!--                                            <a href="#" class="btn-link text-semibold media-heading box-inline">Bobby Marz</a>-->
+<!--                                            <p class="text-muted text-sm"><i class="fa fa-mobile fa-lg"></i> - From Mobile - 7 min ago</p>-->
+<!--                                        </div>-->
+<!--                                        <p>Sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>-->
+<!--                                        <div class="pad-ver">-->
+<!--                                            <div class="btn-group">-->
+<!--                                                <a class="btn btn-sm btn-default btn-hover-success active" href="#"><i class="fa fa-thumbs-up"></i> You Like it</a>-->
+<!--                                                <a class="btn btn-sm btn-default btn-hover-danger" href="#"><i class="fa fa-thumbs-down"></i></a>-->
+<!--                                            </div>-->
+<!--                                            <a class="btn btn-sm btn-default btn-hover-primary" href="#">Comment</a>-->
+<!--                                        </div>-->
+<!--                                        <hr>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+
+<!--                                <div class="media-block">-->
+<!--                                    <a class="media-left" href="#"><img class="img-circle img-sm" alt="Profile Picture" src="https://png.pngtree.com/png-vector/20190114/ourlarge/pngtree-vector-avatar-icon-png-image_313572.jpg" width="40">-->
+<!--                                    </a>-->
+<!--                                    <div class="media-body">-->
+<!--                                        <div class="mar-btm">-->
+<!--                                            <a href="#" class="btn-link text-semibold media-heading box-inline">Lucy Moon</a>-->
+<!--                                            <p class="text-muted text-sm"><i class="fa fa-globe fa-lg"></i> - From Web - 2 min ago</p>-->
+<!--                                        </div>-->
+<!--                                        <p>Duis autem vel eum iriure dolor in hendrerit in vulputate ?</p>-->
+<!--                                        <div class="pad-ver">-->
+<!--                                            <div class="btn-group">-->
+<!--                                                <a class="btn btn-sm btn-default btn-hover-success" href="#"><i class="fa fa-thumbs-up"></i></a>-->
+<!--                                                <a class="btn btn-sm btn-default btn-hover-danger" href="#"><i class="fa fa-thumbs-down"></i></a>-->
+<!--                                            </div>-->
+<!--                                            <a class="btn btn-sm btn-default btn-hover-primary" href="#">Comment</a>-->
+<!--                                        </div>-->
+<!--                                        <hr>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    &lt;!&ndash;===================================================&ndash;&gt;-->
+<!--                    &lt;!&ndash; End Newsfeed Content &ndash;&gt;-->
+
+
+<!--                    &lt;!&ndash; Newsfeed Content &ndash;&gt;-->
+<!--                    &lt;!&ndash;===================================================&ndash;&gt;-->
+<!--                    <div class="media-block pad-all">-->
+<!--                        <a class="media-left" href="#"><img class="img-circle img-sm" alt="Profile Picture" src="https://png.pngtree.com/png-vector/20190114/ourlarge/pngtree-vector-avatar-icon-png-image_313572.jpg" width="40"></a>-->
+<!--                        <div class="media-body">-->
+<!--                            <div class="mar-btm">-->
+<!--                                <a href="#" class="btn-link text-semibold media-heading box-inline">John Doe</a>-->
+<!--                                <p class="text-muted text-sm"><i class="fa fa-mobile fa-lg"></i> - From Mobile - 11 min ago</p>-->
+<!--                            </div>-->
+<!--                            <p>Lorem ipsum dolor sit amet.</p>-->
+<!--                            <img class="img-responsive thumbnail" src="https://via.placeholder.com/400x300" alt="Image">-->
+<!--                            <div class="pad-ver">-->
+<!--                                <span class="tag tag-sm"><i class="fa fa-heart text-danger"></i> 250 Likes</span>-->
+<!--                                <div class="btn-group">-->
+<!--                                    <a class="btn btn-sm btn-default btn-hover-success" href="#"><i class="fa fa-thumbs-up"></i></a>-->
+<!--                                    <a class="btn btn-sm btn-default btn-hover-danger" href="#"><i class="fa fa-thumbs-down"></i></a>-->
+<!--                                </div>-->
+<!--                                <a class="btn btn-sm btn-default btn-hover-primary" href="#">Comment</a>-->
+<!--                            </div>-->
+<!--                            <hr>-->
+
+<!--                            &lt;!&ndash; Comments &ndash;&gt;-->
+<!--                            <div>-->
+<!--                                <div class="media-block pad-all">-->
+<!--                                    <a class="media-left" href="#"><img class="img-circle img-sm" alt="Profile Picture" src="https://png.pngtree.com/png-vector/20190114/ourlarge/pngtree-vector-avatar-icon-png-image_313572.jpg" width="40"></a>-->
+<!--                                    <div class="media-body">-->
+<!--                                        <div class="mar-btm">-->
+<!--                                            <a href="#" class="btn-link text-semibold media-heading box-inline">Maria Leanz</a>-->
+<!--                                            <p class="text-muted text-sm"><i class="fa fa-globe fa-lg"></i> - From Web - 2 min ago</p>-->
+<!--                                        </div>-->
+<!--                                        <p>Duis autem vel eum iriure dolor in hendrerit in vulputate ?</p>-->
+<!--                                        <div>-->
+<!--                                            <div class="btn-group">-->
+<!--                                                <a class="btn btn-sm btn-default btn-hover-success" href="#"><i class="fa fa-thumbs-up"></i></a>-->
+<!--                                                <a class="btn btn-sm btn-default btn-hover-danger" href="#"><i class="fa fa-thumbs-down"></i></a>-->
+<!--                                            </div>-->
+<!--                                            <a class="btn btn-sm btn-default btn-hover-primary" href="#">Comment</a>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                    <!--===================================================-->
+                    <!-- End Newsfeed Content -->
+                </div>
+                <nav aria-label="...">
+                    <ul class="pagination" id = "pagination_1">
+<!--                        <li class="page-item disabled">-->
+<!--                            <span class="page-link"><<<</span>-->
+<!--                        </li>-->
+<!--                        <li class="page-item">-->
+<!--                            <a class="page-link" href="#">1</a></li>-->
+<!--                        <li class="page-item ">-->
+<!--                      <span class="page-link">-->
+<!--                        2-->
+<!--                        <span class="sr-only">(current)</span>-->
+<!--                      </span>-->
+<!--                        </li>-->
+<!--                        <li class="page-item"><a class="page-link" href="#">3</a></li>-->
+<!--                        <li class="page-item">-->
+<!--                            <a class="page-link" href="#">>>></a>-->
+<!--                        </li>-->
+                    </ul>
+                </nav>
+            </div>
+            <div class="card row-hover pos-relative py-3 px-3 mb-3 border-secondary border-top-20 border-right-20 border-bottom-20 rounded-30" >
                 <h2 class="text-black">Câu Trả lời của bạn</h2>
-
-
 
                 <div class="row align-items-center">
                     <div class="col-md-8 mb-3 mb-sm-0">
@@ -165,7 +297,6 @@
                     </div>
 
                     <div class="col-md-4 op-7">
-                        <h3 class="form-title text-dark "> nội dung chi tiết</h3>
 
                         <div class="container-fluid">
 
@@ -179,7 +310,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col px-1">  <span><button class="primary-btn">Trả Lời</button> </span> </div>
+                        <div class="col px-1">  <span><button onclick="askquestion()" class="primary-btn">Trả Lời</button> </span> </div>
 
 
                     </div>
@@ -241,12 +372,26 @@
                     <div class="col-sm-6 flex-ew text-center py-3 mx-0"> <a class="d-block lead font-weight-bold" href="#">DanielD</a> Newest Member </div>
                 </div>
             </div>
-        </div></div>
+        </div>
+        </div>
         </div>
     </div>
 </div>
+<script type="text/javascript">
 
+</script>
 <style type="text/css">
+    textarea {
+        -moz-appearance: textfield-multiline;
+        -webkit-appearance: textarea;
+        border: 1px solid gray;
+        font: medium -moz-fixed;
+        height: 28px;
+        overflow: auto;
+        padding: 2px;
+        resize: both;
+        width: 400px;
+    }
     body{
         margin-top:20px;
         background:#eee;
@@ -267,11 +412,10 @@
     .font-weight-bold {
         font-weight: 700 !important;
     }
+
 </style>
 
-<script type="text/javascript">
 
-</script>
 <script>
     $(document).ready(function (){
 
@@ -291,17 +435,206 @@
 
         $.ajax(settings).done(function (response) {
             console.log(response);
-            console.log(response.content)
+
             var tempDiv = document.createElement('div');
-            tempDiv.innerHTML = response.content;
+            $("#creator").text( response.creator.account)
+            tempDiv.innerHTML = response.question.content;
+            $("#date_create").text(response.question.date_Create.split('T')[0])
+            $("#view").text(response.question.view)
             $("#question").append(tempDiv)
-            $("#title").text(response.title)
+            $("#title").text(response.question.title)
         });
 
 
+        var settings = {
+
+            "url": "http://localhost:8080/api/ckt/load_page_reply/"+id+"/1",
+            "method": "GET",
+            "timeout": 0,
+        };
+
+
+        $.ajax(settings).done(function (response) {
+            console.log(response);
+            var list_reply =  response.reply
+            if(response.size != 1) {
+                for (var i = 0; i < response.size; i++) {
+                    var page_num = i + 1
+
+                    $('#pagination_1').append("  <li class=\"page-item\">\n" +
+                        "                        <a class=\"page-link\" href=\"#\">" + page_num + "</a></li>\n" +
+                        "                       <li class=\"page-item \">")
+
+                }
+            }
+
+                for (var i = 0; i < list_reply.length ; i++) {
+                var id = "id=comment_"+list_reply[i].reply_id
+                var button_id = "id=button_"+list_reply[i].reply_id
+                var box_id = "id=boxcomment_"+list_reply[i].reply_id
+                    var comment =  "onclick=comment(" + list_reply[i].reply_id+")"
+                    var Upload_Comment =  "onclick=Upload_Comment("+list_reply[i].reply_id+")"
+                    var text_id =   "id=text_"+list_reply[i].reply_id
+
+
+
+                    $("#comment").append("<div class=\"media-block\">\n" +
+                    "                        <a class=\"media-left\" href=\"#\"><img class=\"img-circle img-sm\" alt=\"Profile Picture\" src=\"https://png.pngtree.com/png-vector/20190114/ourlarge/pngtree-vector-avatar-icon-png-image_313572.jpg\" width=\"40\"></a>\n" +
+                    "                        <div class=\"media-body\">\n" +
+                    "                            <div class=\"mar-btm\">\n" +
+                    "                                <a href=\"#\" class=\"btn-link text-semibold media-heading box-inline\">"+list_reply[i].user.account+"</a>\n" +
+                    "                                <p class=\"text-muted text-sm\"><i class=\"fa fa-mobile fa-lg\"></i> " +list_reply[i].date_create + "</p>\n" +
+                    "                            </div>\n" +
+                    "                            <p>"+list_reply[i].content +"</p>\n" +
+                    "                            <div class=\"pad-ver\">\n" +
+                    "                                <div class=\"btn-group\">\n" +
+                    "                                    <a class=\"btn btn-sm btn-default btn-hover-success\" href=\"#\"><i class=\"fa fa-thumbs-up\"></i></a>\n" +
+                    "                                    <a class=\"btn btn-sm btn-default btn-hover-danger\" href=\"#\"><i class=\"fa fa-thumbs-down\"></i></a>\n" +
+                    "                                </div>\n" +
+                    "                                <a  class='btn btn-sm btn-default btn-hover-primary' " + comment+ " >Comment</a>\n" +
+                    "                            </div>\n" +
+                    "                            <hr>\n" +
+                    " <div>\n" +
+                    "          <div class=\"media-block\">\n" +
+                    "          </div>" +
+
+                    "   <div  "+box_id+" class='container-fluid'>\n" +
+                    "\n" +
+                    "                            <div class=\"row\">\n" +
+                    "                                <div class=\"container\">\n" +
+                    "                                    <div class=\"row\">\n" +
+                    "                                        <div class=\"col-lg-8 nopadding\">\n" +
+                    "                                            <textarea "+id+"></textarea>\n" +
+                    "                                        </div>\n" +
+                    "                                    </div>\n" +
+                    "                                </div>\n" +
+                    "                            </div>\n" +
+                    "                        </div>" +
+                    // "<div " +comment_id+" contenteditable class='' lass='form-control' rows='2' placeholder='Bình Luận Của Bạn'>I look like a textarea</div>\n" +
+                    // "    <textarea  " +id+ " contenteditable  class='form-control' rows='2' placeholder='Bình Luận Của Bạn' ></textarea>\n" +
+                    "     <div class='left-padding'>  <span><a    class='btn btn-sm btn-default btn-hover-primary' "+Upload_Comment+" >Đăng</a> </span> </div>"+
+
+                    "                    </div>")
+
+                var comment_id =  "comment_"+list_reply[i].reply_id
+                var button_id = "button_" +list_reply[i].reply_id
+                var box_id = "boxcomment_"+list_reply[i].reply_id
+
+                $("#" + comment_id).Editor()
+                $("#" + box_id).hide()
+
+
+                $("#" + comment_id).hide()
+
+                $("#"+button_id).hide()
+
+            }
+        });
 
     })
+</script>
+<script>
+    function comment(id) {
 
+        if (   $("#boxcomment_" + id).is(":visible") ) {
+            $("#button_" +id ).hide()
+
+            $("#boxcomment_" +id ).hide()
+        }
+        else {
+            var button_id = "button_" +id
+
+            $("#"+button_id).show()
+            $("#boxcomment_" +id ).show()
+
+        }
+
+    }
+</script>
+<script>
+    function  get_Cookie(cname) {
+        let a = `; ${document.cookie}`.match(`;\\s*${cname}=([^;]+)`);
+        var value =  a.splice('=')[1]
+        return value
+    }
+</script>
+<script>
+function Upload_Comment(id) {
+    var ID  =  id
+    var content1 = $("#comment_"+id).Editor("getText")
+
+    var content =     "asdasdasd"
+
+    var token =  get_Cookie("login_jwt")
+
+
+    var settings = {
+        "url": "http://localhost:8080/api/ckt/comment",
+        "method": "POST",
+        "timeout": 0,
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "data": JSON.stringify({
+            "id": 0,
+            "content": content,
+            "token" : token,
+            "reply_id": ID
+        }),
+    };
+
+    $.ajax(settings).done(function (response) {
+        if(response == true) {
+
+            alert("Đăng bình luận thành công")
+
+            $("#boxcomment_" +id ).hide()
+        }
+        else {
+            alert("Đăng bình luận thất bại")
+
+ bại    }
+    });
+
+}
+</script>
+
+<script>
+    function askquestion() {
+
+        var content = $("#txtEditor").Editor("getText")
+        const queryString = window.location.search;
+
+        const urlParams = new URLSearchParams(queryString);
+        let id = urlParams.get("id")
+
+        var token =  get_Cookie("login_jwt")
+
+        var settings = {
+            "url": "http://localhost:8080/api/ckt/reply",
+            "method": "POST",
+            "timeout": 0,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "data": JSON.stringify({
+                "content": content,
+                "question_id": id,
+                "token": token
+            }),
+        };
+
+        $.ajax(settings).done(function (response) {
+            if(response == true) {
+                alert("Đã đăng câu trả lời")
+            }
+            else {
+                alert("Đăng thất bại")
+
+            }
+        });
+
+    }
 </script>
 </body>
 </html>
