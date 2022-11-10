@@ -78,6 +78,7 @@ import java.time.Duration;
         jedisConFactory.getPoolConfig().setMinIdle(10);
         return jedisConFactory;
     }
+
     @Bean
     public RedisTemplate<String, Object> redisTemplate() {
         RedisTemplate<String, Object> template = new RedisTemplate<>();

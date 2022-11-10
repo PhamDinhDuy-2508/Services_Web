@@ -88,6 +88,7 @@ public class Reply  implements Serializable {
     private Question question ;
 
 
+
     @ManyToOne( fetch = FetchType.LAZY)
 //    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL)
     @JoinColumn(name = "user_user_id"  , referencedColumnName = "user_id" ,columnDefinition = "json"
@@ -95,9 +96,8 @@ public class Reply  implements Serializable {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 //    @Expose
     private User user ;
-
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "reply")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Collection<Comment_Reply_Question> comment_reply_questionList ;
 
 

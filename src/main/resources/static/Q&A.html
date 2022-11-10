@@ -238,26 +238,27 @@
       $.ajax(settings).done(function (response) {
         console.log(response);
         var list_quest = response
+        // console.log(list_quest[i].reply)
 
 
 
         for (var i = 0; i < list_quest.length; i++) {
-          var href_string =" /question_info?id="+list_quest[i].question_id
+          var href_string =" /question_info?id="+list_quest[i].question.question_id
           $("#Question_list").append(
                   "  <div class='card row-hover pos-relative py-3 px-3 mb-3 border-primary border-top-0 border-right-0 border-bottom-0 rounded-0'>" +
                   "        <div class='row align-items-center'>" +
                   "          <div class='col-md-8 mb-3 mb-sm-0'>" +
                   "            <h5>" +
-                  "              <a href= "+href_string+" class='text-primary'> " + list_quest[i].title + "</a></a>" +
+                  "              <a href= "+href_string+" class='text-primary'> " + list_quest[i].question.title + "</a></a>" +
                   "            </h5>" +
-                  "            <p class='text-sm'><span class='op-6'>Posted</span> <a class=='text-black' href='/question_info?id=1'>" + list_quest[i].date_Create + "</a> <span class=\"op-6\">ago by</span> <a class=\"text-black\" href=\"#\">" + list_quest[i].creator.account + "</a></p>\n" +
+                  "            <p class='text-sm'><span class='op-6'>Posted</span> <a class=='text-black' href='/question_info?id=1'>" + list_quest[i].question.date_Create + "</a> <span class=\"op-6\">ago by</span> <a class=\"text-black\" href=\"#\">" + list_quest[i].question.creator.account + "</a></p>\n" +
                   "            <div class='text-sm op-5'> <a class='text-black mr-2' href='#'>#Development</a> <a class='text-black mr-2' href='#'>#AppStrap Theme</a> </div>\n" +
                   "          </div>" +
                   "          <div class='col-md-4 op-7'>" +
                   "            <div class='row text-center op-7'>" +
-                  "              <div class='col px-1'> <i class='ion-connection-bars icon-1x'></i> <span class='d-block text-sm'>" + list_quest[i].vote + "</span> </div>\n" +
-                  "              <div class='col px-1'> <i class='ion-ios-chatboxes-outline icon-1x'></i> <span class='d-block text-sm'>251 Replys</span> </div>\n" +
-                  "              <div class='col px-1'> <i class='ion-ios-eye-outline icon-1x'></i> <span class='d-block text-sm'>" + list_quest[i].view + "</span> </div>\n" +
+                  "              <div class='col px-1'> <i class='ion-connection-bars icon-1x'></i> <span class='d-block text-sm'>" + list_quest[i].question.vote + "</span> </div>\n" +
+                  "              <div class='col px-1'> <i class='ion-ios-chatboxes-outline icon-1x'></i> <span class='d-block text-sm'>"+list_quest[i].reply_size+"</span> </div>\n" +
+                  "              <div class='col px-1'> <i class='ion-ios-eye-outline icon-1x'></i> <span class='d-block text-sm'>" + list_quest[i].question.view + "</span> </div>\n" +
                   "            </div>" +
                   "          </div>" +
                   "        </div>" +
@@ -339,22 +340,22 @@
               "      </div>")
 
       for (var i = 0; i < list_quest.length; i++) {
-        var href_string =" /question_info?id="+list_quest[i].question_id
+        var href_string =" /question_info?id="+list_quest[i].question.question_id
         $("#Question_list").append(
                 "  <div class='card row-hover pos-relative py-3 px-3 mb-3 border-primary border-top-0 border-right-0 border-bottom-0 rounded-0'>" +
                 "        <div class='row align-items-center'>" +
                 "          <div class='col-md-8 mb-3 mb-sm-0'>" +
                 "            <h5>" +
-                "              <a href= "+href_string+" class='text-primary'> " + list_quest[i].title + "</a></a>" +
+                "              <a href= "+href_string+" class='text-primary'> " + list_quest[i].question.title + "</a></a>" +
                 "            </h5>" +
-                "            <p class='text-sm'><span class='op-6'>Posted</span> <a class=='text-black' href='/question_info?id=1'>" + list_quest[i].date_Create + "</a> <span class=\"op-6\">ago by</span> <a class=\"text-black\" href=\"#\">" + list_quest[i].creator.account + "</a></p>\n" +
+                "            <p class='text-sm'><span class='op-6'>Posted</span> <a class=='text-black' href='/question_info?id=1'>" + list_quest[i].question.date_Create + "</a> <span class=\"op-6\">ago by</span> <a class=\"text-black\" href=\"#\">" + list_quest[i].question.creator.account + "</a></p>\n" +
                 "            <div class='text-sm op-5'> <a class='text-black mr-2' href='#'>#Development</a> <a class='text-black mr-2' href='#'>#AppStrap Theme</a> </div>\n" +
                 "          </div>" +
                 "          <div class='col-md-4 op-7'>" +
                 "            <div class='row text-center op-7'>" +
-                "              <div class='col px-1'> <i class='ion-connection-bars icon-1x'></i> <span class='d-block text-sm'>" + list_quest[i].vote + "</span> </div>\n" +
-                "              <div class='col px-1'> <i class='ion-ios-chatboxes-outline icon-1x'></i> <span class='d-block text-sm'>251 Replys</span> </div>\n" +
-                "              <div class='col px-1'> <i class='ion-ios-eye-outline icon-1x'></i> <span class='d-block text-sm'>" + list_quest[i].view + "</span> </div>\n" +
+                "              <div class='col px-1'> <i class='ion-connection-bars icon-1x'></i> <span class='d-block text-sm'>" + list_quest[i].question.vote + "</span> </div>\n" +
+                "              <div class='col px-1'> <i class='ion-ios-chatboxes-outline icon-1x'></i> <span class='d-block text-sm'>"+list_quest[i].reply_size+"</span> </div>\n" +
+                "              <div class='col px-1'> <i class='ion-ios-eye-outline icon-1x'></i> <span class='d-block text-sm'>" + list_quest[i].question.view + "</span> </div>\n" +
                 "            </div>" +
                 "          </div>" +
                 "        </div>" +

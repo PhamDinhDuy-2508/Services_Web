@@ -28,7 +28,6 @@ public class Question    implements Serializable {
     private  int Question_id = 0 ;
 
 
-
     @Column(name = "Date_create")
 
     private Date Date_Create ;
@@ -54,6 +53,7 @@ public class Question    implements Serializable {
         Email = email;
     }
 
+
     @ManyToOne(  fetch = FetchType.EAGER)
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -66,11 +66,12 @@ public class Question    implements Serializable {
 
     private List<Category_Question> category_questions ;
 
-    @JsonIgnore
 
+    @JsonIgnore
     @OneToMany( fetch = FetchType.LAZY, mappedBy = "question")
 //    @JsonIgnore
     private Collection< Reply  > reply ;
+
     public Collection<Reply> getReply() {
         return reply;
     }

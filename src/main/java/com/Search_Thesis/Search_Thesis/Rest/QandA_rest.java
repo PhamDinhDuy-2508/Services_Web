@@ -10,10 +10,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,11 +37,22 @@ public class QandA_rest {
     @GetMapping("/load_all/{page}")
 
     public ResponseEntity<?> load_all(@RequestParam("Filter") String Filter, @PathVariable String page){
+        try {
 
-        List<Question> list =   qandA_services.load_all_with_page(page , Filter) ;
+
+            List<Question_detail_response> list = qandA_services.load_all_with_page(page, Filter);
+
+            System.out.println(list);
+            return ResponseEntity.ok( list);
+
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.ok( null);
+
+        }
 
 
-      return ResponseEntity.ok( list);
     }
 
     @GetMapping("/get_number_page")
@@ -75,24 +84,28 @@ public class QandA_rest {
         return ResponseEntity.ok(question_info_response) ;
     }
     //test_Api
-   @PostMapping("/upload_image")
-    public ResponseEntity<?> Upload_image(@RequestParam("file") MultipartFile multipartFile) throws IOException {
-        List<String> pos = new ArrayList<>() ;
-        pos.add("1") ;
-
-        try {
-            qandA_services.upload(multipartFile , "123" ,pos);
-
-        }catch (Exception e) {}
-       return null ;
-   }
+//   @PostMapping("/upload_image")
+//    public ResponseEntity<?> Upload_image(@RequestParam("file") MultipartFile multipartFile) throws IOException {
+//        List<String> pos = new ArrayList<>() ;
+//        pos.add("1") ;
+//
+//        try {
+//            qandA_services.upload(multipartFile , "123" ,pos);
+//
+//        }catch (Exception e) {}
+//       return null ;
+//   }
+   //
 
    @GetMapping("/load_question/{id}")
     public ResponseEntity<?> load_quest(@PathVariable String id) {
        Question question1 = qandA_services.load_question(id);
 
        qandA_services.Increment_view(id);
+
        question_info_response.setQuestion(question1);
+
+
        question_info_response.setCreator(question1.getCreator());
 
       return   ResponseEntity.ok(question_info_response) ;
@@ -112,12 +125,12 @@ public class QandA_rest {
    public ResponseEntity<?> get_reply(@PathVariable String question_id) {
         try {
             List<Reply> replyList = qandA_services.load_reply(question_id);
-            System.out.println(replyList);
             return  ResponseEntity.ok(replyList) ;
 
         }
         catch (Exception e) {
             return  ResponseEntity.ok(null) ;
+
 
         }
 
@@ -136,10 +149,10 @@ public class QandA_rest {
 
         }
    }
-   @GetMapping("/load_comment/{id}")
-   public ResponseEntity<?> Comment( @PathVariable String id) {
+   @GetMapping("/load_comment/{id}") // add id_question
+   public ResponseEntity<?> Comment(@PathVariable String id) {
        try {
-           List<Comment_Reply_Question> lisgt =  qandA_services.load_Comment(id);
+           List<Comment_Reply_Question> lisgt =  qandA_services.load_Comment(id, "1");
            return ResponseEntity.ok(lisgt) ;
        }
        catch (Exception e) {
@@ -151,12 +164,32 @@ public class QandA_rest {
 
    @GetMapping("/load_page_reply/{id}/{page}")
    public  ResponseEntity<?> load_reply_page(@PathVariable String page, @PathVariable String id) throws JsonProcessingException {
-       Reply_response Page = qandA_services.response_question_pagination(id , Integer.parseInt(page));
+        try {
+            List<Reply> Page = qandA_services.response_question_pagination(id, page);
 
-      return ResponseEntity.ok(Page) ;
+            return ResponseEntity.ok(Page) ;
+
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.ok(null) ;
+
+        }
+
+   }
+   @GetMapping("/test")
+   public  ResponseEntity<?> test_API(){
+
+        Comment_Reply_Question comment_reply_question =  new Comment_Reply_Question() ;
+
+        comment_reply_question.setContent("phamdinhduy_test");
+
+        qandA_services.update_comment_cache("11" , "1" , comment_reply_question);
+        return ResponseEntity.ok(true) ;
 
    }
 
-}
+
+   }
 
 

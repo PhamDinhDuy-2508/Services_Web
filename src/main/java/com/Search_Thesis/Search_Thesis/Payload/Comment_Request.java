@@ -7,7 +7,6 @@ public class Comment_Request {
     private String content ;
     private String token ;
     private String id ;
-
     private String reply_id ;
 
 }
