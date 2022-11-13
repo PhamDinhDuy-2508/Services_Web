@@ -6,12 +6,9 @@ import com.Search_Thesis.Search_Thesis.Model.Reply;
 import com.Search_Thesis.Search_Thesis.resposity.Question_Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.jcache.JCacheCache;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import javax.cache.Cache;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,13 +19,10 @@ public class CacheManager_iml_PAGINATION_comment implements  Cache_Manager<Strin
 
     @Autowired
     Reply reply;
-
     @Autowired
     CacheManager cacheManager;
-
     @Autowired
     Question_Repository question_repository;
-
 
     @Override
     public String getCache(String id, String... value) {
@@ -37,6 +31,10 @@ public class CacheManager_iml_PAGINATION_comment implements  Cache_Manager<Strin
 
     public boolean Update_cache_Reply(String id, String reply_id, Comment_Reply_Question comment_reply_question, List<Reply> reply_List) {
         String cache_name = "reply_page";
+        System.out.println(id + "," + reply_id);
+
+        System.out.println("question_id : " + id);
+
         String key = "";
 
         Question question1 = question_repository.findByQuestion_id(Integer.parseInt(id));
@@ -63,17 +61,22 @@ public class CacheManager_iml_PAGINATION_comment implements  Cache_Manager<Strin
             } catch (Exception e) {
                 end_id = replyList.get(replyList.size() - 1).getReply_id();
             }
-
             List<Integer> element = new ArrayList<>();
+
             element.add(start_id);
             element.add(end_id);
-
             page_list.add(element);
-
         }
 
         List<Integer> element = new ArrayList<>();
-        element.add(replyList.get(page * 10 - 1).getReply_id());
+        System.out.println(page+1);
+        if(page == 0 ) {
+            element.add(replyList.get(page).getReply_id());
+        }
+        else {
+            element.add(replyList.get((page) * 10 - 1).getReply_id());
+
+        }
         element.add(replyList.get(replyList.size() - 1).getReply_id());
 
         page_list.add(element);
@@ -87,7 +90,7 @@ public class CacheManager_iml_PAGINATION_comment implements  Cache_Manager<Strin
                 break;
             }
         }
-        System.out.println(key);
+
 
         List<Reply> replyList1 = (List<Reply>) cacheManager.getCache("reply_page").get(key).get();
         List<Reply> replyList2 = new ArrayList<>();
@@ -109,13 +112,10 @@ public class CacheManager_iml_PAGINATION_comment implements  Cache_Manager<Strin
                 reply1.getComment_reply_questionList().add(comment_reply_question);
 
             }
-
-
 //         reply1.getComment_reply_questionList().add(comment_reply_question);
 //         replyList1.ad//         cacheManager.getCache(cache_name).put(key ,  replyList1);d(reply1) ;
         }
         try {
-
             replyList2.remove(pos);
 
             replyList2.add(pos, reply1);
@@ -129,55 +129,8 @@ public class CacheManager_iml_PAGINATION_comment implements  Cache_Manager<Strin
         return false;
     }
 
-    @Cacheable(value = "reply_page", key = "#id.concat('-').concat( #page_num)")
-    public List<Reply> get_reply_list_from_Cache(String id, String page_num, List<Reply> list) {
-        javax.cache.Cache<Object, Object> jcache = (Cache<Object, Object>) cacheManager.getCache("reply_page").get(id + "-" + page_num);
-        if (jcache != null) {
-            System.out.println(new JCacheCache(jcache));
-        }
-        return list;
-
-//
-    }
-
     @Override
     public boolean Update_Cache(int page_size, String t, String... cache_key) {
-//        try {
-//
-//            String Cache_key = Arrays.stream(cache_key).toList().get(0);
-//
-//            List<Object> list = Collections.singletonList(question_repository.findAll());
-//
-//            PagedListHolder pagedListHolder = new PagedListHolder<>(list);
-//
-//            pagedListHolder.setPageSize(page_size);
-//
-//            int total_page = pagedListHolder.getPageCount();
-//            if (cache_key == null) {
-//
-//                cacheManager.getCache(name_cache).clear();
-//
-//            }
-//
-//            for (int i = 1; i <= total_page; i++) {
-//                pagedListHolder.setPageSize(page_size);
-//                pagedListHolder.setPage(i);
-//                String key =   Cache_key +  "-" +  String.valueOf(i) ;
-//                System.out.println(key);
-//
-//                if (Cache_key != null) {
-//
-//                    cacheManager.getCache(name_cache).evict(key);
-//
-//                }
-//
-////                cacheManager.getCache(name_cache).put(key, lst.stream().toList());
-//            }
-//
-//            return true;
-//        }
-//        catch (Exception e) {
-//            System.out.println(e.getMessage());
         return false;
 
     }

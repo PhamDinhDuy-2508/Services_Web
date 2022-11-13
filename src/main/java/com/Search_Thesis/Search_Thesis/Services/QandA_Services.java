@@ -22,6 +22,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.*;
@@ -73,6 +74,9 @@ public class QandA_Services {
     @Autowired
     CacheManager_iml_PAGINATION cache_manager_question ;    ;
 
+    @Autowired
+    CacheManager_iml_PAGINATION_question cacheManager_iml_pagination_question ;
+
 
 
     private ExecutorService threadpool = Executors.newCachedThreadPool();
@@ -84,7 +88,6 @@ public class QandA_Services {
     }
     @Cacheable(value = "question_page"  , key = "#page")
     public List<Question_detail_response> load_all_with_page(String page, String Filter) {
-
 
 //        if(listCache_services_quesion.get_Cache(Integer.valueOf(page)) != null) {
 ////            List<Question> list = listCache_services_quesion.get_Cache(Integer.valueOf(page));
@@ -118,15 +121,13 @@ public class QandA_Services {
         ArrayList<Question_detail_response> LIST = new ArrayList<Question_detail_response>(question_detail_responses.subList(0, question_detail_responses.size()));
 
 
-
-
-
-
         return LIST;
 //        }
 
 
     }
+
+//    @Cacheable(value = "question_list" )
     public List<Question> load_all() {
         return question_repository.findAll();
     }
@@ -170,6 +171,7 @@ public class QandA_Services {
                 public void run() {
                     try {
                         Update_to_Database_and_Cloudiary(question1) ;
+//                        question_repository.save(question1) ;
                     } catch (ExecutionException e) {
                         System.out.println(e.getMessage());
                     } catch (InterruptedException e) {
@@ -207,11 +209,11 @@ public class QandA_Services {
             list_tag = (List<Category_Question>) get_Category_task.get();
 
             question1.setCategory_questions(list_tag);
-            update_question_cache();
+//            update_question_cache();
 
 
 
-//            question_repository.save(question1);
+            question_repository.save(question1);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return;
@@ -226,36 +228,61 @@ public class QandA_Services {
 
             Content content1 =  new Content(question) ;
             content1.find_src();
+
             return content1;
 
         }).thenApplyAsync((content)->{
 
             HashMap<Integer , String> map_src_image =  content.getMap_src_image() ;
-            int length = 20;
-            boolean useLetters = true;
-            boolean useNumbers = false;
-            String generatedString = RandomStringUtils.random(length, useLetters, useNumbers);
+            System.out.println(map_src_image.size());
+            if(map_src_image.size() != 0) {
 
-            List<Integer> keyset = map_src_image.keySet().stream().toList(); ;
+                int length = 20;
+                boolean useLetters = true;
+                boolean useNumbers = false;
+                String generatedString = RandomStringUtils.random(length, useLetters, useNumbers);
 
-            for (Integer i : keyset ) {
-                String name_image =  generatedString +"_"+i ;
+                List<Integer> keyset = map_src_image.keySet().stream().toList();
+                ;
+
+                for (Integer i : keyset) {
+                    String name_image = generatedString + "_" + i;
 
 
-                byte[] byte_array =  Base64.getDecoder().decode( map_src_image.get(i).getBytes()) ;
+                    byte[] byte_array = Base64.getDecoder().decode(map_src_image.get(i).getBytes());
 
-                Map image_url =    cloudinaryServices.upload( name_image, byte_array) ;
+                    Map image_url = cloudinaryServices.upload(name_image, byte_array);
 
-                String url =  (String) image_url.get("secure_url");
+                    String url = (String) image_url.get("secure_url");
 
-                content.getMap_src_image().replace(i ,  url) ;
+                    content.getMap_src_image().replace(i, url);
 
+                }
+            }
+            else {
+                question_repository.save(question) ;
             }
             return content;
         }).thenApplyAsync(content -> {
             content.update_content();
-            question.setContent(content.getContent_result().toString());
-            question_repository.save(question) ;
+
+
+            try {
+
+                question.setContent(content.getContent_result().toString());
+//                question_repository.save(question) ;
+
+            }
+            catch (Exception e) {
+                LocalDateTime localDateTime = LocalDateTime.now() ;
+//                question.setContent(content.getContent());
+
+                java.util.Date date =  Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+                question.setDate_Create(date);
+
+//                question_repository.save(question) ;
+
+            }
             return content ;
         }) ;
         contentCompletableFuture.get() ;
@@ -319,6 +346,7 @@ public class QandA_Services {
     }
     @Async
 
+
     public void upload_reply(Reply_request reply_request) throws ParseException {
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
@@ -369,7 +397,7 @@ public class QandA_Services {
            return null ;
        }
     }
-//    @Cacheable(value = "reply_page" ,  key = "#id.concat('-').concat( #page_num)")
+    @Cacheable(value = "reply_page" ,  key = "#id.concat('-').concat( #page_num)")
 
 
     public List<Reply> response_question_pagination(String id , String page_num) throws JsonProcessingException {
@@ -387,7 +415,6 @@ public class QandA_Services {
         for (Reply reply1 : list) {
             Set<Comment_Reply_Question> replySet =  reply1.getComment_reply_questionList().stream().collect(Collectors.toSet()) ;
             reply1.setComment_reply_questionList(replySet);
-
         }
         return list.stream().toList()  ;
 
@@ -443,12 +470,11 @@ public class QandA_Services {
         comment_reply_question.setDate(date);
 
 
-
-
-//        comment_ques_repository.save(comment_reply_question) ;
+        comment_ques_repository.save(comment_reply_question) ;
 //
 //
 //        update_comment_cache(comment_request.getReply_id() , comment_request.getId());
+
         update_comment_cache(comment_request.getId(),  comment_request.getReply_id() , comment_reply_question) ;
 
 
@@ -470,31 +496,13 @@ public class QandA_Services {
         cache_manager_question.Update_Cache(8 , "reply_page" ,  id_question ) ;
     }
     @Async
-    public void update_comment_cache(String id_reply ,String id_question , Comment_Reply_Question comment_reply_question ) {
+    public void update_comment_cache(String id_question ,String id_reply , Comment_Reply_Question comment_reply_question ) {
 
         List<Reply> rep =  new ArrayList<>() ;
         System.out.println( id_reply +"," + id_question );
-        try {
-//           rep =   response_question_pagination(id_question, "1");
-//            System.out.println(cacheManager.getCache("reply_page").get("2-1").get());
-//            System.out.println(redisTemplate.opsForList());
-        }
-        catch (Exception e) {
 
-            System.out.println(e.getMessage());
-
-        }
-        List<Reply> finalRep = rep;
         Runnable task_update_Cache  = ()->{
-            cacheManager_iml_pagination_comment.Update_cache_Reply(id_question ,  id_reply , comment_reply_question , finalRep) ;
-//            try {
-//
-//
-//                response_question_pagination(id_question, "1");
-//            }
-//            catch (Exception e) {
-//                System.out.println(e.getMessage());
-//            }
+            cacheManager_iml_pagination_comment.Update_cache_Reply(id_question ,  id_reply , comment_reply_question , rep) ;
 
         } ;
 
@@ -502,6 +510,16 @@ public class QandA_Services {
 //        cache_manager_question.Set_object(reply);
 //
 //        cache_manager_question.Update_Cache(8 , "comment_rep" ,  id_reply ) ;
+    }
+    public void Filter(String filter) {
+
+    }
+    public List<Question>  test_Question_Cache() {
+        cacheManager_iml_pagination_question.add_Ques_into_Cache() ;
+        return (List<Question>) cacheManager.getCache("question_page").get(1).get();
+
+
+
     }
 
 

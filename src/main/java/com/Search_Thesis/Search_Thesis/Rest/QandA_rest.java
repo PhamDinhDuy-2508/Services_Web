@@ -158,10 +158,9 @@ public class QandA_rest {
        catch (Exception e) {
 
            return ResponseEntity.ok(null) ;
+
        }
-
    }
-
    @GetMapping("/load_page_reply/{id}/{page}")
    public  ResponseEntity<?> load_reply_page(@PathVariable String page, @PathVariable String id) throws JsonProcessingException {
         try {
@@ -173,19 +172,23 @@ public class QandA_rest {
         catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity.ok(null) ;
-
         }
-
    }
-   @GetMapping("/test")
-   public  ResponseEntity<?> test_API(){
+   @GetMapping("/test_cache_cmt/{id_ques}/{id_rep}")
+   public  ResponseEntity<?> test_API(@PathVariable String id_ques, @PathVariable String id_rep){
 
         Comment_Reply_Question comment_reply_question =  new Comment_Reply_Question() ;
 
         comment_reply_question.setContent("phamdinhduy_test");
 
-        qandA_services.update_comment_cache("11" , "1" , comment_reply_question);
+        qandA_services.update_comment_cache(id_rep , id_ques , comment_reply_question);
+
         return ResponseEntity.ok(true) ;
+
+   }
+   @GetMapping("/test_Cache_ques")
+    public ResponseEntity<?> test() {
+        return ResponseEntity.ok(        qandA_services.test_Question_Cache() )  ;
 
    }
 

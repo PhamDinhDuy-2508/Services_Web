@@ -56,8 +56,10 @@ public class Content {
     }
     public void update_content() {
         List<Integer> jkeys =  this.map_src_image.keySet().stream().toList() ;
+        if(jkeys.size() != 0 ){
         for(Integer i : jkeys) {
             this.content_result.insert(i ,  this.map_src_image.get(i)) ;
+        }
         }
         System.out.println(this.content_result);
 

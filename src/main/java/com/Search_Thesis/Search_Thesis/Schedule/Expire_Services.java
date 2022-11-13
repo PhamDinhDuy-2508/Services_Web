@@ -1,14 +1,19 @@
 package com.Search_Thesis.Search_Thesis.Schedule;
 
+import com.Search_Thesis.Search_Thesis.Model.Question;
 import com.Search_Thesis.Search_Thesis.Redis_Model.Document_info_redis;
 import com.Search_Thesis.Search_Thesis.Redis_Model.Document_info_redis_Services;
 import com.Search_Thesis.Search_Thesis.Redis_Model.Folder_info_Services;
 import com.Search_Thesis.Search_Thesis.Redis_Model.Folder_model_redis;
 import com.Search_Thesis.Search_Thesis.Server_Service.Message_to_Server;
 import com.Search_Thesis.Search_Thesis.Services.Edit_Document_Services;
+import com.Search_Thesis.Search_Thesis.resposity.Question_Repository;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -37,11 +42,18 @@ public class Expire_Services {
     @Autowired
     Folder_model_redis folder_model_redis ;
 
+    @Autowired
+    Question_Repository question_repository ;
+
+    @Autowired
+    CacheManager cacheManager ;
+
+
     private  Socket socket ;
 
     @PostConstruct
     public void Create_Connection() throws IOException {
-        Socket socket =  new Socket("localhost" , 2508) ;
+//        Socket socket =  new Socket("localhost" , 2508) ;
         message_to_server = new Message_to_Server(socket);
     }
 
@@ -74,6 +86,18 @@ public class Expire_Services {
 
 
         }
+
+    }
+    public List<Question> load_all() {
+        return question_repository.findAll() ;
+    }
+
+
+    @Async
+    @Scheduled(fixedRate = 30000)
+    public void Update_Cache_Question_list() {
+
+
 
     }
     public void Connect_to_Socket() throws IOException {
@@ -128,6 +152,7 @@ public class Expire_Services {
            }
 
        }
+
 
 //
 
