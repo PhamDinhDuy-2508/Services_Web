@@ -47,7 +47,7 @@ public class Schedule_Expired {
     }
 
     @Async
-    @Scheduled(fixedRate = 10000 , initialDelay  = 5000)
+//    @Scheduled(fixedRate = 20000 , initialDelay  = 5000)
 
     public void Update_Cache() throws InterruptedException {
         System.out.println("test_after_5s");

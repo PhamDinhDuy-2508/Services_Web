@@ -21,10 +21,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -42,6 +49,9 @@ public class Document_rest {
 
     @Autowired
     Document_Service_redis document_service_redis;
+
+    @Autowired
+    Drive_Service drive_service ;
 
     @Autowired
     Document_services document_services;
@@ -91,7 +101,6 @@ public class Document_rest {
             documentList = document_services.load_category(root_folder.getId());
             list_category = documentList;
             Session_Service_2<List<Document>> session_service_2 = new Session_Service_2<>();
-
 
             Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
@@ -193,6 +202,7 @@ public class Document_rest {
         JSONObject jsonObject = jwt_services.getPayload();
         int user_id = (int) jsonObject.get("id");
         Create_folder.setUser_id(String.valueOf(user_id));
+        System.out.println(Create_folder.getCode());
 
         Category_document categoryDocument =  category_document_responsitory.findByCode(Create_folder.getCode()) ;
         Create_folder.setName(categoryDocument.getName());
@@ -276,6 +286,7 @@ public class Document_rest {
     public ResponseEntity<List<Document>> display_document(
             @RequestParam("ID") String ID, HttpServletRequest request) {
         documentList = document_services_2.load_Document(ID);
+        System.out.println(documentList.size());
         try {
             folder_reids_respository.save_folder_ID(ID, documentList);
         } catch (Exception e) {
@@ -286,9 +297,12 @@ public class Document_rest {
 
     @RequestMapping(method = RequestMethod.GET, value = "Preview_file/{ID}", produces = "application/pdf")
 
-    public ResponseEntity<?> preview(HttpServletRequest request, @PathVariable("ID") String ID) {
+    public ResponseEntity<?> preview(HttpServletRequest request, @PathVariable("ID") String ID) throws GeneralSecurityException, IOException {
 
-        String filename = document_services_2.pdf_Path(ID);
+        String filename = document_services_2.pdf_Path(ID) ;
+        System.out.println(filename);
+        System.out.println( drive_service.listFolderContent("1kaUe173DrRNbIQ0IJVJJxZ3znpQ33C-V") );
+
 
 
         try {
@@ -297,6 +311,7 @@ public class Document_rest {
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
+//        return  null ;
     }
 
     @GetMapping("/Search_Document/{code}")
@@ -330,7 +345,21 @@ public class Document_rest {
             List<Folder> folders  =  document_services_2.Filter(code , filter) ;
             return ResponseEntity.ok(document_services_2.pagination(code ,page , folders)) ;
         }
+    }
+    @GetMapping("dowload_file/{id}")
+    public  ResponseEntity<?> dowload(@PathVariable String id , HttpServletResponse response) throws IOException, GeneralSecurityException {
+//        drive_service.dowload_file(id , response.getOutputStream()) ;
+        return ResponseEntity.ok(true) ;
+    }
+    @GetMapping("preview_file_from_Drive/{id}")
+    public ResponseEntity<Object> redirectToExternalUrl(@PathVariable String id) throws URISyntaxException {
 
+        String file_path = document_services_2.pdf_Path(id);
+
+        URI yahoo = new URI(file_path);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setLocation(yahoo);
+        return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
     }
     @GetMapping("/filter/{CatrgoryCode}/{page_num}")
     public ResponseEntity Filter(@RequestParam("signal") String signal, @PathVariable String CatrgoryCode, @PathVariable String page_num) {
@@ -340,7 +369,6 @@ public class Document_rest {
 
         folderList = category_redis.getFolderList();
         try {
-
                 switch (signal) {
                     case "AZ": {
                         System.out.println("AZ");

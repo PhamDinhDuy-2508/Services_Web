@@ -1,5 +1,6 @@
 package com.Search_Thesis.Search_Thesis.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,14 @@ public class Document implements Serializable {
 
     @Column(name = "Author")
     private  String Author ;
+
+    @JsonIgnore
+    @Column(name = "PATH")
+    private  String path ;
+
+    @JsonIgnore
+    @Column(name = "id_document_drive")
+    private  String id_document_drive ;
 
     @Column(name = "Publish_date")
     private Date Publish_date ;

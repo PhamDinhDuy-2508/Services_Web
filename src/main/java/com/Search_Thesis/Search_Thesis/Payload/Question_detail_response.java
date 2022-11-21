@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 public class Question_detail_response implements Serializable{
@@ -14,6 +15,7 @@ public class Question_detail_response implements Serializable{
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 
     private Question question ;
+    private List<Category_question_id_name> category_questionList ;
 
 
 

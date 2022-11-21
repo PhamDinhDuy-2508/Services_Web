@@ -79,6 +79,7 @@ public class QandA_Services {
 
 
 
+
     private ExecutorService threadpool = Executors.newCachedThreadPool();
     public int get_size_list() {
 
@@ -89,11 +90,6 @@ public class QandA_Services {
     @Cacheable(value = "question_page"  , key = "#page")
     public List<Question_detail_response> load_all_with_page(String page, String Filter) {
 
-//        if(listCache_services_quesion.get_Cache(Integer.valueOf(page)) != null) {
-////            List<Question> list = listCache_services_quesion.get_Cache(Integer.valueOf(page));
-////            return  list ;
-//        }
-//        else {
             List<Question> list = load_all();
 
             PagedListHolder pagedListHolder = new PagedListHolder<>(list);
@@ -110,16 +106,8 @@ public class QandA_Services {
                 question_detail_responses.add(question_detail_response) ;
             }
 
-//            try {
-//
-//                listCache_services_quesion.Create_Cache(pagedListHolder.getPageList(), Integer.valueOf(page));
-//            }
-//            catch (Exception e) {
-//                System.out.println(e.getMessage());
-//            }
 
         ArrayList<Question_detail_response> LIST = new ArrayList<Question_detail_response>(question_detail_responses.subList(0, question_detail_responses.size()));
-
 
         return LIST;
 //        }
@@ -206,14 +194,18 @@ public class QandA_Services {
             question1.setCreator(user);
 
             get_Category_task = threadpool.submit(callable);
+
+
             list_tag = (List<Category_Question>) get_Category_task.get();
 
-            question1.setCategory_questions(list_tag);
+            ArrayList<Category_Question> LIST = new ArrayList<Category_Question>(list_tag.subList(0, list_tag.size()));
+            question1.setCategory_questions(LIST);
+
+
 //            update_question_cache();
 
-
-
             question_repository.save(question1);
+            System.out.println(question_repository.findByQuestion_id(id).getCategory_questions());
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return;
@@ -308,6 +300,7 @@ public class QandA_Services {
         Question question1 = question_repository.findByQuestion_id(Question_id);
 
         int count = question1.getView() + 1;
+        cacheManager_iml_pagination_question.update_into_View_CaChe(question1) ;
 
         question1.setView(count);
 
@@ -317,8 +310,6 @@ public class QandA_Services {
     public Question load_question_detail(int id) {
 
         Question question1 = question_repository.findByQuestion_id(id);
-
-
         return question1;
     }
 
@@ -511,15 +502,115 @@ public class QandA_Services {
 //
 //        cache_manager_question.Update_Cache(8 , "comment_rep" ,  id_reply ) ;
     }
-    public void Filter(String filter) {
 
-    }
     public List<Question>  test_Question_Cache() {
         cacheManager_iml_pagination_question.add_Ques_into_Cache() ;
         return (List<Question>) cacheManager.getCache("question_page").get(1).get();
+    }
+    public List<Category_question_id_name> load_Category() {
+
+        ArrayList<Category_question_id_name> LIST = new ArrayList<>() ;
+
+        List<Category_Question> category_questions =  category_question_repository.findAll() ;
+
+        for(Category_Question category_question : category_questions) {
+
+            Category_question_id_name category_question_id_name =  new Category_question_id_name(category_question.getCategory_id() , category_question.getCategory_name()) ;
+            LIST.add(category_question_id_name) ;
+
+        }
+        return LIST ;
+    }
+//    @Cacheable(value = "question_filter" , key = "#Filter")
+    public List<Question> load_all_Filter(String Filter) {
+        if(Filter.equals("View")) {
+            List<Question> questionList =  question_repository.findByViewContaining() ;
+
+            return questionList;
+        }
+        else if (Filter.equals("Replys")) {
+
+            List<Question> questionList =  question_repository.findByReplyContaining() ;
+
+            return questionList ;
+
+        }
+        else {
+            return null ;
+        }
+
+    }
+//    @Cacheable(value = "question_page" ,  key = "#page.concat('-').concat( #Filter)")
+    public List<Question_detail_response> load_with_Filter(String page , String Filter) {
+        if(Filter.equals("Default")) {
+            return load_all_with_page(page, "None") ;
+        }
+        List<Question> questionList =  new ArrayList<>() ;
+        questionList = load_all_Filter(Filter);
 
 
+        PagedListHolder pagedListHolder = new PagedListHolder<>(questionList);
 
+        pagedListHolder.setPage(Integer.parseInt(page) - 1);
+        pagedListHolder.setPageSize(10);
+        List<Question> list1 =  pagedListHolder.getPageList() ;
+        List<Question_detail_response> question_detail_responses =  new ArrayList<>() ;
+
+        for(Question question1 : list1) {
+
+            Question_detail_response question_detail_response =  new Question_detail_response() ;
+            question_detail_response.setQuestion(question1);
+            question_detail_response.setReply_size(question1.getReply().size());
+            List<Category_Question> category_questions =  question1.getCategory_questions() ;
+            List<Category_question_id_name> category_question_id_names =  new ArrayList<>() ;
+
+
+            for (Category_Question category_question : category_questions ) {
+
+                category_question_id_names.add(new Category_question_id_name(category_question.getCategory_id() , category_question.getCategory_name())) ;
+
+            }
+            question_detail_response.setCategory_questionList(category_question_id_names);
+
+            question_detail_responses.add(question_detail_response) ;
+
+        }
+
+        ArrayList<Question_detail_response> LIST = new ArrayList<Question_detail_response>(question_detail_responses.subList(0, question_detail_responses.size()));
+        return LIST ;
+    }
+
+
+    public List<Question_detail_response> get_tag_list(String id , String page) {
+        Category_Question category_question =   category_question_repository.findByCategory_id(Integer.valueOf(id)) ;
+        List<Question> list = category_question.getQuestionList() ;
+
+        PagedListHolder pagedListHolder = new PagedListHolder<>(list);
+
+        pagedListHolder.setPage(Integer.parseInt(page) - 1);
+        pagedListHolder.setPageSize(10);
+        List<Question> list1 =  pagedListHolder.getPageList() ;
+        List<Question_detail_response> question_detail_responses =  new ArrayList<>() ;
+
+        for(Question question1 : list1) {
+            Question_detail_response question_detail_response =  new Question_detail_response() ;
+            List<Category_Question> category_questions =  question1.getCategory_questions() ;
+            List<Category_question_id_name> category_question_id_names =  new ArrayList<>() ;
+
+            for (Category_Question category_question_ : category_questions ) {
+                category_question_id_names.add(new Category_question_id_name(category_question.getCategory_id() , category_question.getCategory_name())) ;
+            }
+            question_detail_response.setQuestion(question1);
+            question_detail_response.setReply_size(question1.getReply().size());
+            question_detail_responses.add(question_detail_response) ;
+            question_detail_response.setCategory_questionList(category_question_id_names);
+
+        }
+
+
+        ArrayList<Question_detail_response> LIST = new ArrayList<Question_detail_response>(question_detail_responses.subList(0, question_detail_responses.size()));
+
+        return LIST;
     }
 
 

@@ -100,7 +100,7 @@ public class Document_services_2 {
 
         return folder ;
     }
-    @Cacheable(value = "display_document" ,  key = "#ID")
+//    @Cacheable(value = "display_document" ,  key = "#ID")
     public List<Document> load_Document(String ID) {
         try {
             System.out.println(Integer.valueOf(ID));
@@ -115,7 +115,7 @@ public class Document_services_2 {
 
         Document document =  document_repository.findByID(Integer.valueOf( ID_document) )  ;
 
-        return document.getFile() ;
+        return document.getPath() ;
     }
     @Async
     public CompletableFuture<String> Download(String ID, String file_name , ServletContext servletContext) throws IOException {

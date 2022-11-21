@@ -4,12 +4,13 @@ import com.google.gson.annotations.Expose;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 @Entity
 @Table(name =  "catergory_question")
 @Component
 
-public class Category_Question {
+public class Category_Question implements Serializable {
     private static final long  serialVersionUID = -297553281792804396L;
 
     @Id
@@ -22,10 +23,11 @@ public class Category_Question {
     @Column(name = "category_name")
     private  String category_name ;
 
-    @JoinTable(name =  "category_question_join" ,  joinColumns = @JoinColumn(name ="id_category" ) ,
-            inverseJoinColumns =  @JoinColumn(name = "id_question" ) )
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY )
+//    @JoinTable(name =  "category_question_join" ,  joinColumns = @JoinColumn(name ="id_category" ) ,
+//            inverseJoinColumns =  @JoinColumn(name = "id_question" ) )
+////    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY )
 
+    @ManyToMany(mappedBy = "category_questions")
 
     private List<Question> questionList ;
 

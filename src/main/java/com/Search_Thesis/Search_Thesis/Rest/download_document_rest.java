@@ -1,9 +1,8 @@
 package com.Search_Thesis.Search_Thesis.Rest;
 
 import com.Search_Thesis.Search_Thesis.Model.Root_Folder;
-import com.Search_Thesis.Search_Thesis.Services.Document_services_2;
-import com.Search_Thesis.Search_Thesis.Services.Dowload_File_Utils;
-import com.Search_Thesis.Search_Thesis.Services.Session_Service;
+import com.Search_Thesis.Search_Thesis.Services.*;
+import com.Search_Thesis.Search_Thesis.resposity.Document_Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.io.ByteArrayResource;
@@ -46,10 +45,40 @@ public class download_document_rest {
 
     @Autowired
     private ServletContext servletContext;
+    @Autowired
+    Drive_Service drive_service ;
+    @Autowired
+    Document_Repository document_repository ;
+    @Autowired
+    Document_services  document_services ;
+
+    @GetMapping("/Download_file/{ID}")
+    public CompletableFuture<ResponseEntity> download(@PathVariable String ID , HttpServletResponse response) throws Exception {
+
+
+      return  document_services.Document_download(ID ,  response).thenApply(objectObjectMap -> {
+          System.out.println("Thread_1  : " +  Thread.currentThread().getName()+ Thread.currentThread().getId());
+
+          MediaType mediaType = MediaTypeUtils.getMediaTypeForFileName(servletContext, ID);
+
+          byte[] data = new byte[0];
+          data = (byte[]) objectObjectMap.get("byte");
+          ByteArrayResource resource = new ByteArrayResource(data);
+
+          return ResponseEntity.ok()
+                  .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + objectObjectMap.get("name"))
+                  .contentType(mediaType)
+                  .contentLength(data.length)
+                  .body(resource);
+      });
+
+    }
 
     @GetMapping("/download/{ID}/{filename}")
-    public CompletableFuture<ResponseEntity> download_file(@PathVariable String ID, @PathVariable String filename) throws IOException {
+    public CompletableFuture<ResponseEntity> download_file(@PathVariable String ID, @PathVariable String filename , HttpServletResponse response) throws IOException {
         System.out.println("Main_thread : " +  Thread.currentThread().getName() + Thread.currentThread().getId());
+
+
        return document_services_2.Download(ID, filename, this.servletContext).
 
                 thenApply(file_path->{

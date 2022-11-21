@@ -28,6 +28,7 @@ public class Question    implements Serializable {
     private  int Question_id = 0 ;
 
 
+
     @Column(name = "Date_create")
 
     private Date Date_Create ;
@@ -54,6 +55,8 @@ public class Question    implements Serializable {
     }
 
 
+
+
     @ManyToOne(  fetch = FetchType.EAGER)
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -61,8 +64,13 @@ public class Question    implements Serializable {
     @JoinColumn(name = "Creator_id"  , referencedColumnName = "user_id" ,columnDefinition = "json"
             , nullable = true)
     private User creator;
-    @Transient
-    @ManyToMany(mappedBy = "questionList")
+//    @JsonIgnore
+//    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnore
+    @ManyToMany(    fetch = FetchType.LAZY )
+
+    @JoinTable(name =  "category_question_join" ,  joinColumns = @JoinColumn(name ="id_question" ) ,
+            inverseJoinColumns =  @JoinColumn(name = "id_category" ) )
 
     private List<Category_Question> category_questions ;
 

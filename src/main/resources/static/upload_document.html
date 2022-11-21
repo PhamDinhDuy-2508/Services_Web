@@ -746,9 +746,7 @@ function back_to_document_page(){
         };
         $.ajax(settings).done(function (response) {
 
-            console.log("succsess")
             uploadFile()
-
         });
 
     }
@@ -959,7 +957,9 @@ function back_to_document_page(){
                     "headers": {
                         "Authorization": "Basic aGllcHNpOjEyMw==",
                         "Content-Type": "application/json",
+
                         "Cookie": "SESSION=Y2I4ZGE4YjAtMjk5OC00MGE0LTk4MzUtYzc2MWIyMGFhNDM4"
+
                     },
 
                 };

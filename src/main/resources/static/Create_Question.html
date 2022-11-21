@@ -91,6 +91,8 @@
     <!--
         CSS
         ============================================= -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/js/bootstrap.bundle.min.js" type="module"></script>
     <link rel="stylesheet" href="css/linearicons.css">
     <link rel="stylesheet" href="css/owl.carousel.css">
     <link rel="stylesheet" href="css/themify-icons.css">
@@ -104,6 +106,32 @@
     <script src ="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"></script>
     <script src="js/editor.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <style>
+        .form-control-focus {
+            color: #212529;
+            background-color: #fff;
+            border-color: #86b7fe;
+            outline: 0;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+
+        .was-validated :valid + .form-control-focus {
+            border-color: #198754;
+            box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+        }
+
+        .was-validated :invalid + .form-control-focus {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+        }
+    </style>
+
+    <script type="module">
+        import Tags from "https://cdn.jsdelivr.net/gh/lekoala/bootstrap5-tags@master/tags.js";
+
+        Tags.init("select");
+    </script>
+
 
     <script>
         $(document).ready(function() {
@@ -191,9 +219,56 @@
                 </div>
                 <h3 class="form-title text-dark ">Gắn thẻ</h3>
 
-                <div>
-                    <input type="text" class="form-input" name="name" id="category" placeholder="Gắn thẻ"/>
-                </div>
+
+                <label htmlFor="validationTagsThreshold" className="form-label">Tags (allow clear + 0 threshold)</label>
+                <select className="form-select" id="validationTagsThreshold" name="tagsClearThreshold[]" multiple
+                        data-allow-clear="true" data-suggestions-threshold="0">
+                    <option selected disabled hidden value="" id="chouse">Choose a tag...</option>
+                    <option value='1'>Lập trình</option>
+                    <option value='2'>Mô phỏng</option>
+                    <option value='3'>Động Lực Học</option>
+                    <option value='4'>C++</option>
+                    <option value='5'>C#</option>
+                    <option value='6'>JAVA</option>
+                    <option value='7'>Python</option>
+                    <option value='8'>Ansys</option>
+                    <option value='9'>Matlab</option>
+                    <option value='10'>C</option>
+                    <option value='11'>SQL</option>
+                    <option value='12'>FEM</option>
+                    <option value='13'>Dẻo</option>
+                    <option value='14'>Đại Cương</option>
+                    <option value='15'>Đồ án</option>
+                    <option value='16'>Luận văn</option>
+                </select>
+
+
+
+<!--                            <option value="1" selected="selected">Apple</option>-->
+<!--                            <option value="2" data-badge-style="success" selected="selected">Banana</option>-->
+<!--                            <option value="3" data-badge-style="warning" data-badge-class="text-dark">Orange</option>-->
+<!--                            <option value="4" data-badge-style="secondary">Blueberry</option>-->
+<!--                            <option value="5">Strawberry</option>-->
+<!--                            <option value="6">Cranberry</option>-->
+<!--                            <option value="7">Huckleberry</option>-->
+<!--                            <option value="8">Chokeberry</option>-->
+<!--                            <option value="9">Elderberry</option>-->
+<!--                            <option value="10">Gooseberry</option>-->
+<!--                            <option value="11">Blackberry</option>-->
+<!--                            <option value="12">Raspberry</option>-->
+<!--                            <option value="13">Goji berry</option>-->
+<!--                            <option value="14">Salmon berry</option>-->
+<!--                            <option value="15">Sumac berry</option>-->
+                        </select>
+
+
+                    <!--                    </div>-->
+
+<!--            </div>-->
+<!--                <div>-->
+<!--                    <input type="text" class="form-input" name="name" id="category" placeholder="Gắn thẻ"/>-->
+<!--                </div>-->
+
                 <h3 class="form-title text-dark ">Tên hiển thị</h3>
 
                 <div>
@@ -203,16 +278,16 @@
 
                 <div class="container-fluid">
 
-        <div class="row">
-            <div class="container">
                 <div class="row">
-                    <div class="col-lg-12 nopadding">
-                        <textarea id="txtEditor"></textarea>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-10 nopadding">
+                                <textarea id="txtEditor"></textarea>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        </div>
                 <div class="form-check form-switch">
                     <input  class="form-check-input" type="checkbox" name="sendmail" id="sendmail" class="agree-term" onclick="senmail()" />
                     <label for="sendmail" class=" text-dark"><span><span></span></span>
@@ -234,7 +309,7 @@
 
 
 </div>
-</div>
+
 
 
 
@@ -243,12 +318,18 @@
     <p class="pull-right">&copy; Suyati Technologies <script>document.write(new Date().getFullYear())</script>. All rights reserved.</p>
 </div>
 
-
+<script>
+    $(document).ready(function (){
+        load_cate()
+    })
+</script>
 
 <script>
 function  create_question() {
     var title = $("#Title").val()
-    var category = $("#category").val()
+
+    var category = ($("#validationTagsThreshold").val()).toString()
+    alert(category)
     var content = $("#txtEditor").Editor("getText")
     var name_display = $("#name_user").val()
     var email =  $("#email").val()
@@ -272,7 +353,7 @@ function  create_question() {
     };
     $.ajax(settings).done(function (response) {
         console.log(response);
-        alert(response)
+        alert("Đăng Thành Công")
     });
 
 }
@@ -403,6 +484,12 @@ function senmail() {
             let a = `; ${document.cookie}`.match(`;\\s*${cname}=([^;]+)`);
             var value =  a.splice('=')[1]
             return value
+        }
+    </script>
+
+    <script>
+        function load_cate() {
+
         }
     </script>
 </html>

@@ -1395,11 +1395,11 @@ function show_folder(ID) {
         for (var i = 0; i < JSON_arr.length; i++) {
             var name = JSON_arr[i].title
             name =  name.replace(/\s/g ,'')
-            var download_folder = "/api/ckt/download/" + JSON_arr[i].id + "/" +JSON_arr[i].id
+            var download_folder = "/api/ckt/Download_file/" + JSON_arr[i].id
             console.log(download_folder)
             $('#table_file').append(" <tr id = " + JSON_arr[i].id + ">" +
                 "                                            <td>" +
-                "                                            <a  target='_blank' rel='noopener noreferrer' href='/api/ckt/Preview_file/" + JSON_arr[i].id + "' class = 'text-dark stretched-link'>" + JSON_arr[i].title +
+                "                                            <a  target='_blank' rel='noopener noreferrer' href='/api/ckt/preview_file_from_Drive/" + JSON_arr[i].id + "' class = 'text-dark stretched-link'>" + JSON_arr[i].title +
                 "                                            </a>" +
                 "                                            </td>" +
                 "                                            <td>" +

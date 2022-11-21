@@ -10,6 +10,8 @@ import javax.servlet.http.HttpSession;
 @Controller
 
 public class QandA {
+    private static final String qurstion = "question.html";
+
     @RequestMapping("/question")
 
     public String  QandA(){
@@ -19,7 +21,11 @@ public class QandA {
     public String  Display_detail(){
         return "question.html" ;
     }
+    @RequestMapping("/question_tag")
+    public String  Display_tag(){
 
+        return "Topic.html" ;
+    }
 
     @RequestMapping("/Create_question")
 

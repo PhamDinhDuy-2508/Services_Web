@@ -90,6 +90,7 @@ import java.time.Duration;
     @Bean
     public CommonsMultipartResolver multipartResolver() {
         CommonsMultipartResolver resolver = new CommonsMultipartResolver() ;
+        resolver.setMaxInMemorySize(50000000);
         resolver.setDefaultEncoding("UTF-8");
         return  resolver ;
     }

@@ -2,6 +2,7 @@ package com.Search_Thesis.Search_Thesis.Services;
 
 import com.Search_Thesis.Search_Thesis.Algorithm.Search_Folder;
 import com.Search_Thesis.Search_Thesis.Algorithm.Search_category;
+import com.Search_Thesis.Search_Thesis.Config.Drive_Config;
 import com.Search_Thesis.Search_Thesis.Event.Create_Category_Event;
 import com.Search_Thesis.Search_Thesis.Event.Create_folder_Event;
 import com.Search_Thesis.Search_Thesis.Event.Upload_document_Event;
@@ -13,7 +14,9 @@ import com.Search_Thesis.Search_Thesis.resposity.Category_document_Responsitory;
 import com.Search_Thesis.Search_Thesis.resposity.Document_Repository;
 import com.Search_Thesis.Search_Thesis.resposity.Folder_Respository;
 import com.Search_Thesis.Search_Thesis.resposity.Root_Responsitory;
+import com.google.api.services.drive.Drive;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.context.event.EventListener;
@@ -23,6 +26,7 @@ import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -30,6 +34,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.GeneralSecurityException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.*;
@@ -64,6 +69,13 @@ public class Document_services {
 
     @Autowired
     Document_Repository document_repository ;
+
+    @Autowired
+    Drive_Service drive_service ;
+
+    @Value("${drive.root_folder.id}")
+    private String parent_Id ;
+
     ExecutorService threadpool = Executors.newCachedThreadPool();
 
 
@@ -96,6 +108,7 @@ public class Document_services {
 
         List<Category_document> new_list =  new ArrayList<>() ;
         new_list = category_document_responsitory.findByID(ID) ;
+        System.out.println(new_list);
         return new_list ;
     }
 
@@ -114,12 +127,10 @@ public class Document_services {
         if(request_detail.isEmpty()) {
             return  category_documentList ;
         }
-
         return res ;
     }
 
     @Async
-
     public Future<Boolean> find_category_code(String root,String code){
 
        List<Category_document> category_document = category_document_responsitory.findByID(Integer.valueOf(root)) ;
@@ -137,6 +148,7 @@ public class Document_services {
     @EventListener
     @Async
     public  void   Create_new_Category(Create_Category_Event create_category_event) {
+        System.out.println(this.parent_Id);
         try {
 
             root_folder.setId(Integer.valueOf(create_category_event.getCreate_category().getRoot_id()));
@@ -151,10 +163,15 @@ public class Document_services {
             root_folder.setCategory_document(Collections.singleton(category_document));
 
             root_responsitory.save(root_folder) ;
-
-            Create_Category_Folder(create_category_event.getCreate_category().getRoot_name() ,
-                                    create_category_event.getCreate_category().getCode() );
-
+            String id = "" ;
+            for(com.google.api.services.drive.model.File file :drive_service.listFolderContent(parent_Id)) {
+                System.out.println(file.getName());
+                if(file.getName().equals(create_category_event.getCreate_category().getRoot_name())) {
+                    id =  file.getId() ;
+                    break;
+                }
+            }
+            drive_service.create_Folder_ID(id ,create_category_event.getCreate_category().getCode()  ) ;
         }
 
         catch (Exception e) {
@@ -185,37 +202,55 @@ public class Document_services {
     @Async
     public void Create_Folder(Create_folder_Event create_folder_event) {
 
+
         try {
+            String root_name= create_folder_event.getCreate_folder().getRoot_name() ;
+            String category_name =  create_folder_event.getCreate_folder().getCode() ;
+            String folder_name =  create_folder_event.getCreate_folder().getFolder_name() ;
+            Category_document categoryDocument =  category_document_responsitory.findByCode(category_name) ;
+            System.out.println(categoryDocument);
 
-            root_folder.setId(Integer.valueOf(create_folder_event.getCreate_folder().getRoot_id()));
-            root_folder.setName(create_folder_event.getCreate_folder().getName());
+//            root_folder.setId(Integer.valueOf(create_folder_event.getCreate_folder().getRoot_id()));
+//            root_folder.setName(create_folder_event.getCreate_folder().getName());
 
-            category_document.setName(create_folder_event.getCreate_folder().getName());
-            category_document.setCode(create_folder_event.getCreate_folder().getCode());
+//            category_document.setName(create_folder_event.getCreate_folder().getName());
+//            category_document.setCode(create_folder_event.getCreate_folder().getCode());
 
             folder.setTitle(create_folder_event.getCreate_folder().getFolder_name());
             LocalDate myObj = LocalDate.now() ;
             java.sql.Date date = java.sql.Date.valueOf(myObj.toString()) ;
             folder.setPublish_date(date);
             category_document.setNewfolder(Collections.singleton(folder));
+            folder.setCategorydocument(categoryDocument);
 
-            folder.setCategorydocument(category_document);
+//            folder.setCategorydocument(category_document);
             folder.setContributor_ID(Integer.valueOf( create_folder_event.getCreate_folder().getUser_id()));
 
-            category_document.setRoot_folder(root_folder);
+//            category_document.setRoot_folder(root_folder);
 
-            root_folder.setCategory_document(Collections.singleton(category_document));
+//            root_folder.setCategory_document(Collections.singleton(category_document));
+//
+//            root_responsitory.save(root_folder) ;
+//            category_document_responsitory.save(categoryDocument) ;
+            folder_respository.save(folder) ;
 
-            root_responsitory.save(root_folder) ;
+            String filePath = "Data_Document/"+root_name+"/"+category_name;
 
-            Create_Folder_Directory(create_folder_event.getCreate_folder().getRoot_name()  ,
-                                     create_folder_event.getCreate_folder().getCode() ,
-                                    create_folder_event.getCreate_folder().getFolder_name());
-            Update_Cache_Folder(folder) ;
+            String id =  drive_service.getFolderId(filePath) ;
+            Drive driveInstance = Drive_Config.getInstance();
+
+            drive_service.findOrCreateFolder(id ,  folder_name , driveInstance);
+
+//
+//            Create_Folder_Directory(create_folder_event.getCreate_folder().getRoot_name()  ,
+//                                     create_folder_event.getCreate_folder().getCode() ,
+//                                    create_folder_event.getCreate_folder().getFolder_name());
+//            Update_Cache_Folder(folder) ;
 
         }
 
         catch (Exception e) {
+            System.out.println(e.getMessage());
             System.out.println("something was wrong");
         }
 
@@ -346,7 +381,8 @@ public class Document_services {
     }
     @EventListener
     @Async
-    public synchronized void Create_Document(Upload_document_Event upload_document_event) throws IOException, InterruptedException {
+    public  void Create_Document(Upload_document_Event upload_document_event) throws Exception {
+
 
         String root_name = upload_document_event.getCreate_folder().getRoot_name() ;
 
@@ -356,31 +392,48 @@ public class Document_services {
 
         Folder folder1 = folder_respository.findByTitleAndCode(category_name , Folder_name) ;
 
-
         List<MultipartFile> multipartFiles =  new ArrayList<>() ;
+
         List<Document> documentList =  new ArrayList<>() ;
 
+        String file_PATH = "Data_Document/"+root_name+"/"+category_name+"/"+Folder_name ;
+        System.out.println(file_PATH);
+
+        String id = drive_service.getFolderId(file_PATH);
+
+
+//        System.out.println(Arrays.toString(upload_document_event.getMultipartFile()[0].getBytes()));
+
+///https://drive.google.com/file/d/107wEnfCHBcu2BT57-twdmI-r_H9FAArT/view?usp=share_link
         for(MultipartFile multipartFile  : upload_document_event.getMultipartFile()) {
+           com.google.api.services.drive.model.File file =  drive_service.uploadFile(multipartFile , file_PATH) ;
 
+//            String id_Folder = drive_service.getFolderId(file_PATH) ;
+            document = create_Document_info(multipartFile.getOriginalFilename(), file.getParents().get(0), folder1 , file.getWebViewLink(),file.getId());
+//            document_repository.save(document);
+            documentList.add(document);
+            document_repository.save(document) ;
 
-            Thread thread =  new Thread(()->{
-                try {
-
-                    String  file_path = Create_File(root_name ,  category_name , Folder_name , multipartFile.getOriginalFilename() , multipartFile);
-                    if(file_path != null) {
-                        document = create_Document_info(multipartFile.getOriginalFilename(), file_path, folder1);
-                        document_repository.save(document);
-                        documentList.add(document);
-                        System.out.println(file_path);
-                    }
-
-
-                } catch (IOException e) {
-                    System.out.println("Error" + e.getMessage());
-                }
-
-            }) ;
-            thread.start();
+//
+//
+//            Thread thread =  new Thread(()->{
+//                try {
+//
+//                    String  file_path = Create_File(root_name ,  category_name , Folder_name , multipartFile.getOriginalFilename() , multipartFile);
+//                    if(file_path != null) {
+//                        document = create_Document_info(multipartFile.getOriginalFilename(), file_path, folder1);
+//                        document_repository.save(document);
+//                        documentList.add(document);
+//                        System.out.println(file_path);
+//                    }
+//
+//
+//                } catch (IOException e) {
+//                    System.out.println("Error" + e.getMessage());
+//                }
+//
+//            }) ;
+//            thread.start();
 //            Future<?> futureTask = threadpool.submit(() -> {
 //                String file_path = null;
 //                try {
@@ -398,15 +451,16 @@ public class Document_services {
 //            while(!futureTask.isDone()) {
 //                wait();
 //            }
-
-            continue;
-
+//
+//            continue;
+//
 //                    synchronized (thread){
 //                        System.out.println("Thread_child" + Thread.currentThread().getName());
 //                        document = create_Document_info(multipartFile.getOriginalFilename() ,  file_path , folder1) ;
 //                        document_repository.save(document) ;
 //                        documentList.add(document) ;
 //                    }thread.start();
+////            / be nha lam
 
 
         }
@@ -416,12 +470,22 @@ public class Document_services {
 
     }
 
-    public Document create_Document_info(String file_name , String file_path , Folder folder) {
+    public Document create_Document_info(String file_name , String file_path , Folder folder , String share,String id_drive) throws GeneralSecurityException, IOException {
 
         Document document1 =  new Document() ;
         document1.setFile(file_path);
         document1.setTitle(file_name);
+        document1.setPath(share);
+        document1.setId_document_drive(id_drive);
+        try {
 
+
+            String id = drive_service.getFolderId(file_name);
+            System.out.println(drive_service.listFolderContent(id));
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
         LocalDate myObj = LocalDate.now() ;
 
         java.sql.Date date = java.sql.Date.valueOf(myObj.toString()) ;
@@ -442,6 +506,57 @@ public class Document_services {
     public  List<Document> Update_Cache_Document( List<Document> newest_Document ,String ID){
 
         return newest_Document ;
+    }
+    @Async
+    public void create_Category_Drive(String root_name , String foldername) throws GeneralSecurityException, IOException {
+        String root_Drive_id = "" ;
+        List<com.google.api.services.drive.model.File> fileList =  drive_service.listFolderContent("1Zq8yhHNPbcNV3pH7Zz8MV28cKxZc3SVm") ;
+        for (com.google.api.services.drive.model.File file : fileList) {
+
+            if(file.getName().equals(root_name)) {
+                root_Drive_id = file.getId(); ;
+                break;
+            }
+        }
+        drive_service.create_Folder_ID(root_Drive_id ,  foldername) ;
+    }
+    public String Find_By_Folder_ID(String category_id  ,  String folder_name) throws Exception {
+        Drive driveInstance = Drive_Config.getInstance();
+        String id = drive_service.findOrCreateFolder(category_id ,  folder_name ,  driveInstance) ;
+
+        return id ;
+    }
+//    @Async
+    public String Create_Path(MultipartFile [] multipartFiles  , String root_name  , String foldername) throws Exception {
+
+        String file_path = "Data_Document/"+root_name+"/" ;
+        String root_Drive_id = "" ;
+        List<com.google.api.services.drive.model.File> fileList =  drive_service.listFolderContent("1Zq8yhHNPbcNV3pH7Zz8MV28cKxZc3SVm") ;
+        for (com.google.api.services.drive.model.File file : fileList) {
+
+            if(file.getName().equals(root_name)) {
+                root_Drive_id = file.getId(); ;
+                break;
+            }
+        }
+        String id_folder = Find_By_Folder_ID(root_Drive_id ,  foldername) ;
+        file_path += foldername ;
+        drive_service.Upload_File(multipartFiles[0], file_path ) ;
+        return file_path;
+
+    }
+
+
+@Async
+
+    public CompletableFuture<Map<Object , Object>> Document_download(String ID , HttpServletResponse response) throws Exception {
+        Document document = document_repository.findByID(Integer.parseInt(ID)) ;
+        String path =  document.getPath() ;
+        String id = document.getFile();
+        String id_file =  document.getId_document_drive() ;
+        Map<Object , Object> objectObjectMap =  drive_service.download_file(id , id_file , response.getOutputStream()) ;
+        return  CompletableFuture.completedFuture(objectObjectMap)  ;
+
     }
 
 }
@@ -484,6 +599,8 @@ class Send_File implements   Runnable {
     public void send_File(MultipartFile multipartFile) {
         this.multipartFileBlockingDeque.add(multipartFile);
     }
+
+
 }
 class processing_FILE implements  Runnable {
     private  final  BlockingDeque<MultipartFile> multipartFiles ;
@@ -521,28 +638,24 @@ class processing_FILE implements  Runnable {
 
     }
     public void Processing_File(MultipartFile multipartFile)  {
-        try {
-            String root_name = upload_document_event.getCreate_folder().getRoot_name() ;
+        String root_name = upload_document_event.getCreate_folder().getRoot_name() ;
 
-            String category_name = upload_document_event.getCreate_folder().getCode() ;
+        String category_name = upload_document_event.getCreate_folder().getCode() ;
 
-            String Folder_name =  upload_document_event.getCreate_folder().getFolder_name() ;
+        String Folder_name =  upload_document_event.getCreate_folder().getFolder_name() ;
 
-            Folder folder1 = folder_respository.findByTitleAndCode(category_name , Folder_name) ;
-            if(this.path != null) {
-                String file_path = document_services.Create_File(root_name ,  category_name , Folder_name , multipartFile.getOriginalFilename() , multipartFile);
+        Folder folder1 = folder_respository.findByTitleAndCode(category_name , Folder_name) ;
+        if(this.path != null) {
+//                String file_path = document_services.Create_File(root_name ,  category_name , Folder_name , multipartFile.getOriginalFilename() , multipartFile);
+//
+//                Document document = document_services.create_Document_info(multipartFile.getOriginalFilename() ,  file_path , folder1 , "") ;
+//
+//                document_repository.save(document) ;
 
-                Document document = document_services.create_Document_info(multipartFile.getOriginalFilename() ,  file_path , folder1) ;
-
-                document_repository.save(document) ;
-
-            }
-
-        } catch (IOException e) {
-
-            System.out.println(e.getMessage());
         }
 
     }
+
+
 }
 

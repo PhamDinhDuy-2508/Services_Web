@@ -1,6 +1,8 @@
 package com.Search_Thesis.Search_Thesis;
 
-import com.Search_Thesis.Search_Thesis.resposity.User_respository;
+import com.Search_Thesis.Search_Thesis.Model.Question;
+import com.Search_Thesis.Search_Thesis.resposity.Question_Repository;
+import com.Search_Thesis.Search_Thesis.resposity.Tag_repository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -8,6 +10,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.List;
 
 //@SpringBootApplication(scanBasePackages = {"com.Search_Thesis.Search_Thesis.resposity" ,
 //		"com.Search_Thesis.Search_Thesis.Services" ,"com.Search_Thesis.Search_Thesis.Model" ,
@@ -27,7 +31,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SearchThesisApplication implements CommandLineRunner {
 
 	@Autowired
-	User_respository user_respository ;
+	Question_Repository question_repository ;
+	@Autowired
+	Tag_repository category_question_repository ;
 	@Autowired
 	PasswordEncoder passwordEncoder ;
 
@@ -37,6 +43,15 @@ public class SearchThesisApplication implements CommandLineRunner {
 //	private  final Root_Responsitory root_responsitory ;
 	@Override
 	public void run(String... args) throws Exception {
+		List<Question> list =  question_repository.findAll() ;
+//		for (Question lis :list) {
+//			Category_Question category_question =  category_question_repository.findByCategory_id(1) ;
+//			lis.setCategory_questions(Arrays.asList(category_question) );
+//			System.out.println(lis.getCategory_questions());
+//
+//			question_repository.save(lis) ;
+//
+//		}
 //		User user =  new User() ;
 //		user.setAccount("PhamDinhDuy2508");
 //		user.setPassword(passwordEncoder.encode("25082000"));

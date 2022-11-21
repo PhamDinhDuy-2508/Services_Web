@@ -4,9 +4,11 @@ import com.Search_Thesis.Search_Thesis.Model.Comment_Reply_Question;
 import com.Search_Thesis.Search_Thesis.Model.Question;
 import com.Search_Thesis.Search_Thesis.Model.Reply;
 import com.Search_Thesis.Search_Thesis.Payload.*;
+import com.Search_Thesis.Search_Thesis.Services.Drive_Service;
 import com.Search_Thesis.Search_Thesis.Services.QandA_Services;
 import com.Search_Thesis.Search_Thesis.resposity.Question_Repository;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +27,9 @@ public class QandA_rest {
     Question_Repository question_repository ;
 
     @Autowired
+    Drive_Service drive_service ;
+
+    @Autowired
     Question_info_response question_info_response ;
 
 
@@ -34,15 +39,25 @@ public class QandA_rest {
         return ResponseEntity.ok( qandA_services.get_size_list() );
     }
 
-    @GetMapping("/load_all/{page}")
+    @GetMapping("load_Filter/{Filter}/{page}")
+    public ResponseEntity<?> load_Filter(@PathVariable String Filter, @PathVariable String page) {
+        try {
+            List<Question_detail_response> questionList = qandA_services.load_with_Filter(page, Filter);
+            return  ResponseEntity.ok(questionList) ;
 
+        }
+        catch (Exception e) {
+            return  ResponseEntity.ok(e.getMessage()) ;
+        }
+    }
+    @GetMapping("/load_all/{page}")
     public ResponseEntity<?> load_all(@RequestParam("Filter") String Filter, @PathVariable String page){
         try {
 
-
             List<Question_detail_response> list = qandA_services.load_all_with_page(page, Filter);
 
-            System.out.println(list);
+
+
             return ResponseEntity.ok( list);
 
         }
@@ -51,9 +66,9 @@ public class QandA_rest {
             return ResponseEntity.ok( null);
 
         }
-
-
     }
+
+
 
     @GetMapping("/get_number_page")
     public ResponseEntity<Integer> get_number() {
@@ -77,8 +92,12 @@ public class QandA_rest {
 
         qandA_services.Increment_view(id);
 
+
+
         Question question =  qandA_services.load_question_detail(Integer.parseInt(id)) ;
+
         question_info_response.setQuestion(question);
+
         question_info_response.setCreator(question.getCreator());
 
         return ResponseEntity.ok(question_info_response) ;
@@ -130,7 +149,6 @@ public class QandA_rest {
         }
         catch (Exception e) {
             return  ResponseEntity.ok(null) ;
-
 
         }
 
@@ -186,11 +204,45 @@ public class QandA_rest {
         return ResponseEntity.ok(true) ;
 
    }
-   @GetMapping("/test_Cache_ques")
-    public ResponseEntity<?> test() {
-        return ResponseEntity.ok(        qandA_services.test_Question_Cache() )  ;
+
+   @GetMapping("/load_topic")
+   public ResponseEntity<?> load_topic() {
+        try {
+            JSONObject json = new JSONObject();
+            System.out.println(qandA_services.load_Category().size());
+            json.put("size_topic", qandA_services.load_Category().size());
+            json.put("size_post", qandA_services.load_all().size());
+            json.put("topic_detail", qandA_services.load_Category());
+            return ResponseEntity.ok( json.toString() ) ;
+
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            return ResponseEntity.ok( "" ) ;
+
+        }
+   }
+
+   @GetMapping("/load_By_Category/{id}/{page}")
+   public  ResponseEntity<?> load_By_Category(@PathVariable String id, @PathVariable String page) {
+      List<Question_detail_response> questionList =   qandA_services.get_tag_list(id , page) ;
+
+       return ResponseEntity.ok(questionList) ;
 
    }
+
+   @GetMapping("/test_Cache_ques")
+    public ResponseEntity<?> test() {
+        return ResponseEntity.ok( qandA_services.test_Question_Cache() )  ;
+   }
+   @GetMapping("/test_google_Drive")
+    public  ResponseEntity<?> test_2() throws Exception {
+
+        return ResponseEntity.ok( drive_service.listFolderContent("1Zq8yhHNPbcNV3pH7Zz8MV28cKxZc3SVm"));
+
+   }
+
 
 
    }
