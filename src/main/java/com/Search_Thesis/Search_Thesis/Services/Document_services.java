@@ -17,6 +17,7 @@ import com.Search_Thesis.Search_Thesis.resposity.Root_Responsitory;
 import com.google.api.services.drive.Drive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.context.event.EventListener;
@@ -98,6 +99,9 @@ public class Document_services {
 
     @Autowired
     Category_document_Responsitory category_document_responsitory ;
+
+    @Autowired
+    CacheManager cacheManager ;
     public Root_Folder load_Root_Folder(String ID) {
 
         return root_responsitory.findRoot_FolderByIdById(Integer.valueOf(ID));
@@ -210,11 +214,6 @@ public class Document_services {
             Category_document categoryDocument =  category_document_responsitory.findByCode(category_name) ;
             System.out.println(categoryDocument);
 
-//            root_folder.setId(Integer.valueOf(create_folder_event.getCreate_folder().getRoot_id()));
-//            root_folder.setName(create_folder_event.getCreate_folder().getName());
-
-//            category_document.setName(create_folder_event.getCreate_folder().getName());
-//            category_document.setCode(create_folder_event.getCreate_folder().getCode());
 
             folder.setTitle(create_folder_event.getCreate_folder().getFolder_name());
             LocalDate myObj = LocalDate.now() ;
@@ -226,12 +225,7 @@ public class Document_services {
 //            folder.setCategorydocument(category_document);
             folder.setContributor_ID(Integer.valueOf( create_folder_event.getCreate_folder().getUser_id()));
 
-//            category_document.setRoot_folder(root_folder);
-
-//            root_folder.setCategory_document(Collections.singleton(category_document));
 //
-//            root_responsitory.save(root_folder) ;
-//            category_document_responsitory.save(categoryDocument) ;
             folder_respository.save(folder) ;
 
             String filePath = "Data_Document/"+root_name+"/"+category_name;
@@ -240,12 +234,7 @@ public class Document_services {
             Drive driveInstance = Drive_Config.getInstance();
 
             drive_service.findOrCreateFolder(id ,  folder_name , driveInstance);
-
-//
-//            Create_Folder_Directory(create_folder_event.getCreate_folder().getRoot_name()  ,
-//                                     create_folder_event.getCreate_folder().getCode() ,
-//                                    create_folder_event.getCreate_folder().getFolder_name());
-//            Update_Cache_Folder(folder) ;
+            cacheManager.getCache("category_redis").evict(category_name);
 
         }
 
@@ -397,7 +386,6 @@ public class Document_services {
         List<Document> documentList =  new ArrayList<>() ;
 
         String file_PATH = "Data_Document/"+root_name+"/"+category_name+"/"+Folder_name ;
-        System.out.println(file_PATH);
 
         String id = drive_service.getFolderId(file_PATH);
 
@@ -407,6 +395,7 @@ public class Document_services {
 ///https://drive.google.com/file/d/107wEnfCHBcu2BT57-twdmI-r_H9FAArT/view?usp=share_link
         for(MultipartFile multipartFile  : upload_document_event.getMultipartFile()) {
            com.google.api.services.drive.model.File file =  drive_service.uploadFile(multipartFile , file_PATH) ;
+            System.out.println(file.getParents());
 
 //            String id_Folder = drive_service.getFolderId(file_PATH) ;
             document = create_Document_info(multipartFile.getOriginalFilename(), file.getParents().get(0), folder1 , file.getWebViewLink(),file.getId());
@@ -465,6 +454,9 @@ public class Document_services {
 
         }
         Delete_Cachce_Category(category_name);
+//        cacheManager.getCache("category_redis").get(category_name).get() ;
+//        cacheManager.getCache("category_redis").put(category_name);
+
 
         Update_Cache_Document(documentList , String.valueOf( folder1.getIdFolder()) ) ;
 
@@ -645,6 +637,7 @@ class processing_FILE implements  Runnable {
         String Folder_name =  upload_document_event.getCreate_folder().getFolder_name() ;
 
         Folder folder1 = folder_respository.findByTitleAndCode(category_name , Folder_name) ;
+
         if(this.path != null) {
 //                String file_path = document_services.Create_File(root_name ,  category_name , Folder_name , multipartFile.getOriginalFilename() , multipartFile);
 //
@@ -655,6 +648,7 @@ class processing_FILE implements  Runnable {
         }
 
     }
+
 
 
 }

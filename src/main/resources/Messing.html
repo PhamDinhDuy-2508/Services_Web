@@ -2,26 +2,278 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-  <script src="static/js/fabric-min.js"></script>
-  <script src="static/js/Edit_model.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   <script src ="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"></script>
-  <div class="controls">
+  <!-- <div class="controls">
     <p>
       <button id="edit" onclick="Edit()">Toggle editing polygon</button>
     </p>
+  </div> -->
+  <canvas id="canvas" width=500 height=500 style="border: 1px solid"></canvas>
+  <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+    <div class="btn-group mr-2" role="group" aria-label="First group">
+      <button type="button" id="drawline" class="btn btn-secondary">Draw Line</button>
+      <button type="button" class="btn btn-secondary">Draw circle</button>
+      <button type="button" id="draw_curve" class="btn btn-secondary">Draw Curve</button>
+      <button type="button" class="btn btn-secondary">Get object</button>
+      <button type="button" id="stop" class="btn btn-secondary">Stop</button>
+
+    </div>
+    
   </div>
-  <canvas id="c" width="500" height="400" style="border:1px solid #ccc"></canvas></head>
-<body>
+  <body>
 
 </body>
-<script>
-function  add_force(){
 
-}
-</script>
 <script>
+  var stack_button = ["stop"]
+  let signal ="0"
+  const points2 = [10,110,200,100,400,110];
+
+  let points =  [{
+         x: 277, y: 200
+       }, {
+         x: 137, y: 200
+       }, {
+         x: 137, y: 490
+       },  {
+         x: 278, y: 490
+       }, {
+         x: 278, y: 408
+       }, {
+         x: 205, y: 350
+       }, {
+         x: 278, y: 270
+       }, {
+         x: 278, y: 200
+       }]
+  let drag_point = -1;
+  let pointSize = 6;
+  let canvas = document.getElementById("canvas");
+  var ctx = canvas.getContext("2d");
+  requestAnimationFrame(update);
+
+  $("#drawline").click(function(){
+    signal = "1"
+    $("#" + stack_button[0]).attr("enable", true) 
+
+    $("#drawline").attr("disabled", true)
+
+    stack_button.push("drawline")
+  })
+  $("#draw_curve").click(function(){
+    $("#" + stack_button[0]).attr("enable", true) 
+    signal ="2" 
+    stack_button.push("draw_curve")
+    $("#draw_curve").attr("disabled", true) 
+
+
+  })
+
+
+  canvas.onmousedown = function(e) {
+    var pos = getPosition(e);
+    drag_point = getPointAt(pos.x, pos.y);
+    if (drag_point == -1) {
+      if(signal == "1") {
+      points.push(pos);
+    }
+      redraw();
+    }
+  
+  };
+  canvas.onmousemove = function(e) {
+    if (drag_point != -1) {
+      var pos = getPosition(e);
+      points[drag_point].x = pos.x;
+      points[drag_point].y = pos.y;
+      redraw(); 
+    }
+  };
+
+  canvas.onmouseup = function(e) {
+    drag_point = -1;
+  };
+
+  function getPosition(event) {
+    var rect = canvas.getBoundingClientRect();
+    var x = event.clientX - rect.left;
+    var y = event.clientY - rect.top;
+    return {x, y};
+  }
+
+  function getPointAt(x, y) {
+    for (var i = 0; i < points.length; i++) {
+      if (
+        Math.abs(points[i].x - x) < pointSize &&
+        Math.abs(points[i].y - y) < pointSize
+      )
+        return i;
+    }
+    return -1; 
+  }
+
+  function redraw() {
+    if (points.length > 0) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      drawLines2()
+      drawCircles()
+    }
+  }
+  
+
+  function drawLines2() {
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, points[0].y);
+    ctx.strokeStyle = "blue";
+    ctx.lineWidth = 2;
+    points.forEach((p) => {
+      ctx.lineTo(p.x, p.y);
+    })
+    ctx.stroke();
+  }
+
+  function drawCircles() {
+    ctx.strokeStyle = "red";
+    ctx.lineWidth = 4;
+    points.forEach((p) => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, pointSize, 0, Math.PI * 2, true);
+      ctx.stroke();
+    })
+  }
+  function fitCircleToPoints(x1, y1, x2, y2, x3, y3) {
+    var x, y, u;
+    const slopeA = (x2 - x1) / (y1 - y2); // slope of vector from point 1 to 2
+    const slopeB = (x3 - x2) / (y2 - y3); // slope of vector from point 2 to 3
+    if (slopeA === slopeB)  { return } // Slopes are same thus 3 points form striaght line. No circle can fit.
+    if(y1 === y2){   // special case with points 1 and 2 have same y 
+        x = ((x1 + x2) / 2);
+        y = slopeB * x + (((y2 + y3) / 2) - slopeB * ((x2 + x3) / 2));  
+    }else
+    if(y2 === y3){ // special case with points 2 and 3 have same y 
+        x = ((x2 + x3) / 2);
+        y = slopeA * x + (((y1 + y2) / 2) - slopeA * ((x1 + x2) / 2));  
+    } else{
+        x = ((((y2 + y3) / 2) - slopeB * ((x2 + x3) / 2)) - (u = ((y1 + y2) / 2) - slopeA * ((x1 + x2) / 2))) / (slopeA - slopeB);
+        y = slopeA * x + u;
+    }
+    
+    return {
+        x, y, 
+        radius: ((x1 - x) ** 2 + (y1 - y) ** 2) ** 0.5,
+        CCW: ((x3 - x1) * (y2 - y1) - (y3 - y1) * (x2 - x1)) >= 0,
+    };
+}
+
+
+
+
+
+
+Math.TAU = Math.PI * 2;
+// const ctx = canvas.getContext("2d");
+const mouse  = {x : 0, y : 0, button : false}   
+  function mouseEvents(e){
+      const bounds = canvas.getBoundingClientRect();
+      mouse.x = e.pageX - bounds.left - scrollX;
+      mouse.y = e.pageY - bounds.top - scrollY;
+      mouse.button = e.type === "mousedown" ? true : e.type === "mouseup" ? false : mouse.button;
+  }
+["down","up","move"].forEach(name => document.addEventListener("mouse" + name, mouseEvents));
+var w = canvas.width, h = canvas.height, cw = w / 2, ch = h / 2;
+var nearest, ox, oy, dragging, dragIdx;
+  function drawPoint(x, y, rad, col = "black") {
+      ctx.strokeStyle = col;
+      ctx.beginPath();
+      ctx.arc(x, y, rad, 0, Math.TAU);
+      ctx.stroke();
+  }
+  function drawLines(idx, col = "black") {
+      ctx.strokeStyle = col;
+      ctx.beginPath();
+      ctx.lineTo(points2[idx++], points2[idx++]);
+      ctx.lineTo(points2[idx++], points2[idx++]);
+      ctx.lineTo(points2[idx++], points2[idx++]);
+      ctx.stroke();
+  } 
+  function drawPoints() {
+    var i = 0, x, y;
+    nearest = - 1;
+    var minDist = 20;
+    while (i < points2.length) {
+      drawPoint(x = points2[i++], y = points2[i++], 4);
+      const dist = (x - mouse.x) ** 2 + (y - mouse.y) ** 2;
+      if (dist < minDist) {
+          minDist = dist;
+          nearest = i - 2;
+      }
+    }
+  }
+
+  function update(){
+  // redraw();
+
+      ctx.setTransform(1,0,0,1,0,0); // reset transform
+      if(w !== innerWidth || h !== innerHeight){
+          cw = (w = canvas.width = innerWidth) / 2;
+          ch = (h = canvas.height = innerHeight) / 2;
+      }else{
+          ctx.clearRect(0,0,w,h);
+      }
+      canvas.style.cursor = "default";
+      drawPoints();
+      drawCircles()
+      drawLines2()
+      if (nearest > -1) {
+        if (mouse.button) {
+          if (!dragging) {
+              dragging = true;
+              ox = points2[nearest] - mouse.x;
+              oy = points2[nearest+1] - mouse.y;
+              dragIdx = nearest;
+          }
+        } else {
+            canvas.style.cursor = "move";
+        }
+        
+        
+        drawPoint(points2[nearest], points2[nearest + 1], 6, "red")
+      }
+      if (dragging) {
+          if (!mouse.button) {
+              dragging = false;
+          } else {
+              points2[dragIdx] = mouse.x + ox;
+              points2[dragIdx + 1] = mouse.y + oy
+              canvas.style.cursor = "none";
+          }
+      }
+      
+      drawLines(0, "#0002");
+    
+        const circle = fitCircleToPoints(points2[0], points2[1], points2[2], points2[3], points2[4], points2[5]);
+
+      if (circle) {
+          ctx.strokeStyle = "#000";
+          const ang1 = Math.atan2(points2[1] - circle.y, points2[0]- circle.x);
+          const ang2 = Math.atan2(points2[5] - circle.y, points2[4]- circle.x);
+          ctx.beginPath();
+          ctx.arc(circle.x, circle.y, circle.radius, ang1, ang2, circle.CCW);
+          ctx.stroke();
+      }
+      
+      requestAnimationFrame(update);
+  }
+
+  
+ 
+
+
+</script>
+<!-- <script>
        var canvas = this.__canvas = new fabric.Canvas('c');
        // create a polygon object
        var points = [{
@@ -153,6 +405,6 @@ function  add_force(){
        var circle, isDown, origX, origY;
 
 
-</script>
+</script> -->
 
 </html>

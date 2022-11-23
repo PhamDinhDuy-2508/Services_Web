@@ -151,7 +151,6 @@ public class Drive_Service {
         return null;
     }
 
-
     public void create_Folder_ID (String ParentId , String folderName) throws GeneralSecurityException, IOException {
         System.out.println(folderName);
         Drive driveInstance = Drive_Config.getInstance();
@@ -181,14 +180,13 @@ public class Drive_Service {
                                 file.getContentType(),
                                 new ByteArrayInputStream(file.getBytes()))
                         )
-                        .setFields("id,webViewLink").execute();
+                        //files(id, name ,parents,webViewLink)
+                        .setFields("id, name ,parents,webViewLink").execute();
 
                 return uploadFile;
             }
         } catch (Exception e) {
-
             return null;
-
         }
         return null;
     }
@@ -199,7 +197,6 @@ public class Drive_Service {
             return null;
         }
         else {
-
             List<File> fileList = listFolderContent(id) ;
 
             for  (File file : fileList) {
@@ -207,9 +204,7 @@ public class Drive_Service {
                     name = file.getName() ;
                     break;
                 }
-
             }
-
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             baos.writeTo(outputStream);
             baos.toByteArray();
@@ -221,13 +216,26 @@ public class Drive_Service {
             map_byte.put("name" , name) ;
             map_byte.put("byte" ,  bytes) ;
 
-            System.out.println(map_byte);
-
-
             return map_byte ;
         }
     }
+    public void Dowload_Folder(String id_folder ,OutputStream outputStream  ) {
 
+    }
+    public void Download_folder_ZIP(String id_folder ,  OutputStream outputStream) throws GeneralSecurityException, IOException {
+       List<File> fileList =  listFolderContent(id_folder)  ;
+    }
+    public boolean Delete_filde_Drive(String id_folder) throws GeneralSecurityException, IOException {
+        try {
+            Drive_Config.getInstance().files().delete(id_folder).execute();
+            return true  ;
+        }
+        catch ( Exception e) {
+            System.out.println(e.getMessage());
+            return false ;
+        }
+
+    }
 
 
 

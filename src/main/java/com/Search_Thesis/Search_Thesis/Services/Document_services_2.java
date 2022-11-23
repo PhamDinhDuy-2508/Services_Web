@@ -93,7 +93,7 @@ public class Document_services_2 {
         }
         return   category_documentList ;
     }
-    @Cacheable(value = "load_folder" , key = "#code")
+    @Cacheable(value = "category_redis" , key = "#code")
     public List<Folder> load_folder(String code) {
 
         List<Folder> folder = folder_respository.findbyCode(code) ;

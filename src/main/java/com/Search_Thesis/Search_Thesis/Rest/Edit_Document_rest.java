@@ -4,7 +4,6 @@ import com.Search_Thesis.Search_Thesis.Model.Category_document;
 import com.Search_Thesis.Search_Thesis.Model.Document;
 import com.Search_Thesis.Search_Thesis.Model.Folder;
 import com.Search_Thesis.Search_Thesis.Model.User;
-import com.Search_Thesis.Search_Thesis.Redis_Model.Category_Redis;
 import com.Search_Thesis.Search_Thesis.Redis_Model.Category_redis_Services;
 import com.Search_Thesis.Search_Thesis.Redis_Model.Document_Service_redis;
 import com.Search_Thesis.Search_Thesis.Redis_Model.Document_redis;
@@ -242,12 +241,13 @@ public class Edit_Document_rest {
     @GetMapping("pagination/{page_num}/{code}/{filter}")
     public ResponseEntity pagination_document(@PathVariable String page_num, @PathVariable String code, @PathVariable String filter) {
         int page =  Integer.parseInt(page_num) ;
-        Category_Redis category_redis  = category_redis_services.find("Category" , code) ;
+        List<Folder> folderList =  document_services_2.load_folder(code) ;
+//        Category_Redis category_redis  = category_redis_services.find("Category" , code) ;
 
         if(filter.equals("default")) {
-            List<Folder> folders =  category_redis.getFolderList() ;
+//            List<Folder> folders =  category_redis.getFolderList() ;
 
-            return ResponseEntity.ok( document_services_2.pagination(code , page ,  folders)) ;
+            return ResponseEntity.ok( document_services_2.pagination(code , page ,  folderList)) ;
         }
         else  {
             List<Folder> folders  =  document_services_2.Filter(code , filter) ;

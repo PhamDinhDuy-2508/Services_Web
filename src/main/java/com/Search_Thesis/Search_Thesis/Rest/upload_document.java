@@ -67,14 +67,11 @@ public class upload_document
         Category_document category_document = category_document_responsitory.findByCode(code_category);
 
 
-
-
         create_folder.setFolder_name(name_folder);
         create_folder.setName(category_document.getName());
         create_folder.setCode(code_category);
         create_folder.setRoot_id(id_root);
         create_folder.setRoot_name(root_folder.getName());
-        System.out.println(create_folder);
 
 
         try {
@@ -157,7 +154,7 @@ public class upload_document
             catch (Exception e ) {
                 System.out.println(e.getMessage());
             }
-            return   ResponseEntity.ok(           path) ;
+            return   ResponseEntity.ok( path) ;
 
     }
 

@@ -18,6 +18,7 @@ import com.google.gson.GsonBuilder;
 import lombok.Data;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.ResourceLoader;
@@ -86,6 +87,8 @@ public class Document_rest {
 
     @Autowired
     ResourceLoader resourceLoader;
+    @Autowired
+    CacheManager cacheManager  ;
 
     @Autowired
     Category_redis_Services category_redis_services ;
@@ -248,33 +251,49 @@ public class Document_rest {
 
     @GetMapping("/display_folder/{code}")
     public ResponseEntity display_folder(@PathVariable("code") String code) {
+//        cacheManager.getCache("category_redis").clear();
+        System.out.println(code);
         try {
             Category_document categoryDocument =   category_document_responsitory.findByCode(code) ;
-
-           Category_Redis  category_redis = category_redis_services.find("Category", code);
-
-            if (category_redis == null) {
-                List<Folder> list = document_services_2.load_folder(code);
-                JSONObject json = new JSONObject();
-                json.put("amount", list.size());
-                json.put("name" , categoryDocument.getName()) ;
-                category_redis_services.save_folder_ID(code, list);
-                String message = json.toString();
+            System.out.println(categoryDocument);
 
 
-                return ResponseEntity.ok(message);
-            } else {
+//           Category_Redis  category_redis = category_redis_services.find("Category", code);
+            Category_Redis  category_redis =null;
+            List<Folder> list = document_services.get_Folder(code);
+            JSONObject json = new JSONObject();
+            json.put("amount", list.size());
+            json.put("name" , categoryDocument.getName()) ;
 
-                List<Folder> list = category_redis.getFolderList();
-                JSONObject json = new JSONObject();
-                json.put("amount", list.size());
-                json.put("name" , categoryDocument.getName()) ;
-
-                String message = json.toString();
+            String message = json.toString();
 
 
-                return ResponseEntity.ok(message);
-            }
+            return ResponseEntity.ok(message);
+
+
+
+//            if (category_redis == null) {
+//                List<Folder> list = document_services_2.load_folder(code);
+//                JSONObject json = new JSONObject();
+//                json.put("amount", list.size());
+//                json.put("name" , categoryDocument.getName()) ;
+//                category_redis_services.save_folder_ID(code, list);
+//                String message = json.toString();
+//
+//
+//                return ResponseEntity.ok(message);
+//            } else {
+//
+//                List<Folder> list = document_services_2.load_folder(code);
+//                JSONObject json = new JSONObject();
+//                json.put("amount", list.size());
+//                json.put("name" , categoryDocument.getName()) ;
+//
+//                String message = json.toString();
+//
+//
+//                return ResponseEntity.ok(message);
+//            }
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -295,7 +314,7 @@ public class Document_rest {
         return ResponseEntity.ok(documentList);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "Preview_file/{ID}", produces = "application/pdf")
+    @RequestMapping(method = RequestMethod.GET, value = "Preview_file/{ID}")
 
     public ResponseEntity<?> preview(HttpServletRequest request, @PathVariable("ID") String ID) throws GeneralSecurityException, IOException {
 
@@ -334,10 +353,14 @@ public class Document_rest {
     public ResponseEntity Page(@PathVariable String page_num , @RequestParam("Code") String code , @RequestParam("Filter") String filter) {
 
         int page =  Integer.parseInt(page_num) ;
-        Category_Redis category_redis  = category_redis_services.find("Category" , code) ;
+//        Category_Redis category_redis  = category_redis_services.find("Category" , code) ;
+        List<Folder> folderList =document_services_2.load_folder(code) ;
 
         if(filter.equals("default")) {
-            List<Folder> folders =  category_redis.getFolderList() ;
+            ArrayList<Folder> folder = new ArrayList<Folder>(folderList.subList(0, folderList.size() ));
+
+            List<Folder> folders =  folder.stream().toList() ;
+
 
             return ResponseEntity.ok( document_services_2.pagination( code , page ,  folders)) ;
         }
@@ -408,6 +431,7 @@ public class Document_rest {
             return ResponseEntity.ok(folderList);
         }
     }
+
 }
 
 @Data

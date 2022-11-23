@@ -245,7 +245,6 @@ public class Edit_Document_Services {
 
     public void Delete_Folder(String id_Folder , String code)
     {
-        System.out.println("Delete folder" + code +  id_Folder);
 
         Folder folder1 = folder_respository.findByIdFolder(Integer.parseInt(id_Folder));
 
@@ -263,7 +262,7 @@ public class Edit_Document_Services {
         else {
             documentList =   document_repository.findById_folder(Integer.parseInt(id_Folder))  ;
         }
-//        redisTemplate.opsForHash().put("Folder_delete" , id_Folder , documentList);
+        redisTemplate.opsForHash().put("Folder_delete" , id_Folder , documentList);
         folder_info_services.save_folder_ID(id_Folder ,  documentList);
 
 

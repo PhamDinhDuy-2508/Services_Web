@@ -1773,7 +1773,7 @@ function  save_delete_document(id_folder,Id) {
 
                 $('#table_fil_folder').append(" <tr id = " + List_file[i].id + ">" +
                     "                                            <td>" +
-                    "                                            <a  target='_blank' rel='noopener noreferrer' href='/api/ckt/Preview_file/" + List_file[i].id + "' class = 'text-dark stretched-link'>" + List_file[i].title +
+                    "                                            <a  target='_blank' rel='noopener noreferrer' href='/api/ckt/preview_file_from_Drive/" + List_file[i].id + "' class = 'text-dark stretched-link'>" + List_file[i].title +
                     "                                            </a>" +
                     "                                            </td>" +
                     "                                            <td>" +
@@ -1850,7 +1850,7 @@ function  save_delete_document(id_folder,Id) {
                 console.log(download_folder)
                 $('#table_file_View').append(" <tr id = " + JSON_arr[i].id + ">" +
                     "                                            <td>" +
-                    "                                            <a  target='_blank' rel='noopener noreferrer' href='/api/ckt/Preview_file/" + JSON_arr[i].id + "' class = 'text-dark stretched-link'>" + JSON_arr[i].title +
+                    "                                            <a  target='_blank' rel='noopener noreferrer' href='/api/ckt/preview_file_from_Drive/" + JSON_arr[i].id + "' class = 'text-dark stretched-link'>" + JSON_arr[i].title +
                     "                                            </a>" +
                     "                                            </td>" +
                     "                                            <td>" +

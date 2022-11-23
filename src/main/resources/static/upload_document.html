@@ -763,8 +763,11 @@ function back_to_document_page(){
 
                 var data = new FormData();
                 data.append('file', file);
+                console.log( 'http://localhost:8080/api/ckt/upload_document/' +document.getElementById("dropdownMenuButton1").value+"/"+
+                    $('#category').val()  + "/"  +$('#folder_search').val())
                 jQuery.ajax({
-                    url: 'http://localhost:8080/api/ckt/upload_document',
+                    url: 'http://localhost:8080/api/ckt/upload_document/' +document.getElementById("dropdownMenuButton1").value+"/"+
+                        $('#category').val()  + "/"  +$('#folder_search').val(),
                     data: data,
                     cache: false,
                     contentType: false,
