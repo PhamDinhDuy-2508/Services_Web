@@ -315,7 +315,7 @@
 
 
 <div class="container-fluid footer">
-    <p class="pull-right">&copy; Suyati Technologies <script>document.write(new Date().getFullYear())</script>. All rights reserved.</p>
+    <p class="pull-right">&copy; Pham Dinh Duy <script>document.write(new Date().getFullYear())</script>. All rights reserved.</p>
 </div>
 
 <script>
@@ -326,6 +326,7 @@
 
 <script>
 function  create_question() {
+
     var title = $("#Title").val()
 
     var category = ($("#validationTagsThreshold").val()).toString()
@@ -455,7 +456,6 @@ function  create_question() {
                 }
             }
         }
-
         /*execute a function when someone clicks in the document:*/
         document.addEventListener("click", function (e) {
             closeAllLists(e.target);

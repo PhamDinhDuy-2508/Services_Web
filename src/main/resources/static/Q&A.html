@@ -285,7 +285,6 @@
           }
         });
     $('#Filter').change(function(){
-      alert($(this).val())
       load_Filter_Page($(this).val() ,  1)
 
     })
@@ -387,7 +386,6 @@ function reload_page(page) {
   const urlParams = new URLSearchParams(queryString);
   const Filter = urlParams.get('Filter')
   var categoty =  urlParams.get('category')
-  alert(categoty)
 
   if(Filter == null && page != null && categoty == null) {
     redirect_page(page)

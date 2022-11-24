@@ -243,6 +243,22 @@ public class QandA_rest {
 
    }
 
+   @GetMapping("/Active_question")
+    public ResponseEntity<?> Active_topic() {
+
+      List<Question>  questionList  =   qandA_services.get_Active_question() ;
+       List<Question> arrlist2 =  new ArrayList<>()  ;
+      if(questionList.size() > 5) {
+          arrlist2 = questionList.subList(2, 4);
+      }
+      else {
+           arrlist2 = questionList.subList(0, questionList.size());
+      }
+        return  ResponseEntity.ok(arrlist2) ;
+
+   }
+
+
 
 
    }

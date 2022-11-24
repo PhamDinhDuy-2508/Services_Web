@@ -613,6 +613,23 @@ public class QandA_Services {
         return LIST;
     }
 
+    @Cacheable(value = "Active_question" )
+
+    public List<Question> get_Active_question() {
+
+        List<Question> active_question =  new ArrayList<>() ;
+
+        List<Question> questionList =  question_repository.findAll() ;
+        Collections.reverse(questionList);
+        for(Question question1 : questionList) {
+            if(question1.getReply().size() == 0 ) {
+                    active_question.add(question1);
+            }
+        }
+        return  active_question  ;
+
+    }
+
 
 }
 

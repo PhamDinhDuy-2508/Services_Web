@@ -280,9 +280,7 @@ public class Edit_Document_Services {
         document_services.Delete_Cachce_Category(folder1.getCategorydocument().getCode());
 
     }
-        public  void Delete_Document_In_Server(List<Document> documents){
 
-        }
 
     }
 

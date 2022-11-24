@@ -752,9 +752,6 @@ function back_to_document_page(){
     }
 
         function uploadFile() {
-            if($('#save_button').val() == "false") {
-                alert("Đầu vào không hợp lệ")
-            }
 
             var signal =  true
             var token =  get_Cookie("login_jwt")

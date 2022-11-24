@@ -7,7 +7,6 @@ import com.Search_Thesis.Search_Thesis.Model.Category_document;
 import com.Search_Thesis.Search_Thesis.Model.Document;
 import com.Search_Thesis.Search_Thesis.Model.Folder;
 import com.Search_Thesis.Search_Thesis.Model.Root_Folder;
-import com.Search_Thesis.Search_Thesis.Redis_Model.Category_Redis;
 import com.Search_Thesis.Search_Thesis.Redis_Model.Category_redis_Services;
 import com.Search_Thesis.Search_Thesis.resposity.Category_document_Responsitory;
 import com.Search_Thesis.Search_Thesis.resposity.Document_Repository;
@@ -256,13 +255,14 @@ public class Document_services_2 {
         }
         return  result ;
     }
-    @Cacheable(value = "Filter" , key = "{#signal  , #code}")
+//    @Cacheable(value = "Filter" , key = "{#signal  , #code}")
     public List<Folder> Filter(String code ,  String signal) {
+        System.out.println(signal);
         List<Folder> folderList = new ArrayList<>();
 
-        Category_Redis category_redis = category_redis_services.find("Category", code);
+//        Category_Redis category_redis = category_redis_services.find("Category", code);
 
-        folderList = category_redis.getFolderList();
+        folderList = load_folder(code);
         try {
 
             switch (signal) {
@@ -285,7 +285,7 @@ public class Document_services_2 {
 
                     return (sort_alphabet.get_Result());
                 }
-                case ("Date"): {
+                case ("DateE"): {
                     System.out.println("Date");
                     List<Folder> folderList1 = new ArrayList<>();
 
@@ -293,7 +293,11 @@ public class Document_services_2 {
 
                     sort_alphabet.Filter(folderList);
 
-                    return (sort_alphabet.get_Result());
+                    return (folderList);
+                }
+                case  ("DateI") : {
+                    Collections.reverse(folderList);
+                    return folderList ;
                 }
                 default: {
                     return (null);
