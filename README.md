@@ -40,6 +40,21 @@ Create Question
 
 <img width="464" alt="image" src="https://user-images.githubusercontent.com/69359047/203617018-d3c43576-19f7-46da-9ada-51b090ebbb2b.png">
 
+Question info
+
+<img width="941" alt="image" src="https://user-images.githubusercontent.com/69359047/203807560-3b4614a6-9730-4f89-a89f-28d15597808d.png">
+
+Reply & comment 
+
+![ezgif com-gif-maker (3)](https://user-images.githubusercontent.com/69359047/203808483-608ac685-dc02-4952-b189-1d9e52d59ce5.gif)
+
+Topic page
+
+<img width="949" alt="image" src="https://user-images.githubusercontent.com/69359047/203808701-653019b7-b884-4bca-b116-3555e4aa3e9b.png">
+
+
+
+
 
 
 
