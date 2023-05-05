@@ -1,6 +1,6 @@
 package com.Search_Thesis.Search_Thesis.Event;
 
-import com.Search_Thesis.Search_Thesis.Model.Create_category;
+import com.Search_Thesis.Search_Thesis.DTO.Create_category;
 import org.springframework.context.ApplicationEvent;
 public class Create_Category_Event extends ApplicationEvent {
 

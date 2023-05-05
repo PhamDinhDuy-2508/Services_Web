@@ -1,6 +1,6 @@
 package com.Search_Thesis.Search_Thesis.Event;
 
-import com.Search_Thesis.Search_Thesis.Model.Create_folder;
+import com.Search_Thesis.Search_Thesis.DTO.Create_folder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 

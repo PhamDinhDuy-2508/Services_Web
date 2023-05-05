@@ -14,7 +14,6 @@ import java.util.Set;
 @Component("category_document")
 @Entity
 @Table(name = "category_document")
-
 public class Category_document implements Serializable {
 
 

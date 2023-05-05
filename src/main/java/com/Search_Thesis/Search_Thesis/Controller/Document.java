@@ -1,9 +1,10 @@
 package com.Search_Thesis.Search_Thesis.Controller;
 
-import com.Search_Thesis.Search_Thesis.Services.JWT_Services;
-import com.Search_Thesis.Search_Thesis.Services.User_Serrvices;
+import com.Search_Thesis.Search_Thesis.Services.JwtService.JwtService;
+import com.Search_Thesis.Search_Thesis.Services.UserService.UserServiceImpl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,17 +15,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Slf4j
-
 @Controller
-
-
 public class Document {
 
     @Autowired
-    User_Serrvices user_serrvices;
+    UserServiceImpl user_service;
 
     @Autowired
-    JWT_Services jwt_services;
+    @Qualifier("JwtServices")
+    JwtService jwt_services;
 
 
     @RequestMapping("/document")

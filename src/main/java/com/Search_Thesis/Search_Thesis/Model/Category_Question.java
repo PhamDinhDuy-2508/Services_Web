@@ -1,18 +1,18 @@
 package com.Search_Thesis.Search_Thesis.Model;
 
 import com.google.gson.annotations.Expose;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 @Entity
+@EnableAutoConfiguration
 @Table(name =  "catergory_question")
 @Component
-
 public class Category_Question implements Serializable {
     private static final long  serialVersionUID = -297553281792804396L;
-
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Expose

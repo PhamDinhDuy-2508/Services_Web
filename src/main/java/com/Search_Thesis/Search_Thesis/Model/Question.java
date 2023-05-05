@@ -75,6 +75,7 @@ public class Question    implements Serializable {
     private List<Category_Question> category_questions ;
 
 
+
     @JsonIgnore
     @OneToMany( fetch = FetchType.LAZY, mappedBy = "question")
 //    @JsonIgnore

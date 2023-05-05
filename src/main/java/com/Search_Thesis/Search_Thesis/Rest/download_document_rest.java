@@ -2,8 +2,10 @@ package com.Search_Thesis.Search_Thesis.Rest;
 
 import com.Search_Thesis.Search_Thesis.Model.Root_Folder;
 import com.Search_Thesis.Search_Thesis.Services.*;
-import com.Search_Thesis.Search_Thesis.resposity.Document_Repository;
+import com.Search_Thesis.Search_Thesis.Services.SessionService.SessionService;
+import com.Search_Thesis.Search_Thesis.repository.Document_Repository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -32,7 +34,8 @@ public class download_document_rest {
     Root_Folder root_folder;
 
     @Autowired
-    Session_Service session_service;
+    @Qualifier("SessionService")
+    SessionService session_serviceImpl;
 
     @Autowired
     Document_services_2 document_services_2;

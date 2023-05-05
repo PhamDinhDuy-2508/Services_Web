@@ -10,12 +10,14 @@ import com.Search_Thesis.Search_Thesis.Model.Category_document;
 import com.Search_Thesis.Search_Thesis.Model.Document;
 import com.Search_Thesis.Search_Thesis.Model.Folder;
 import com.Search_Thesis.Search_Thesis.Model.Root_Folder;
-import com.Search_Thesis.Search_Thesis.resposity.Category_document_Responsitory;
-import com.Search_Thesis.Search_Thesis.resposity.Document_Repository;
-import com.Search_Thesis.Search_Thesis.resposity.Folder_Respository;
-import com.Search_Thesis.Search_Thesis.resposity.Root_Responsitory;
+import com.Search_Thesis.Search_Thesis.Services.SessionService.SessionService;
+import com.Search_Thesis.Search_Thesis.repository.Category_document_Responsitory;
+import com.Search_Thesis.Search_Thesis.repository.Document_Repository;
+import com.Search_Thesis.Search_Thesis.repository.Folder_Respository;
+import com.Search_Thesis.Search_Thesis.repository.Root_Responsitory;
 import com.google.api.services.drive.Drive;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
@@ -53,7 +55,8 @@ public class Document_services {
     Root_Responsitory root_responsitory ;
 
     @Autowired
-    Session_Service session_service  ;
+    @Qualifier("SessionService")
+    SessionService session_serviceImpl;
     @Autowired
     Search_category search_category ;
 

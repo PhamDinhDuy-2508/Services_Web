@@ -1,15 +1,16 @@
 package com.Search_Thesis.Search_Thesis.Rest;
 
+import com.Search_Thesis.Search_Thesis.DTO.Create_folder;
 import com.Search_Thesis.Search_Thesis.Event.Upload_document_Event;
 import com.Search_Thesis.Search_Thesis.Model.Category_document;
-import com.Search_Thesis.Search_Thesis.Model.Create_folder;
 import com.Search_Thesis.Search_Thesis.Model.Root_Folder;
 import com.Search_Thesis.Search_Thesis.Services.Document_services;
 import com.Search_Thesis.Search_Thesis.Services.Drive_Service;
-import com.Search_Thesis.Search_Thesis.Services.JWT_Services;
-import com.Search_Thesis.Search_Thesis.resposity.Category_document_Responsitory;
-import com.Search_Thesis.Search_Thesis.resposity.Root_Responsitory;
+import com.Search_Thesis.Search_Thesis.Services.JwtService.JwtService;
+import com.Search_Thesis.Search_Thesis.repository.Category_document_Responsitory;
+import com.Search_Thesis.Search_Thesis.repository.Root_Responsitory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +40,8 @@ public class upload_document
     @Autowired
     Create_folder create_folder ;
     @Autowired
-    JWT_Services jwt_services ;
+    @Qualifier("JwtServices")
+    JwtService jwt_services ;
 
     @Autowired
     Root_Responsitory root_responsitory ;

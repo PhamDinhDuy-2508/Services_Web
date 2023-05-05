@@ -2,6 +2,7 @@ package com.Search_Thesis.Search_Thesis.Services;
 
 import com.Search_Thesis.Search_Thesis.Event.sendEmail_Event;
 import com.Search_Thesis.Search_Thesis.Model.User;
+import com.Search_Thesis.Search_Thesis.Services.UserService.UserServiceImpl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
@@ -16,7 +17,7 @@ public class ForgotPassword_Services {
     public String random_token  ;
 
     @Autowired
-    User_Serrvices user_serrvices ;
+    UserServiceImpl user_service;
 
     @Autowired
     User user ;
@@ -28,7 +29,7 @@ public class ForgotPassword_Services {
     public User checkUser(String email , String token) {
         System.out.println(Thread.currentThread().getName());
 
-        user =  user_serrvices.getUserByEmailAndUpdateToken(email, token ) ;
+        user =  user_service.getUserByEmailAndUpdateToken(email, token ) ;
         return  user ;
     }
 
@@ -36,13 +37,13 @@ public class ForgotPassword_Services {
     @EventListener
     public void ForgotPassword(sendEmail_Event sendEmail_event) throws MessagingException, UnsupportedEncodingException {
 
-        user =  user_serrvices.getUserByEmailAndUpdateToken(sendEmail_event.getEmail(), sendEmail_event.getToken()) ;
+        user =  user_service.getUserByEmailAndUpdateToken(sendEmail_event.getEmail(), sendEmail_event.getToken()) ;
          if(user == null) {
              return;
          }
          else {
              String resetPasswordLink = Utility.getSiteURL(sendEmail_event.getRequest()) + "/reset_pass?token=" + sendEmail_event.getToken();
-             System.out.println(resetPasswordLink);
+//             System.out.println(resetPasswordLink);
 
              email_services.Send_Email(sendEmail_event.getEmail(),   resetPasswordLink);
         }

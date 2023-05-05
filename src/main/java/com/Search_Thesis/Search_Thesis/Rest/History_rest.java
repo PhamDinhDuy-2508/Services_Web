@@ -1,17 +1,18 @@
 package com.Search_Thesis.Search_Thesis.Rest;
 
 import com.Search_Thesis.Search_Thesis.Model.Document;
+import com.Search_Thesis.Search_Thesis.Model.Document_info_redis;
 import com.Search_Thesis.Search_Thesis.Model.Folder;
-import com.Search_Thesis.Search_Thesis.Redis_Model.Document_Service_redis;
-import com.Search_Thesis.Search_Thesis.Redis_Model.Document_info_redis;
-import com.Search_Thesis.Search_Thesis.Redis_Model.Folder_model_redis;
+import com.Search_Thesis.Search_Thesis.Model.Folder_model_redis;
 import com.Search_Thesis.Search_Thesis.Services.History_Services;
-import com.Search_Thesis.Search_Thesis.Services.JWT_Services;
-import com.Search_Thesis.Search_Thesis.resposity.Document_Repository;
-import com.Search_Thesis.Search_Thesis.resposity.Folder_Respository;
+import com.Search_Thesis.Search_Thesis.Services.JwtService.JwtService;
+import com.Search_Thesis.Search_Thesis.Services.Redis.RedisServiceImpl.Document_Service_redis;
+import com.Search_Thesis.Search_Thesis.repository.Document_Repository;
+import com.Search_Thesis.Search_Thesis.repository.Folder_Respository;
 import lombok.Data;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +37,8 @@ public class History_rest {
     @Autowired
     RedisTemplate redisTemplate ;
     @Autowired
-    JWT_Services jwt_services ;
+    @Qualifier("JwtServices")
+    JwtService jwt_services ;
 
     @GetMapping("/load_history/{token}")
     public ResponseEntity Get_Edit_History(@PathVariable String token) {

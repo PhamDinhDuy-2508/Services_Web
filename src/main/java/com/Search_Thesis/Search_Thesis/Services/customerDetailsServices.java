@@ -1,7 +1,7 @@
 package com.Search_Thesis.Search_Thesis.Services;
 
 import com.Search_Thesis.Search_Thesis.Model.User;
-import com.Search_Thesis.Search_Thesis.resposity.SignIn_Respository;
+import com.Search_Thesis.Search_Thesis.repository.SignIn_Respository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +21,6 @@ public class customerDetailsServices implements UserDetailsService {
     }
     public customerDetailsServices() {
         user_ =  new User() ;
-
     }
 
 
@@ -41,7 +40,6 @@ public class customerDetailsServices implements UserDetailsService {
             String noop_pass  = "{noop}"+this.user_.getPassword() ;
 
             grantList.add(authority);
-            System.out.println(authority.toString());
 
 
             return new org.springframework.security.core.userdetails.User(username, noop_pass,
@@ -50,12 +48,6 @@ public class customerDetailsServices implements UserDetailsService {
         catch (Exception e) {
             return  null ;
         }
-    }
-    public User getUser_() {
-        return user_;
-    }
-    public String get_Role(){
-        return this.user_.getRole() ;
     }
     public void print(){
         System.out.println("CUSTOMER");

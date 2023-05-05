@@ -1,18 +1,19 @@
 package com.Search_Thesis.Search_Thesis.Rest;
 
 import com.Search_Thesis.Search_Thesis.JWT.JwtTokenProvider;
-import com.Search_Thesis.Search_Thesis.Model.Authencation_Request;
-import com.Search_Thesis.Search_Thesis.Model.Authencation_Response;
-import com.Search_Thesis.Search_Thesis.Model.Login_info;
+import com.Search_Thesis.Search_Thesis.DTO.Authencation_Request;
+import com.Search_Thesis.Search_Thesis.DTO.Authencation_Response;
+import com.Search_Thesis.Search_Thesis.DTO.Login_info;
 import com.Search_Thesis.Search_Thesis.Model.User;
 import com.Search_Thesis.Search_Thesis.Security.CustomerDetails;
 import com.Search_Thesis.Search_Thesis.Services.Login_Services;
-import com.Search_Thesis.Search_Thesis.Services.Session_Service;
+import com.Search_Thesis.Search_Thesis.Services.SessionService.SessionService;
 import com.Search_Thesis.Search_Thesis.Services.customerDetailsServices;
-import com.Search_Thesis.Search_Thesis.resposity.SignIn_Respository;
-import com.Search_Thesis.Search_Thesis.resposity.User_respository;
+import com.Search_Thesis.Search_Thesis.repository.SignIn_Respository;
+import com.Search_Thesis.Search_Thesis.repository.User_respository;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +48,8 @@ public class User_Login_rest {
     private com.Search_Thesis.Search_Thesis.JWT.jwtUtils jwtUtils ;
 
     @Autowired
-    private Session_Service session_service;
+    @Qualifier("SessionService")
+    private SessionService session_serviceImpl;
 
     @Autowired
     User_respository user_respository ;

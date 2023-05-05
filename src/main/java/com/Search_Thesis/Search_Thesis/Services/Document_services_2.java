@@ -7,12 +7,14 @@ import com.Search_Thesis.Search_Thesis.Model.Category_document;
 import com.Search_Thesis.Search_Thesis.Model.Document;
 import com.Search_Thesis.Search_Thesis.Model.Folder;
 import com.Search_Thesis.Search_Thesis.Model.Root_Folder;
-import com.Search_Thesis.Search_Thesis.Redis_Model.Category_redis_Services;
-import com.Search_Thesis.Search_Thesis.resposity.Category_document_Responsitory;
-import com.Search_Thesis.Search_Thesis.resposity.Document_Repository;
-import com.Search_Thesis.Search_Thesis.resposity.Folder_Respository;
-import com.Search_Thesis.Search_Thesis.resposity.Root_Responsitory;
+import com.Search_Thesis.Search_Thesis.Services.Redis.RedisServiceImpl.Category_redis_Services;
+import com.Search_Thesis.Search_Thesis.Services.SessionService.SessionService;
+import com.Search_Thesis.Search_Thesis.repository.Category_document_Responsitory;
+import com.Search_Thesis.Search_Thesis.repository.Document_Repository;
+import com.Search_Thesis.Search_Thesis.repository.Folder_Respository;
+import com.Search_Thesis.Search_Thesis.repository.Root_Responsitory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Scope;
@@ -32,7 +34,6 @@ import java.util.zip.ZipOutputStream;
 
 @Service
 @Scope("prototype")
-
 public class Document_services_2 {
     @Autowired
     ApplicationEventPublisher applicationEventPublisher ;
@@ -44,7 +45,8 @@ public class Document_services_2 {
     Root_Folder root_folder ;
 
     @Autowired
-    Session_Service session_service ;
+    @Qualifier("SessionService")
+    SessionService session_serviceImpl;
     @Autowired
     Root_Responsitory root_responsitory ;
 
@@ -121,6 +123,7 @@ public class Document_services_2 {
 
         String file_path = pdf_Path(ID) ;
         return  CompletableFuture.completedFuture(file_path)  ;
+
     }
     @Async
     public CompletableFuture<String> get_name_of_Folder(int Code){
@@ -161,18 +164,15 @@ public class Document_services_2 {
                 zipOut.closeEntry();
             }
             zipOut.finish();
-
             zipOut.close();
         }
 
         catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
-
-
         return null;
     }
+
     @Async
     public CompletableFuture<List<Document> > search_document(List<Document> base ,String signal) {
 
@@ -188,13 +188,11 @@ public class Document_services_2 {
 
         return  CompletableFuture.completedFuture(result) ;
 
-
     }
 
     public Set<Category_document> get_category_with_id_folder() throws ExecutionException, InterruptedException {
 
             Set<Category_document> category_documentList = this.get_Category_task.get();
-
             return category_documentList ;
     }
 

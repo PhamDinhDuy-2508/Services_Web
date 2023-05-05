@@ -1,6 +1,6 @@
 package com.Search_Thesis.Search_Thesis.Rest;
 
-import com.Search_Thesis.Search_Thesis.Services.JWT_Services;
+import com.Search_Thesis.Search_Thesis.Services.JwtService.JwtServiceImpl.JwtServiceImpl;
 import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +19,7 @@ public class Blog_rest {
         HttpSession session =  request.getSession(true) ;
         try{
             String jwt = (String) session.getAttribute("jwt_code");
-            JWT_Services jwt_services = new JWT_Services();
+            JwtServiceImpl jwt_services = new JwtServiceImpl();
 
             jwt_services.setJwt(jwt);
 

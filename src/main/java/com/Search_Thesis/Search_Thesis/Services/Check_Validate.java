@@ -1,8 +1,7 @@
 package com.Search_Thesis.Search_Thesis.Services;
 
 import com.Search_Thesis.Search_Thesis.Model.User;
-import com.Search_Thesis.Search_Thesis.Rest.User_Sign_Up;
-import com.Search_Thesis.Search_Thesis.resposity.SignUp_Respository;
+import com.Search_Thesis.Search_Thesis.repository.SignUp_Respository;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

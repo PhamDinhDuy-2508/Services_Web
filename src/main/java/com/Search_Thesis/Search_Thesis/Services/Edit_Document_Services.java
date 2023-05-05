@@ -1,10 +1,10 @@
 package com.Search_Thesis.Search_Thesis.Services;
 
-import com.Search_Thesis.Search_Thesis.Model.Document;
-import com.Search_Thesis.Search_Thesis.Model.Folder;
-import com.Search_Thesis.Search_Thesis.Model.Root_Folder;
-import com.Search_Thesis.Search_Thesis.Redis_Model.*;
-import com.Search_Thesis.Search_Thesis.resposity.*;
+import com.Search_Thesis.Search_Thesis.Model.*;
+import com.Search_Thesis.Search_Thesis.Services.Redis.RedisServiceImpl.Document_Service_redis;
+import com.Search_Thesis.Search_Thesis.Services.Redis.RedisServiceImpl.Document_info_redis_Services;
+import com.Search_Thesis.Search_Thesis.Services.Redis.RedisServiceImpl.Folder_info_Services;
+import com.Search_Thesis.Search_Thesis.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.redis.core.RedisTemplate;

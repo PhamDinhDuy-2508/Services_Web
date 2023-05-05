@@ -30,6 +30,7 @@
 			<artifactId>google-api-services-drive</artifactId>
 			<version>v3-rev197-1.25.0</version>
 		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/com.google.oauth-client/google-oauth-client-jetty -->
 		<dependency>
 			<groupId>com.google.oauth-client</groupId>
@@ -43,6 +44,7 @@
 			<artifactId>google-api-services-drive</artifactId>
 			<version>v3-rev136-1.25.0</version>
 		</dependency>
+
 
 
 		<dependency>
@@ -286,9 +288,6 @@
 			<groupId>org.springframework.session</groupId>
 			<artifactId>spring-session-data-redis</artifactId>
 		</dependency>
-
-
-
 	</dependencies>
 
 	<build>

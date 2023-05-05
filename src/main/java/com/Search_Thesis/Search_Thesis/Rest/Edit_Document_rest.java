@@ -1,22 +1,19 @@
 package com.Search_Thesis.Search_Thesis.Rest;
 
-import com.Search_Thesis.Search_Thesis.Model.Category_document;
-import com.Search_Thesis.Search_Thesis.Model.Document;
-import com.Search_Thesis.Search_Thesis.Model.Folder;
-import com.Search_Thesis.Search_Thesis.Model.User;
-import com.Search_Thesis.Search_Thesis.Redis_Model.Category_redis_Services;
-import com.Search_Thesis.Search_Thesis.Redis_Model.Document_Service_redis;
-import com.Search_Thesis.Search_Thesis.Redis_Model.Document_redis;
+import com.Search_Thesis.Search_Thesis.Model.*;
 import com.Search_Thesis.Search_Thesis.Services.Document_services;
 import com.Search_Thesis.Search_Thesis.Services.Document_services_2;
 import com.Search_Thesis.Search_Thesis.Services.Edit_Document_Services;
-import com.Search_Thesis.Search_Thesis.Services.JWT_Services;
-import com.Search_Thesis.Search_Thesis.resposity.Document_Repository;
-import com.Search_Thesis.Search_Thesis.resposity.Folder_Respository;
-import com.Search_Thesis.Search_Thesis.resposity.User_respository;
+import com.Search_Thesis.Search_Thesis.Services.JwtService.JwtService;
+import com.Search_Thesis.Search_Thesis.Services.Redis.RedisServiceImpl.Category_redis_Services;
+import com.Search_Thesis.Search_Thesis.Services.Redis.RedisServiceImpl.Document_Service_redis;
+import com.Search_Thesis.Search_Thesis.repository.Document_Repository;
+import com.Search_Thesis.Search_Thesis.repository.Folder_Respository;
+import com.Search_Thesis.Search_Thesis.repository.User_respository;
 import lombok.Data;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -46,7 +43,8 @@ public class Edit_Document_rest {
     @Autowired
     Folder_Respository folder_respository ;
     @Autowired
-    JWT_Services jwt_services ;
+    @Qualifier("JwtServices")
+    JwtService jwt_services ;
     @Autowired
     User_respository user_respository ;
     @Autowired

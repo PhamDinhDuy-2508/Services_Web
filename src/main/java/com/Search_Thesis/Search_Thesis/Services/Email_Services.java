@@ -11,12 +11,8 @@ import java.io.UnsupportedEncodingException;
 
 @Service
 public class Email_Services {
-    private  String email ;
-
     @Autowired
     private JavaMailSender mailSender;
-
-
 
     public void Send_Email(String email , String link)
             throws MessagingException, UnsupportedEncodingException {
@@ -28,7 +24,6 @@ public class Email_Services {
         helper.setTo(email);
 
         String subject = "Here's the link to reset your password";
-        System.out.println(link);
 
         String content = "<p>Xin Chào</p>"
                 + "<p>Bạn đã yêu cầu reset mật khẩu của bạn cho chúng tôi</p>"
@@ -37,12 +32,13 @@ public class Email_Services {
                 + "<br>"
                 + "<p> Bỏ qua thư này nếu bạn đã nhớ lại được mật khẩu"
                 + "Hoặt bạn không có ý định gửi thư này.</p>";
-        System.out.println(content);
+
         helper.setSubject(subject);
 
         helper.setText(content, true);
 
         mailSender.send(message);
+
 
     }
 }

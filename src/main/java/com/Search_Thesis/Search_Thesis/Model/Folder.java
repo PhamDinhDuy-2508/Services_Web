@@ -13,15 +13,12 @@ import java.sql.Date;
 @Component("folder")
 @EnableAutoConfiguration
 @Table(name = "folder")
-
 public class Folder implements Serializable {
-
     @Id
     @Expose
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "id_folder")
     private int idFolder  =0  ;
-
     @Expose
     @Column(name = "Title")
     private  String title ;

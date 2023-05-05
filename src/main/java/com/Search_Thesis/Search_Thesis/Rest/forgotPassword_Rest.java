@@ -41,16 +41,14 @@ public class forgotPassword_Rest {
         User result = futureTask.get();
 
         if (result == null){
-            System.out.println("Null");
+            return ;
         }
         else {
-            System.out.println( "Success") ;
             applicationEventPublisher.publishEvent(new sendEmail_Event(this,gmail_response.getEmail(), request , token));
 
         }
         threadpool.shutdown();
     }
-
 
 }
 @Data

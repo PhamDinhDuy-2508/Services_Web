@@ -1,7 +1,7 @@
 package com.Search_Thesis.Search_Thesis.Rest;
 
 import com.Search_Thesis.Search_Thesis.Model.User;
-import com.Search_Thesis.Search_Thesis.Services.User_Serrvices;
+import com.Search_Thesis.Search_Thesis.Services.UserService.UserServiceImpl.UserServiceImpl;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import javax.validation.constraints.Size;
 public class resetPassword_rest {
 
     @Autowired
-    User_Serrvices user_serrvices ;
+    UserServiceImpl user_service;
     @Autowired
     User user ;
 
@@ -29,7 +29,7 @@ public class resetPassword_rest {
     public ResponseEntity response(@RequestParam("token" )  String token ){
         try {
             System.out.println(token);
-            user =   user_serrvices.getUserBytoken(token);
+            user =   user_service.getUserBytoken(token);
             user_res user_res =  new user_res() ;
 
             return  ResponseEntity.ok(user_res) ;
@@ -41,11 +41,11 @@ public class resetPassword_rest {
     }
     @PostMapping("/update")
     public ResponseEntity reset_pass(@RequestBody reset_response reset_response ,@RequestParam("token" )  String token) {
-        user = user_serrvices.getUserBytoken(token);
+        user = user_service.getUserBytoken(token);
 
         try {
 
-            user_serrvices.updateUserPassword(reset_response.getPass(), user.getUser_id());
+            user_service.updateUserPassword(reset_response.getPass(), user.getUser_id());
 
 
             return ResponseEntity.ok(user);

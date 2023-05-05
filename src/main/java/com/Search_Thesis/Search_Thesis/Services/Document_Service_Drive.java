@@ -1,7 +1,7 @@
 package com.Search_Thesis.Search_Thesis.Services;
 
 import com.Search_Thesis.Search_Thesis.Model.Category_document;
-import com.Search_Thesis.Search_Thesis.resposity.Document_Repository;
+import com.Search_Thesis.Search_Thesis.repository.Document_Repository;
 import com.google.api.services.drive.model.File;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

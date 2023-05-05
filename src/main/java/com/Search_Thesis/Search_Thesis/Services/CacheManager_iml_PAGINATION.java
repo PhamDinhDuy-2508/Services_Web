@@ -1,6 +1,6 @@
 package com.Search_Thesis.Search_Thesis.Services;
 
-import com.Search_Thesis.Search_Thesis.resposity.Question_Repository;
+import com.Search_Thesis.Search_Thesis.repository.Question_Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.cache.CacheManager;

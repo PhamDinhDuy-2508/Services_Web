@@ -3,7 +3,7 @@ package com.Search_Thesis.Search_Thesis.Services;
 import com.Search_Thesis.Search_Thesis.Model.Comment_Reply_Question;
 import com.Search_Thesis.Search_Thesis.Model.Question;
 import com.Search_Thesis.Search_Thesis.Model.Reply;
-import com.Search_Thesis.Search_Thesis.resposity.Question_Repository;
+import com.Search_Thesis.Search_Thesis.repository.Question_Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Scope;

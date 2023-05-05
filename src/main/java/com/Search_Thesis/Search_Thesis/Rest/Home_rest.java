@@ -2,9 +2,10 @@ package com.Search_Thesis.Search_Thesis.Rest;
 
 
 import com.Search_Thesis.Search_Thesis.Model.User;
-import com.Search_Thesis.Search_Thesis.Services.JWT_Services;
+import com.Search_Thesis.Search_Thesis.Services.JwtService.JwtService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,7 +29,8 @@ public class Home_rest {
     @Autowired
     private User user ;
     @Autowired
-    JWT_Services jwt_services ;
+    @Qualifier("JwtServices")
+    JwtService jwt_services ;
     @Autowired
     private HttpSession httpSession;
 

@@ -2,15 +2,17 @@ package com.Search_Thesis.Search_Thesis.Rest;
 
 import com.Search_Thesis.Search_Thesis.Event.Load_User_Event;
 import com.Search_Thesis.Search_Thesis.JWT.jwtUtils;
-import com.Search_Thesis.Search_Thesis.Model.Authencation_Response;
+import com.Search_Thesis.Search_Thesis.DTO.Authencation_Response;
 import com.Search_Thesis.Search_Thesis.Model.User;
-import com.Search_Thesis.Search_Thesis.Services.JWT_Services;
-import com.Search_Thesis.Search_Thesis.Services.User_Serrvices;
-import com.Search_Thesis.Search_Thesis.resposity.User_respository;
+import com.Search_Thesis.Search_Thesis.Services.JwtService.JwtService;
+import com.Search_Thesis.Search_Thesis.Services.JwtService.JwtServiceImpl.JwtServiceImpl;
+import com.Search_Thesis.Search_Thesis.Services.UserService.UserServiceImpl.UserServiceImpl;
+import com.Search_Thesis.Search_Thesis.repository.User_respository;
 import com.google.gson.Gson;
 import lombok.Data;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +34,7 @@ public class Profile_rest {
     ApplicationEventPublisher applicationEventPublisher ;
 
     @Autowired
-    User_Serrvices user_serrvices ;
+    UserServiceImpl user_service;
 
     @Autowired
     User_respository user_respository ;
@@ -43,13 +45,14 @@ public class Profile_rest {
     private jwtUtils jwtUtils ;
 
     @Autowired
-    JWT_Services jwt_services ;
+    @Qualifier("JwtServices")
+    JwtService jwt_services ;
 
 
     @GetMapping()
     public ModelAndView display(@RequestParam("username") String username) {
-        ModelAndView mav = new ModelAndView("proffile.html");
-        return mav;
+        ModelAndView model = new ModelAndView("proffile.html");
+        return model;
     }
 
     @GetMapping("/load_data")
@@ -58,7 +61,7 @@ public class Profile_rest {
 
         String _jwt =(String) httpSession.getAttribute("jwt_code") ;
 
-        JWT_Services jwt_services = new JWT_Services();
+        JwtServiceImpl jwt_services = new JwtServiceImpl();
 
         jwt_services.setJwt(_jwt);
 
@@ -68,14 +71,11 @@ public class Profile_rest {
 
             try {
 
-
                 applicationEventPublisher.publishEvent(new Load_User_Event(this,username1, request));
 
-                user =  user_serrvices.load_user_by_username(username1,  request);
-
+                user =  user_service.load_user_by_username(username1,  request);
 
                 return ResponseEntity.ok(user) ;
-
             }
             catch (Exception e){
                 JWT_response jwt_responses = new JWT_response() ;
@@ -109,8 +109,8 @@ public class Profile_rest {
 
     public ResponseEntity load_pass( @RequestParam("username") String username , HttpServletRequest request){
 
-            if(user_serrvices.checkRequestParam(user_serrvices.getUserName_from_jwt(request) , username)){
-               String jwt_response =  jwtUtils.generateToken(user_serrvices.load_user_from_Session(request).getPassword());
+            if(user_service.checkRequestParam(user_service.getUserName_from_jwt(request) , username)){
+               String jwt_response =  jwtUtils.generateToken(user_service.load_user_from_Session(request).getPassword());
 
                return  ResponseEntity.ok(new Authencation_Response(jwt_response)) ;
             }
@@ -128,8 +128,8 @@ public class Profile_rest {
                                HttpServletRequest request ) throws IllegalStateException {
         Error_res error_res =  new Error_res() ;
 
-        if(user_serrvices.checkRequestParam(user_serrvices.getUserName_from_jwt(request) , username)){
-            User user1 =  user_serrvices.load_user_from_Session(request) ;
+        if(user_service.checkRequestParam(user_service.getUserName_from_jwt(request) , username)){
+            User user1 =  user_service.load_user_from_Session(request) ;
             if(!user1.getPassword().equals(password_response.getOld_password())) {
                 error_res.setType("1");
                 error_res.setError("mật Khẩu không chính xác");
@@ -141,7 +141,7 @@ public class Profile_rest {
                 return ResponseEntity.ok(error_res) ;
             }
             else {
-                System.out.println(user_serrvices.updateUserPassword(user1.getPassword() ,  user1.getUser_id())) ;
+                System.out.println(user_service.updateUserPassword(user1.getPassword() ,  user1.getUser_id())) ;
             }
         }
 

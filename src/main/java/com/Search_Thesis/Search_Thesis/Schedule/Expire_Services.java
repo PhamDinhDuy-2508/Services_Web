@@ -1,13 +1,13 @@
 package com.Search_Thesis.Search_Thesis.Schedule;
 
 import com.Search_Thesis.Search_Thesis.Model.Question;
-import com.Search_Thesis.Search_Thesis.Redis_Model.Document_info_redis;
-import com.Search_Thesis.Search_Thesis.Redis_Model.Document_info_redis_Services;
-import com.Search_Thesis.Search_Thesis.Redis_Model.Folder_info_Services;
-import com.Search_Thesis.Search_Thesis.Redis_Model.Folder_model_redis;
+import com.Search_Thesis.Search_Thesis.Model.Document_info_redis;
+import com.Search_Thesis.Search_Thesis.Services.Redis.RedisServiceImpl.Document_info_redis_Services;
+import com.Search_Thesis.Search_Thesis.Services.Redis.RedisServiceImpl.Folder_info_Services;
+import com.Search_Thesis.Search_Thesis.Model.Folder_model_redis;
 import com.Search_Thesis.Search_Thesis.Server_Service.Message_to_Server;
 import com.Search_Thesis.Search_Thesis.Services.Edit_Document_Services;
-import com.Search_Thesis.Search_Thesis.resposity.Question_Repository;
+import com.Search_Thesis.Search_Thesis.repository.Question_Repository;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;

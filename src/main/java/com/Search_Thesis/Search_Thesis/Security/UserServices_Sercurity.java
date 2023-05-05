@@ -1,7 +1,7 @@
 package com.Search_Thesis.Search_Thesis.Security;
 
 import com.Search_Thesis.Search_Thesis.Model.User;
-import com.Search_Thesis.Search_Thesis.resposity.User_respository;
+import com.Search_Thesis.Search_Thesis.repository.User_respository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

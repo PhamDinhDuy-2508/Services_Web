@@ -2,16 +2,16 @@ package com.Search_Thesis.Search_Thesis.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-
+@EnableAutoConfiguration
 @Table(name = "comment_reply_question")
 @Entity
 public class Comment_Reply_Question implements Serializable {
     private static final long serialVersionUID = 6529685098267757690L;
-
     @Id
     @Column(name = "idcomment_reply_question")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

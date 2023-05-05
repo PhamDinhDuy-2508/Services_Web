@@ -2,9 +2,9 @@ package com.Search_Thesis.Search_Thesis.Services;
 
 import com.Search_Thesis.Search_Thesis.Model.Category_Question;
 import com.Search_Thesis.Search_Thesis.Model.Question;
-import com.Search_Thesis.Search_Thesis.Payload.Category_question_id_name;
-import com.Search_Thesis.Search_Thesis.Payload.Question_detail_response;
-import com.Search_Thesis.Search_Thesis.resposity.Question_Repository;
+import com.Search_Thesis.Search_Thesis.DTO.Category_question_id_name;
+import com.Search_Thesis.Search_Thesis.DTO.QuestionDetailResponse;
+import com.Search_Thesis.Search_Thesis.repository.Question_Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.cache.CacheManager;
@@ -41,27 +41,27 @@ public class CacheManager_iml_PAGINATION_question implements Cache_Manager<Strin
             pagedListHolder.setPage(i);
             cacheManager.getCache("question_page").evict(String.valueOf(i)); ;
             List<Question> list  = pagedListHolder.getPageList() ;
-            List<Question_detail_response> question_detail_responses =  new ArrayList<>() ;
+            List<QuestionDetailResponse> question_detail_respons =  new ArrayList<>() ;
 
             for(Question question1 : list) {
 
                 List<Category_Question> category_questions =  question1.getCategory_questions() ;
                 List<Category_question_id_name> category_question_id_names =  new ArrayList<>() ;
-                Question_detail_response question_detail_response =  new Question_detail_response() ;
-                question_detail_response.setQuestion(question1);
-                question_detail_response.setReply_size(question1.getReply().size());
+                QuestionDetailResponse question_detailResponse =  new QuestionDetailResponse() ;
+                question_detailResponse.setQuestion(question1);
+                question_detailResponse.setReply_size(question1.getReply().size());
 
                 for (Category_Question category_question : category_questions ) {
 
                     category_question_id_names.add(new Category_question_id_name(category_question.getCategory_id() , category_question.getCategory_name())) ;
 
                 }
-                question_detail_response.setCategory_questionList(category_question_id_names);
+                question_detailResponse.setCategory_questionList(category_question_id_names);
 
-                question_detail_responses.add(question_detail_response) ;
+                question_detail_respons.add(question_detailResponse) ;
             }
 
-            ArrayList<Question_detail_response> LIST = new ArrayList<Question_detail_response>(question_detail_responses.subList(0, question_detail_responses.size()));
+            ArrayList<QuestionDetailResponse> LIST = new ArrayList<QuestionDetailResponse>(question_detail_respons.subList(0, question_detail_respons.size()));
 
             cacheManager.getCache("question_page").put(String.valueOf(i+1) , LIST);
         }
@@ -73,28 +73,28 @@ public class CacheManager_iml_PAGINATION_question implements Cache_Manager<Strin
             pagedListHolder.setPage(total_page+1);
             cacheManager.getCache("question_page").evict(total_page+1); ;
             List<Question> list  = pagedListHolder.getPageList() ;
-            List<Question_detail_response> question_detail_responses =  new ArrayList<>() ;
+            List<QuestionDetailResponse> question_detail_respons =  new ArrayList<>() ;
 
 
             for(Question question1 : list) {
                 List<Category_Question> category_questions =  question1.getCategory_questions() ;
                 List<Category_question_id_name> category_question_id_names =  new ArrayList<>() ;
 
-                Question_detail_response question_detail_response =  new Question_detail_response() ;
-                question_detail_response.setQuestion(question1);
-                question_detail_response.setReply_size(question1.getReply().size());
+                QuestionDetailResponse question_detailResponse =  new QuestionDetailResponse() ;
+                question_detailResponse.setQuestion(question1);
+                question_detailResponse.setReply_size(question1.getReply().size());
                 for (Category_Question category_question : category_questions ) {
 
                     category_question_id_names.add(new Category_question_id_name(category_question.getCategory_id() , category_question.getCategory_name())) ;
 
                 }
-                question_detail_response.setCategory_questionList(category_question_id_names);
+                question_detailResponse.setCategory_questionList(category_question_id_names);
 
-                question_detail_responses.add(question_detail_response) ;
+                question_detail_respons.add(question_detailResponse) ;
 
             }
 
-            ArrayList<Question_detail_response> LIST = new ArrayList<Question_detail_response>(question_detail_responses.subList(0, question_detail_responses.size()));
+            ArrayList<QuestionDetailResponse> LIST = new ArrayList<QuestionDetailResponse>(question_detail_respons.subList(0, question_detail_respons.size()));
 
             cacheManager.getCache("question_page").put(total_page+1 , LIST); ;
         }
@@ -103,7 +103,7 @@ public class CacheManager_iml_PAGINATION_question implements Cache_Manager<Strin
     }
     public boolean update_into_View_CaChe(Question question) {
         int total = question_repository.findAll().size() ;
-        List<Question_detail_response> list_pre =  new ArrayList<>() ;
+        List<QuestionDetailResponse> list_pre =  new ArrayList<>() ;
         int total_page =  total/10 ;
         if(total > total_page*10) {
             total_page += 1 ;
@@ -115,10 +115,10 @@ public class CacheManager_iml_PAGINATION_question implements Cache_Manager<Strin
                 list_pre = null ;
             }
             else {
-                list_pre = (List<Question_detail_response>) cacheManager.getCache("question_page").get(Last_page+"-View").get();
+                list_pre = (List<QuestionDetailResponse>) cacheManager.getCache("question_page").get(Last_page+"-View").get();
 
             }
-            List<Question_detail_response> list = (List<Question_detail_response>) cacheManager.getCache("question_page").get(page+"-View").get();
+            List<QuestionDetailResponse> list = (List<QuestionDetailResponse>) cacheManager.getCache("question_page").get(page+"-View").get();
 
             if(question.getView() < list.get(0).getQuestion().getView() && question.getView() > list.get(9).getQuestion().getView()) {
 
@@ -140,32 +140,32 @@ public class CacheManager_iml_PAGINATION_question implements Cache_Manager<Strin
         }
         return  false ;
     }
-    public int Update_Pos(String id ,  List<Question_detail_response> question_detail_responseList_current , List<Question_detail_response> question_detail_responseList_Pre) {
+    public int Update_Pos(String id , List<QuestionDetailResponse> question_detailResponseList_current, List<QuestionDetailResponse> question_detailResponseList_Pre) {
         int pos = 0 ;
-        Question_detail_response question =  new Question_detail_response() ;
-        for(Question_detail_response question_detail_response : question_detail_responseList_current) {
-            if(question_detail_response.getQuestion().getQuestion_id() ==  Integer.valueOf(id)) {
-                question =  question_detail_response ;
+        QuestionDetailResponse question =  new QuestionDetailResponse() ;
+        for(QuestionDetailResponse question_detailResponse : question_detailResponseList_current) {
+            if(question_detailResponse.getQuestion().getQuestion_id() ==  Integer.valueOf(id)) {
+                question = question_detailResponse;
                 break;
             }
             pos ++ ;
         }
         if(pos != 0 ) {
-            for (int i = pos; i < question_detail_responseList_current.size(); i++) {
-                if (question_detail_responseList_current.get(i).getQuestion().getView() < question_detail_responseList_current.get(pos).getQuestion().getView()) {
-                    question_detail_responseList_current.remove(pos);
-                    question_detail_responseList_current.add(i, question);
+            for (int i = pos; i < question_detailResponseList_current.size(); i++) {
+                if (question_detailResponseList_current.get(i).getQuestion().getView() < question_detailResponseList_current.get(pos).getQuestion().getView()) {
+                    question_detailResponseList_current.remove(pos);
+                    question_detailResponseList_current.add(i, question);
                 }
             }
             return  0 ;
         }
         else {
-            for (int i = pos; i < question_detail_responseList_Pre.size(); i++) {
-                if (question_detail_responseList_Pre.get(i).getQuestion().getView() < question.getQuestion().getView()) {
-                    question_detail_responseList_current.remove(pos);
-                    question_detail_responseList_current.add(question_detail_responseList_Pre.get(9));
-                    question_detail_responseList_Pre.remove(9) ;
-                    question_detail_responseList_Pre.add(i, question);
+            for (int i = pos; i < question_detailResponseList_Pre.size(); i++) {
+                if (question_detailResponseList_Pre.get(i).getQuestion().getView() < question.getQuestion().getView()) {
+                    question_detailResponseList_current.remove(pos);
+                    question_detailResponseList_current.add(question_detailResponseList_Pre.get(9));
+                    question_detailResponseList_Pre.remove(9) ;
+                    question_detailResponseList_Pre.add(i, question);
                 }
             }
             return  1 ;

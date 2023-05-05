@@ -1,12 +1,12 @@
 package com.Search_Thesis.Search_Thesis.Rest;
 
+import com.Search_Thesis.Search_Thesis.DTO.*;
 import com.Search_Thesis.Search_Thesis.Model.Comment_Reply_Question;
 import com.Search_Thesis.Search_Thesis.Model.Question;
 import com.Search_Thesis.Search_Thesis.Model.Reply;
-import com.Search_Thesis.Search_Thesis.Payload.*;
 import com.Search_Thesis.Search_Thesis.Services.Drive_Service;
-import com.Search_Thesis.Search_Thesis.Services.QandA_Services;
-import com.Search_Thesis.Search_Thesis.resposity.Question_Repository;
+import com.Search_Thesis.Search_Thesis.Services.QandAServices;
+import com.Search_Thesis.Search_Thesis.repository.Question_Repository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,16 +21,16 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/ckt")
 public class QandA_rest {
+
     @Autowired
-    QandA_Services qandA_services ;
+    QandAServices qandA_services ;
     @Autowired
     Question_Repository question_repository ;
-
     @Autowired
     Drive_Service drive_service ;
 
     @Autowired
-    Question_info_response question_info_response ;
+    QuestionInfoResponse question_infoResponse;
 
 
     @GetMapping("/get_list_size")
@@ -42,7 +42,7 @@ public class QandA_rest {
     @GetMapping("load_Filter/{Filter}/{page}")
     public ResponseEntity<?> load_Filter(@PathVariable String Filter, @PathVariable String page) {
         try {
-            List<Question_detail_response> questionList = qandA_services.load_with_Filter(page, Filter);
+            List<QuestionDetailResponse> questionList = qandA_services.load_with_Filter(page, Filter);
             return  ResponseEntity.ok(questionList) ;
 
         }
@@ -53,10 +53,7 @@ public class QandA_rest {
     @GetMapping("/load_all/{page}")
     public ResponseEntity<?> load_all(@RequestParam("Filter") String Filter, @PathVariable String page){
         try {
-
-            List<Question_detail_response> list = qandA_services.load_all_with_page(page, Filter);
-
-
+            List<QuestionDetailResponse> list = qandA_services.load_all_with_page(page, Filter);
 
             return ResponseEntity.ok( list);
 
@@ -67,8 +64,6 @@ public class QandA_rest {
 
         }
     }
-
-
 
     @GetMapping("/get_number_page")
     public ResponseEntity<Integer> get_number() {
@@ -96,11 +91,11 @@ public class QandA_rest {
 
         Question question =  qandA_services.load_question_detail(Integer.parseInt(id)) ;
 
-        question_info_response.setQuestion(question);
+        question_infoResponse.setQuestion(question);
 
-        question_info_response.setCreator(question.getCreator());
+        question_infoResponse.setCreator(question.getCreator());
 
-        return ResponseEntity.ok(question_info_response) ;
+        return ResponseEntity.ok(question_infoResponse) ;
     }
     //test_Api
 //   @PostMapping("/upload_image")
@@ -122,16 +117,16 @@ public class QandA_rest {
 
        qandA_services.Increment_view(id);
 
-       question_info_response.setQuestion(question1);
+       question_infoResponse.setQuestion(question1);
 
 
-       question_info_response.setCreator(question1.getCreator());
+       question_infoResponse.setCreator(question1.getCreator());
 
-      return   ResponseEntity.ok(question_info_response) ;
+      return   ResponseEntity.ok(question_infoResponse) ;
    }
 
     @PostMapping("/reply")
-    public ResponseEntity<?> upload_reply( @RequestBody  Reply_request reply_request) {
+    public ResponseEntity<?> upload_reply( @RequestBody ReplyRequest reply_request) {
         try {
             qandA_services.upload_reply(reply_request);
             return ResponseEntity.ok(true ) ;
@@ -154,7 +149,7 @@ public class QandA_rest {
 
    }
    @PostMapping("/comment")
-   public ResponseEntity<?> Comment( @Valid @RequestBody Comment_Request comment_request) {
+   public ResponseEntity<?> Comment( @Valid @RequestBody CommentRequest comment_request) {
        System.out.println(comment_request);
 
         try {
@@ -226,7 +221,7 @@ public class QandA_rest {
 
    @GetMapping("/load_By_Category/{id}/{page}")
    public  ResponseEntity<?> load_By_Category(@PathVariable String id, @PathVariable String page) {
-      List<Question_detail_response> questionList =   qandA_services.get_tag_list(id , page) ;
+      List<QuestionDetailResponse> questionList =   qandA_services.get_tag_list(id , page) ;
 
        return ResponseEntity.ok(questionList) ;
 
@@ -258,8 +253,11 @@ public class QandA_rest {
 
    }
 
-
-
+   @GetMapping("/test")
+    public ResponseEntity<?> Test() {
+        qandA_services.get_question() ;
+        return   ResponseEntity.ok(qandA_services.get_question()) ;
+   }
 
    }
 

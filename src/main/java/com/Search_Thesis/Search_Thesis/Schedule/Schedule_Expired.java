@@ -1,7 +1,7 @@
 package com.Search_Thesis.Search_Thesis.Schedule;
 
-import com.Search_Thesis.Search_Thesis.Redis_Model.Document_Service_redis;
-import com.Search_Thesis.Search_Thesis.Redis_Model.Document_info_redis_Services;
+import com.Search_Thesis.Search_Thesis.Services.Redis.RedisServiceImpl.Document_Service_redis;
+import com.Search_Thesis.Search_Thesis.Services.Redis.RedisServiceImpl.Document_info_redis_Services;
 import com.Search_Thesis.Search_Thesis.Services.CacheManager_iml_PAGINATION_question;
 import com.Search_Thesis.Search_Thesis.Services.Edit_Document_Services;
 import org.springframework.beans.factory.annotation.Autowired;

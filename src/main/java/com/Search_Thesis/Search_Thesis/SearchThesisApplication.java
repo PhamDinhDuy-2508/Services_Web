@@ -1,8 +1,8 @@
 package com.Search_Thesis.Search_Thesis;
 
 import com.Search_Thesis.Search_Thesis.Model.Question;
-import com.Search_Thesis.Search_Thesis.resposity.Question_Repository;
-import com.Search_Thesis.Search_Thesis.resposity.Tag_repository;
+import com.Search_Thesis.Search_Thesis.repository.Question_Repository;
+import com.Search_Thesis.Search_Thesis.repository.Tag_repository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
