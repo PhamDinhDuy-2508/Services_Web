@@ -1534,8 +1534,30 @@ function show_folder(ID) {
         $("#search_document").on("input", function () {
             console.log( $(this).val())
             code = $('#ID_Folder').text()
+            var SolrSearch = "http://localhost:8983/solr/#/DocumentSearch/query?q=autoSuggest_index:"+$(this).val() + " AND folderId:" + code +"&q.op=AND&indent=true&spellcheck=true&wt=json&start=0&rows=10&qt=%2Fselect"
+            console.log($.getJSON(SolrSearch))
+
+            console.log(SolrSearch)
+            $.ajax({
+                type: 'GET',
+                dataType: 'jsonp',
+                data: {
+                    'q': 'autoSuggest_index:'+$(this).val()+' AND folderId:' + code,
+                    'wt': 'json',
+                },
+                jsonp: 'json.wrf',
+                url: "/solr/#/DocumentSearch/select",
+                success: function(msg) {
+                    console.log(msg);
+                },
+
+            });
+            console.log('autoSuggest_index:'+$(this).val()+' AND folderId:' + code)
+
+
             var settings = {
                 "url": "http://localhost:8080/api/ckt/Search_Document/"+code+"?"+"signal=" + $(this).val(),
+                // "url" : SolrSearch,
                 "method": "GET",
                 "timeout": 0,
                 "headers": {

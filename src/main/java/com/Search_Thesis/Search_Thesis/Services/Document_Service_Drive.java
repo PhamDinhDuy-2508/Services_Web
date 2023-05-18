@@ -1,9 +1,11 @@
 package com.Search_Thesis.Search_Thesis.Services;
 
 import com.Search_Thesis.Search_Thesis.Model.Category_document;
+import com.Search_Thesis.Search_Thesis.Services.Drive.DriveService;
 import com.Search_Thesis.Search_Thesis.repository.Document_Repository;
 import com.google.api.services.drive.model.File;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +17,8 @@ import java.util.List;
 public class Document_Service_Drive {
 
     @Autowired
-    Drive_Service drive_service ;
+    @Qualifier("DriveService")
+    DriveService drive_service ;
 
     @Autowired
     Document_Repository document_repository ;

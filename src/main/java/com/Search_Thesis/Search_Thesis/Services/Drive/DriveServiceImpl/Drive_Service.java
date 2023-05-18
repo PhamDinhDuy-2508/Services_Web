@@ -1,6 +1,7 @@
-package com.Search_Thesis.Search_Thesis.Services;
+package com.Search_Thesis.Search_Thesis.Services.Drive.DriveServiceImpl;
 
 import com.Search_Thesis.Search_Thesis.Config.Drive_Config;
+import com.Search_Thesis.Search_Thesis.Services.Drive.DriveService;
 import com.google.api.client.http.InputStreamContent;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
@@ -19,8 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Service
-public class Drive_Service {
+@Service("DriveService")
+public class Drive_Service implements DriveService {
     @Autowired
     private Drive_Config googleDriveConfig;
 
@@ -33,54 +34,38 @@ public class Drive_Service {
         return result.getFiles();
     }
     public String getFolderId(String folderName) throws Exception {
+
         String parentId = null;
+
         String[] folderNames = folderName.split("/");
 
         Drive driveInstance = googleDriveConfig.getInstance();
+
         for (String name : folderNames) {
             parentId = findOrCreateFolder(parentId, name, driveInstance);
         }
         return parentId;
     }
     public String findOrCreateFolder(String parentId, String folderName, Drive driveInstance) throws Exception {
+
         String folderId = searchFolderId(parentId, folderName, driveInstance);
-        // Folder already exists, so return id
+
         if (folderId != null) {
             return folderId;
         }
-        //Folder dont exists, create it and return folderId
         File fileMetadata = new File();
         fileMetadata.setMimeType("application/vnd.google-apps.folder");
         fileMetadata.setName(folderName);
 
-        if (parentId != null) {
-            fileMetadata.setParents(Collections.singletonList(parentId));
-        }
         return driveInstance.files().create(fileMetadata)
                 .setFields("id")
                 .execute()
                 .getId();
     }
-
-    public String CreateFolderWithPath(String folder_name , String Path ) {
-//        File fileMetadata = new File();
-//        fileMetadata.setMimeType("application/vnd.google-apps.folder");
-//        fileMetadata.setName(folderName);
-//
-//        if (parentId != null) {
-//            fileMetadata.setParents(Collections.singletonList(parentId));
-//        }
-//        return driveInstance.files().create(fileMetadata)
-//                .setFields("id")
-//                .execute()
-//                .getId();
-        return null ;
-    }
-
     public String searchFolderId(String parentId, String folderName, Drive service) throws Exception {
         String folderId = null;
         String pageToken = null;
-        FileList result = null;
+        FileList result  ;
 
         File fileMetadata = new File();
         fileMetadata.setMimeType("application/vnd.google-apps.folder");
@@ -125,10 +110,8 @@ public class Drive_Service {
         return result.getFiles();
     }
     public String Upload_File(MultipartFile file, String filePath) {
-        System.out.println(filePath);
         try {
             String folderId = getFolderId(filePath);
-            System.out.println(folderId);
             if (null != file) {
                 File fileMetadata = new File();
                 fileMetadata.setParents(Collections.singletonList(folderId));
@@ -152,7 +135,6 @@ public class Drive_Service {
     }
 
     public void create_Folder_ID (String ParentId , String folderName) throws GeneralSecurityException, IOException {
-        System.out.println(folderName);
         Drive driveInstance = Drive_Config.getInstance();
         File fileMetadata = new File();
         fileMetadata.setMimeType("application/vnd.google-apps.folder");
@@ -219,7 +201,7 @@ public class Drive_Service {
             return map_byte ;
         }
     }
-    public void Dowload_Folder(String id_folder ,OutputStream outputStream  ) {
+    public void Download_Folder(String id_folder ,OutputStream outputStream  ) {
 
     }
     public void Download_folder_ZIP(String id_folder ,  OutputStream outputStream) throws GeneralSecurityException, IOException {

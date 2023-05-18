@@ -1,8 +1,8 @@
-package com.Search_Thesis.Search_Thesis.Services.Redis.RedisServiceImpl;
+package com.Search_Thesis.Search_Thesis.Services.RedisService.RedisServiceImpl;
 
 import com.Search_Thesis.Search_Thesis.Model.Document;
 import com.Search_Thesis.Search_Thesis.Model.Document_info_redis;
-import com.Search_Thesis.Search_Thesis.Services.Redis.Services_Redis;
+import com.Search_Thesis.Search_Thesis.Services.RedisService.Services_Redis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -22,11 +22,6 @@ public class Document_info_redis_Services implements Services_Redis<Document_inf
     RedisTemplate redisTemplate  ;
 
 
-
-
-
-    Document_info_redis document_info_redis =  new Document_info_redis();
-
     @Override
     public Document_info_redis find(String haskey, String ID) {
         return (Document_info_redis) redisTemplate.opsForHash().values(Haskey);
@@ -45,7 +40,6 @@ public class Document_info_redis_Services implements Services_Redis<Document_inf
             return true ;
         }
         catch (Exception e) {
-            System.out.println(e.getMessage());
             return false;
         }
     }
@@ -71,9 +65,7 @@ public class Document_info_redis_Services implements Services_Redis<Document_inf
         try{
 
             List<String> key = redisTemplate.opsForHash().keys("Delete_document").stream().toList();
-            for( String keys  : key) {
-                System.out.println(redisTemplate.opsForHash().get(this.Haskey ,  keys));
-            }
+
 
             List<Document_info_redis> document_info_redisList =  new ArrayList<>() ;
             Document_info_redis document_info_redis1 =  new Document_info_redis() ;
@@ -106,14 +98,11 @@ public class Document_info_redis_Services implements Services_Redis<Document_inf
         redisTemplate.opsForHash().values("1_Expire");
     }
     public Set<?> getHashKey(String hashkey) {
-
         return redisTemplate.opsForHash().keys(hashkey);
-
     }
 
     public Document_info_redis  findByTime(LocalDateTime localDateTime) {
         Document_info_redis document_info_redis1  = (Document_info_redis) redisTemplate.opsForHash().get("1_Expire" ,  localDateTime);
-        System.out.println(document_info_redis1);
       return document_info_redis1;
     }
     public void Delete_Expired_Data(LocalDateTime localDateTime){

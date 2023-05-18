@@ -5,7 +5,7 @@ import com.Search_Thesis.Search_Thesis.Event.Upload_document_Event;
 import com.Search_Thesis.Search_Thesis.Model.Category_document;
 import com.Search_Thesis.Search_Thesis.Model.Root_Folder;
 import com.Search_Thesis.Search_Thesis.Services.Document_services;
-import com.Search_Thesis.Search_Thesis.Services.Drive_Service;
+import com.Search_Thesis.Search_Thesis.Services.Drive.DriveService;
 import com.Search_Thesis.Search_Thesis.Services.JwtService.JwtService;
 import com.Search_Thesis.Search_Thesis.repository.Category_document_Responsitory;
 import com.Search_Thesis.Search_Thesis.repository.Root_Responsitory;
@@ -35,7 +35,8 @@ public class upload_document
     ApplicationEventPublisher applicationEventPublisher ;
 
     @Autowired
-    Drive_Service drive_service ;
+    @Qualifier("DriveService")
+    DriveService drive_service ;
 
     @Autowired
     Create_folder create_folder ;
@@ -51,14 +52,10 @@ public class upload_document
 
     @PostMapping ("/create_folder")
     public void create_folder_DIRECTORY(@RequestBody Create_folder create_folder ) throws IOException {
-
         this.create_folder =  create_folder ;
-
-
         document_services.Create_Folder_Directory(create_folder.getRoot_name() ,
                 create_folder.getCode() ,  create_folder.getFolder_name());
 
-        return;
     }
 
     @PostMapping("/upload_document/{id_root}/{code_category}/{name_folder}")
@@ -118,8 +115,7 @@ public class upload_document
 //    @PostMapping("/upload_document_to_drive/{id}/{name}")
 
 //    @Async
-    @PostMapping(value = "/upload_document_to_drive/{id}/{name}"
-        )
+    @PostMapping(value = "/upload_document_to_drive/{id}/{name}")
     public  ResponseEntity<?> upload_document_to_Drive(@RequestParam("file")  MultipartFile []  multipartFiles, @PathVariable String id, @PathVariable String name) throws Exception {
         String path = "" ;
 

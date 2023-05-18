@@ -2,8 +2,8 @@ package com.Search_Thesis.Search_Thesis.Schedule;
 
 import com.Search_Thesis.Search_Thesis.Model.Question;
 import com.Search_Thesis.Search_Thesis.Model.Document_info_redis;
-import com.Search_Thesis.Search_Thesis.Services.Redis.RedisServiceImpl.Document_info_redis_Services;
-import com.Search_Thesis.Search_Thesis.Services.Redis.RedisServiceImpl.Folder_info_Services;
+import com.Search_Thesis.Search_Thesis.Services.RedisService.RedisServiceImpl.Document_info_redis_Services;
+import com.Search_Thesis.Search_Thesis.Services.RedisService.RedisServiceImpl.Folder_info_Services;
 import com.Search_Thesis.Search_Thesis.Model.Folder_model_redis;
 import com.Search_Thesis.Search_Thesis.Server_Service.Message_to_Server;
 import com.Search_Thesis.Search_Thesis.Services.Edit_Document_Services;
@@ -28,28 +28,28 @@ import java.util.Set;
 @Service
 public class Expire_Services {
     @Autowired
-    Document_info_redis_Services document_info_redis_services ;
+    Document_info_redis_Services document_info_redis_services;
 
     @Autowired
-    Edit_Document_Services edit_document_services ;
+    Edit_Document_Services edit_document_services;
 
     @Autowired
-    Folder_info_Services folder_info_services ;
-    private  Message_to_Server  message_to_server ;
+    Folder_info_Services folder_info_services;
+    private Message_to_Server message_to_server;
 
     @Autowired
-    RedisTemplate redisTemplate ;
+    RedisTemplate redisTemplate;
     @Autowired
-    Folder_model_redis folder_model_redis ;
-
-    @Autowired
-    Question_Repository question_repository ;
+    Folder_model_redis folder_model_redis;
 
     @Autowired
-    CacheManager cacheManager ;
+    Question_Repository question_repository;
+
+    @Autowired
+    CacheManager cacheManager;
 
 
-    private  Socket socket ;
+    private Socket socket;
 
     @PostConstruct
     public void Create_Connection() throws IOException {
@@ -59,11 +59,11 @@ public class Expire_Services {
 
     public void Delete(LocalDateTime now) throws IOException {
 
-        Set<LocalDateTime>  localDateTimes = (Set<LocalDateTime>) document_info_redis_services.getHashKey("1_Expire");
+        Set<LocalDateTime> localDateTimes = (Set<LocalDateTime>) document_info_redis_services.getHashKey("1_Expire");
 
-        List<LocalDateTime>  list  =  localDateTimes.stream().toList();
-        if(list.size() != 0 ) {
-            while( now.isAfter(list.get(0))) {
+        List<LocalDateTime> list = localDateTimes.stream().toList();
+        if (list.size() != 0) {
+            while (now.isAfter(list.get(0))) {
                 LocalDateTime test = list.get(0);
 
                 Document_info_redis document_info_redis = document_info_redis_services.findByTime(test);
@@ -82,14 +82,15 @@ public class Expire_Services {
                 if (list.size() == 0) {
                     break;
                 }
-        }
+            }
 
 
         }
 
     }
+
     public List<Question> load_all() {
-        return question_repository.findAll() ;
+        return question_repository.findAll();
     }
 
 
@@ -98,65 +99,66 @@ public class Expire_Services {
     public void Update_Cache_Question_list() {
 
 
-
     }
+
     public void Connect_to_Socket() throws IOException {
-            Create_test();
+        Create_test();
     }
 
     public String Create_Json_Document(Document_info_redis document_info_redis) {
-        Gson gson =  new Gson() ;
+        Gson gson = new Gson();
         document_info_redis.setID("Delete_document");
-        String json =  gson.toJson(document_info_redis) ;
-        return json ;
+        String json = gson.toJson(document_info_redis);
+        return json;
     }
+
     public String Create_Json_Folder(Folder_model_redis folder_model_redis) {
-        Gson gson =  new Gson() ;
-        String json =  gson.toJson(folder_model_redis) ;
-        return json ;
+        Gson gson = new Gson();
+        String json = gson.toJson(folder_model_redis);
+        return json;
     }
+
     public void Create_test() {
 
-        Set<LocalDateTime>  localDateTimes = (Set<LocalDateTime>) document_info_redis_services.getHashKey("1_Expire");
+        Set<LocalDateTime> localDateTimes = (Set<LocalDateTime>) document_info_redis_services.getHashKey("1_Expire");
 
-        Queue<LocalDateTime> queue = new LinkedList<>(localDateTimes) ;
-
-
-        while (queue.size() != 0 )
-           try  {
-
-               Document_info_redis document_info_redis =  document_info_redis_services.findByTime(queue.peek()) ;
-
-               String message = Create_Json_Document(document_info_redis) ;
-
-               message_to_server.setMessageString( message);
-               System.out.println(document_info_redis);
-               message_to_server.Send_Message_to_Server();
-
-               queue.remove() ;
-
-           }
-           catch (Exception e) {
-               Folder_model_redis folder_model_redis1 =  folder_info_services.findByTime(queue.peek());
-               String message = Create_Json_Folder(folder_model_redis1) ;
-
-               message_to_server.setMessageString( message);
-               message_to_server.Send_Message_to_Server();
+        Queue<LocalDateTime> queue = new LinkedList<>(localDateTimes);
 
 
-               queue.remove() ;
+        while (queue.size() != 0)
+            try {
 
-               continue;
+                Document_info_redis document_info_redis = document_info_redis_services.findByTime(queue.peek());
+
+                String message = Create_Json_Document(document_info_redis);
+
+                message_to_server.setMessageString(message);
+
+                message_to_server.Send_Message_to_Server();
+
+                queue.remove();
+
+            } catch (Exception e) {
+                Folder_model_redis folder_model_redis1 = folder_info_services.findByTime(queue.peek());
+                String message = Create_Json_Folder(folder_model_redis1);
+
+                message_to_server.setMessageString(message);
+                message_to_server.Send_Message_to_Server();
 
 
-           }
+                queue.remove();
 
-       }
+                continue;
+
+
+            }
+
+    }
 
 
 //
 
 
-    }
+}
 
 

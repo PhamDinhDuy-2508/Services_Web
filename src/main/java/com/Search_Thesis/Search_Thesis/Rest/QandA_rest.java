@@ -4,12 +4,13 @@ import com.Search_Thesis.Search_Thesis.DTO.*;
 import com.Search_Thesis.Search_Thesis.Model.Comment_Reply_Question;
 import com.Search_Thesis.Search_Thesis.Model.Question;
 import com.Search_Thesis.Search_Thesis.Model.Reply;
-import com.Search_Thesis.Search_Thesis.Services.Drive_Service;
+import com.Search_Thesis.Search_Thesis.Services.Drive.DriveService;
 import com.Search_Thesis.Search_Thesis.Services.QandAServices;
 import com.Search_Thesis.Search_Thesis.repository.Question_Repository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +28,8 @@ public class QandA_rest {
     @Autowired
     Question_Repository question_repository ;
     @Autowired
-    Drive_Service drive_service ;
+    @Qualifier("DriveService")
+    DriveService drive_service ;
 
     @Autowired
     QuestionInfoResponse question_infoResponse;
@@ -59,9 +61,7 @@ public class QandA_rest {
 
         }
         catch (Exception e) {
-            System.out.println(e.getMessage());
             return ResponseEntity.ok( null);
-
         }
     }
 
@@ -97,19 +97,6 @@ public class QandA_rest {
 
         return ResponseEntity.ok(question_infoResponse) ;
     }
-    //test_Api
-//   @PostMapping("/upload_image")
-//    public ResponseEntity<?> Upload_image(@RequestParam("file") MultipartFile multipartFile) throws IOException {
-//        List<String> pos = new ArrayList<>() ;
-//        pos.add("1") ;
-//
-//        try {
-//            qandA_services.upload(multipartFile , "123" ,pos);
-//
-//        }catch (Exception e) {}
-//       return null ;
-//   }
-   //
 
    @GetMapping("/load_question/{id}")
     public ResponseEntity<?> load_quest(@PathVariable String id) {

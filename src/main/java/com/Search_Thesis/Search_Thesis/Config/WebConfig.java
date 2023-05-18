@@ -4,6 +4,8 @@ import com.Search_Thesis.Search_Thesis.Filter.Document_Filter;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock;
+import org.apache.solr.client.solrj.SolrClient;
+import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.springframework.boot.autoconfigure.cache.RedisCacheManagerBuilderCustomizer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -13,6 +15,8 @@ import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
+import org.springframework.data.solr.core.SolrTemplate;
+import org.springframework.data.solr.repository.config.EnableSolrRepositories;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -26,11 +30,13 @@ import java.time.Duration;
 @EnableScheduling
 @EnableSchedulerLock(defaultLockAtMostFor = "10m")
 @ConditionalOnProperty(name="scheduler.enabled", matchIfMissing = true)
-
 @EnableRedisRepositories
 
 
-    public class WebConfig implements WebMvcConfigurer {
+
+@EnableSolrRepositories(
+        basePackages = "com.Search_Thesis.Search_Thesis.repository.SolrRepository")
+public class WebConfig implements WebMvcConfigurer {
 
 
 //    public MappingJackson2HttpMessageConverter jacksonMessageConverter(){
@@ -61,10 +67,8 @@ import java.time.Duration;
 
             FilterRegistrationBean<Document_Filter> registrationBean
                     = new FilterRegistrationBean<>();
-
             registrationBean.setFilter(new Document_Filter());
             registrationBean.addUrlPatterns("/document/**");
-
             return  registrationBean ;
         }
 
@@ -81,6 +85,7 @@ import java.time.Duration;
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate() {
+
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(jedisConnectionFactory());
         template.setEnableTransactionSupport(true) ;
@@ -104,6 +109,16 @@ import java.time.Duration;
         )) ;
         return cloudinary ;
     }
+    @Bean
+    public SolrClient solrClient() {
+        return new HttpSolrClient.Builder("http://localhost:8983/solr").build();
+    }
+
+    @Bean
+    public SolrTemplate solrTemplate(SolrClient client) throws Exception {
+        return new SolrTemplate(client);
+    }
+
 
 //    @Bean
 //    public JedisConnectionFactory connectionFactory() {

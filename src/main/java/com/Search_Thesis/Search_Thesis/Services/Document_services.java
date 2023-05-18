@@ -10,6 +10,7 @@ import com.Search_Thesis.Search_Thesis.Model.Category_document;
 import com.Search_Thesis.Search_Thesis.Model.Document;
 import com.Search_Thesis.Search_Thesis.Model.Folder;
 import com.Search_Thesis.Search_Thesis.Model.Root_Folder;
+import com.Search_Thesis.Search_Thesis.Services.Drive.DriveServiceImpl.Drive_Service;
 import com.Search_Thesis.Search_Thesis.Services.SessionService.SessionService;
 import com.Search_Thesis.Search_Thesis.repository.Category_document_Responsitory;
 import com.Search_Thesis.Search_Thesis.repository.Document_Repository;
@@ -172,7 +173,7 @@ public class Document_services {
             root_responsitory.save(root_folder) ;
             String id = "" ;
             for(com.google.api.services.drive.model.File file :drive_service.listFolderContent(parent_Id)) {
-                System.out.println(file.getName());
+
                 if(file.getName().equals(create_category_event.getCreate_category().getRoot_name())) {
                     id =  file.getId() ;
                     break;
@@ -200,14 +201,14 @@ public class Document_services {
             return folderList ;
         }
         search_folder.setList(folderList);
-        search_folder.Search(request );
+        search_folder.Search(request);
         return  search_folder.getResult() ;
 
     }
 
     @EventListener
     @Async
-    public void Create_Folder(Create_folder_Event create_folder_event) {
+    public void Create_Folder(Create_folder_Event create_folder_event) throws Exception {
 
 
         try {
@@ -215,8 +216,6 @@ public class Document_services {
             String category_name =  create_folder_event.getCreate_folder().getCode() ;
             String folder_name =  create_folder_event.getCreate_folder().getFolder_name() ;
             Category_document categoryDocument =  category_document_responsitory.findByCode(category_name) ;
-            System.out.println(categoryDocument);
-
 
             folder.setTitle(create_folder_event.getCreate_folder().getFolder_name());
             LocalDate myObj = LocalDate.now() ;
@@ -237,13 +236,13 @@ public class Document_services {
             Drive driveInstance = Drive_Config.getInstance();
 
             drive_service.findOrCreateFolder(id ,  folder_name , driveInstance);
+
             cacheManager.getCache("category_redis").evict(category_name);
 
         }
 
         catch (Exception e) {
-            System.out.println(e.getMessage());
-            System.out.println("something was wrong");
+            throw new Exception("Cannot Create Folder") ;
         }
 
     }
@@ -324,11 +323,7 @@ public class Document_services {
 
 
 //        Create_Folder_Directory(root , category ,  folder) ;
-        if(multipartFile.getSize()==0) {
-            System.out.println(Folder_Path);
-            System.out.println(multipartFile.getSize());
-            return null ;
-        }
+
 
 
 
@@ -339,7 +334,7 @@ public class Document_services {
         }
 
         Path document_path = Paths.get(Folder_Path);
-        Path fileToSavePath = Files.createFile(document_path);
+        Files.createFile(document_path);
 
         try {
             byte[] bytes = multipartFile.getBytes();
@@ -358,11 +353,8 @@ public class Document_services {
             stream.close();
 
         } catch (Exception e) {
-            System.out.println("Folder " + Folder_Path);
-            System.out.println("Error" + e.getMessage());
             return Folder_Path;
         }
-        System.out.println(Folder_Path);
 
         return Folder_Path ;
     }

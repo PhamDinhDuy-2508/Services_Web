@@ -4,9 +4,9 @@ import com.Search_Thesis.Search_Thesis.Model.Document;
 import com.Search_Thesis.Search_Thesis.Model.Document_info_redis;
 import com.Search_Thesis.Search_Thesis.Model.Folder;
 import com.Search_Thesis.Search_Thesis.Model.Folder_model_redis;
-import com.Search_Thesis.Search_Thesis.Services.History_Services;
+import com.Search_Thesis.Search_Thesis.Services.HistoryService.History_Services;
 import com.Search_Thesis.Search_Thesis.Services.JwtService.JwtService;
-import com.Search_Thesis.Search_Thesis.Services.Redis.RedisServiceImpl.Document_Service_redis;
+import com.Search_Thesis.Search_Thesis.Services.RedisService.RedisServiceImpl.Document_Service_redis;
 import com.Search_Thesis.Search_Thesis.repository.Document_Repository;
 import com.Search_Thesis.Search_Thesis.repository.Folder_Respository;
 import lombok.Data;
@@ -68,8 +68,7 @@ public class History_rest {
 
         }
         catch (Exception e) {
-            System.out.println(e.getMessage());
-            return  null  ;
+              return  null  ;
         }
     }
     @GetMapping("/Backup_Document/{type_of_file}/{IdOfFile}")

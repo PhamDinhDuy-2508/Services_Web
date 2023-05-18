@@ -7,12 +7,12 @@ import com.Search_Thesis.Search_Thesis.DTO.Create_folder;
 import com.Search_Thesis.Search_Thesis.Event.Create_Category_Event;
 import com.Search_Thesis.Search_Thesis.Event.Create_folder_Event;
 import com.Search_Thesis.Search_Thesis.Model.*;
-import com.Search_Thesis.Search_Thesis.Model.Category_Redis;
+import com.Search_Thesis.Search_Thesis.Services.Document_services;
+import com.Search_Thesis.Search_Thesis.Services.Document_services_2;
+import com.Search_Thesis.Search_Thesis.Services.Drive.DriveService;
 import com.Search_Thesis.Search_Thesis.Services.JwtService.JwtService;
-import com.Search_Thesis.Search_Thesis.Services.Redis.RedisServiceImpl.Category_redis_Services;
-import com.Search_Thesis.Search_Thesis.Services.Redis.RedisServiceImpl.Document_Service_redis;
-import com.Search_Thesis.Search_Thesis.Model.Document_redis;
-import com.Search_Thesis.Search_Thesis.Services.*;
+import com.Search_Thesis.Search_Thesis.Services.RedisService.RedisServiceImpl.Category_redis_Services;
+import com.Search_Thesis.Search_Thesis.Services.RedisService.RedisServiceImpl.Document_Service_redis;
 import com.Search_Thesis.Search_Thesis.Services.SessionService.SessionService;
 import com.Search_Thesis.Search_Thesis.Services.SessionService.SessionServiceForGenerics;
 import com.Search_Thesis.Search_Thesis.repository.Category_document_Responsitory;
@@ -53,8 +53,10 @@ public class Document_rest {
     ApplicationEventPublisher applicationEventPublisher;
     @Autowired
     Document_Service_redis document_service_redis;
+
     @Autowired
-    Drive_Service drive_service;
+    @Qualifier("DriveService")
+    DriveService drive_service;
     @Autowired
     Document_services document_services;
     @Autowired
@@ -197,7 +199,6 @@ public class Document_rest {
     @GetMapping("/check/{Code}")
 
     public CompletableFuture<ResponseEntity<Boolean>> check_Category(@PathVariable("Code") String Code) {
-        System.out.println(Code);
 
         return document_services.check_Category_Existed(Code).thenApply(ResponseEntity::ok);
 
@@ -232,7 +233,6 @@ public class Document_rest {
         System.out.println(code);
         try {
             Category_document categoryDocument = category_document_responsitory.findByCode(code);
-            System.out.println(categoryDocument);
 
 
 //           Category_Redis  category_redis = category_redis_services.find("Category", code);
@@ -272,7 +272,6 @@ public class Document_rest {
 //            }
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
 
             return ResponseEntity.notFound().build();
         }

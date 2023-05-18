@@ -140,9 +140,6 @@ public class Profile_rest {
                 error_res.setError("mật Khẩu  không khớp với mật khẩu vừa tạo");
                 return ResponseEntity.ok(error_res) ;
             }
-            else {
-                System.out.println(user_service.updateUserPassword(user1.getPassword() ,  user1.getUser_id())) ;
-            }
         }
 
         return  ResponseEntity.ok(error_res) ;

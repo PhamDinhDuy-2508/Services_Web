@@ -7,7 +7,7 @@ import com.Search_Thesis.Search_Thesis.Model.Category_document;
 import com.Search_Thesis.Search_Thesis.Model.Document;
 import com.Search_Thesis.Search_Thesis.Model.Folder;
 import com.Search_Thesis.Search_Thesis.Model.Root_Folder;
-import com.Search_Thesis.Search_Thesis.Services.Redis.RedisServiceImpl.Category_redis_Services;
+import com.Search_Thesis.Search_Thesis.Services.RedisService.RedisServiceImpl.Category_redis_Services;
 import com.Search_Thesis.Search_Thesis.Services.SessionService.SessionService;
 import com.Search_Thesis.Search_Thesis.repository.Category_document_Responsitory;
 import com.Search_Thesis.Search_Thesis.repository.Document_Repository;
@@ -217,16 +217,12 @@ public class Document_services_2 {
             }
         }
         this.get_Category_task = threadpool.submit(callable) ;
-
     }
-
     public HashMap<String, List<Folder>> getMap_category_Folder() {
         return Map_category_Folder;
     }
 
-    public void setMap_category_Folder(HashMap<String, List<Folder>> map_category_Folder) {
-        Map_category_Folder = map_category_Folder;
-    }
+
 //    @Cacheable(value = "pagination" ,key = "{#code ,  #page} ")
     public List<Folder> pagination(String code , int page  , List<Folder> folderList) {
         List<Folder> result = new ArrayList<>() ;
@@ -240,32 +236,24 @@ public class Document_services_2 {
             else {
 
                 for(int i = (page-1)*5; i <  folderList.size()  ; i++) {
-                    System.out.println(folderList.get(i).getTitle());
                     result.add(folderList.get(i)) ;
                 }
             }
         }
         else {
             for(int i = (page-1)*5; i <(page)*5 ; i++) {
-                System.out.println(i);
                 result.add(folderList.get(i)) ;
             }
         }
         return  result ;
     }
-//    @Cacheable(value = "Filter" , key = "{#signal  , #code}")
     public List<Folder> Filter(String code ,  String signal) {
-        System.out.println(signal);
         List<Folder> folderList = new ArrayList<>();
-
-//        Category_Redis category_redis = category_redis_services.find("Category", code);
-
         folderList = load_folder(code);
         try {
 
             switch (signal) {
                 case "AZ": {
-                    System.out.println("AZ");
 
                     Sort_Alphabet sort_alphabet = new Sort_Alphabet();
 
@@ -275,7 +263,6 @@ public class Document_services_2 {
                 }
                 case "ZA" :{
                     System.out.println("ZA");
-                    List<Folder> folderList1 = new ArrayList<>();
 
                     Sort_Alphabet sort_alphabet = new Sort_Alphabet();
 
@@ -284,8 +271,6 @@ public class Document_services_2 {
                     return (sort_alphabet.get_Result());
                 }
                 case ("DateE"): {
-                    System.out.println("Date");
-                    List<Folder> folderList1 = new ArrayList<>();
 
                     Sort_Day sort_alphabet = new Sort_Day();
 
@@ -304,7 +289,6 @@ public class Document_services_2 {
 
         }
         catch (Exception e) {
-            System.out.println(e.getMessage());
             return (folderList);
         }
     }

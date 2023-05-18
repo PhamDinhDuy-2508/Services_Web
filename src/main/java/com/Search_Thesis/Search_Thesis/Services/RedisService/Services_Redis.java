@@ -1,4 +1,4 @@
-package com.Search_Thesis.Search_Thesis.Services.Redis;
+package com.Search_Thesis.Search_Thesis.Services.RedisService;
 
 public interface Services_Redis<T, L> {
     T find(String haskey, String ID);

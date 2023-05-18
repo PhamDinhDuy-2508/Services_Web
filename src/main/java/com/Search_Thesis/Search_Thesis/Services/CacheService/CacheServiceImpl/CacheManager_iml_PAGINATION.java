@@ -1,9 +1,9 @@
-package com.Search_Thesis.Search_Thesis.Services;
+package com.Search_Thesis.Search_Thesis.Services.CacheService.CacheServiceImpl;
 
+import com.Search_Thesis.Search_Thesis.Services.CacheService.CacheManager;
 import com.Search_Thesis.Search_Thesis.repository.Question_Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
-import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
@@ -11,24 +11,17 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 @Scope("prototype")
-@Service
-public class CacheManager_iml_PAGINATION implements Cache_Manager<String> {
+@Service("CacheManager_iml_PAGINATION")
+public class CacheManager_iml_PAGINATION implements CacheManager<String> {
     private Object object;
     @Autowired
     Question_Repository question_repository;
 
     @Autowired
-    CacheManager cacheManager;
-
-
+    org.springframework.cache.CacheManager cacheManager;
 
     public void Set_object(Object object) {
         this.object = object;
-    }
-
-    @Override
-    public String getCache(String id, String... value) {
-        return null;
     }
 
     @Override

@@ -16,7 +16,9 @@ public class Email_Services {
 
     public void Send_Email(String email , String link)
             throws MessagingException, UnsupportedEncodingException {
+
         MimeMessage message = mailSender.createMimeMessage();
+
         MimeMessageHelper helper = new MimeMessageHelper(message);
 
         helper.setFrom("duypham258138@gmail.com", "CKT Support");

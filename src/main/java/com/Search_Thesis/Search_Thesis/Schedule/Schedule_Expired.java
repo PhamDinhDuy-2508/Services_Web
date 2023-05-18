@@ -1,8 +1,8 @@
 package com.Search_Thesis.Search_Thesis.Schedule;
 
-import com.Search_Thesis.Search_Thesis.Services.Redis.RedisServiceImpl.Document_Service_redis;
-import com.Search_Thesis.Search_Thesis.Services.Redis.RedisServiceImpl.Document_info_redis_Services;
-import com.Search_Thesis.Search_Thesis.Services.CacheManager_iml_PAGINATION_question;
+import com.Search_Thesis.Search_Thesis.Services.RedisService.RedisServiceImpl.Document_Service_redis;
+import com.Search_Thesis.Search_Thesis.Services.RedisService.RedisServiceImpl.Document_info_redis_Services;
+import com.Search_Thesis.Search_Thesis.Services.CacheService.CacheServiceImpl.CacheManager_iml_PAGINATION_question;
 import com.Search_Thesis.Search_Thesis.Services.Edit_Document_Services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -47,10 +47,9 @@ public class Schedule_Expired {
     }
 
     @Async
-    @Scheduled(fixedRate = 20000 , initialDelay  = 5000)
+    @Scheduled(fixedRate = 100000 , initialDelay  = 50000)
 
     public void Update_Cache() throws InterruptedException {
-        System.out.println("test_after_5s");
         if(thread != null) {
             this.thread.join();
         }
@@ -67,6 +66,6 @@ public class Schedule_Expired {
 
         Set<LocalDateTime> Time_Expired  = (Set<LocalDateTime>) document_info_redis_services.getHashKey("1_Expire");
 //        expire_services.Delete(now);
-//        expire_services.Connect_to_Socket();
+
     }
 }

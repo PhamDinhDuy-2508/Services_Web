@@ -14,6 +14,8 @@ import java.sql.Date;
 @EnableAutoConfiguration
 @Table(name = "folder")
 public class Folder implements Serializable {
+    private static final long serialVersionUID = -2879936628319211082L;
+
     @Id
     @Expose
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -26,7 +28,6 @@ public class Folder implements Serializable {
     @Expose
     @Column(name =  "Publish_date")
     private Date Publish_date ;
-
     @ManyToOne
     @JoinColumn(name = "Category_id_key" , referencedColumnName = "category_id" ,columnDefinition = "json"
             , nullable = true)
@@ -73,6 +74,9 @@ public class Folder implements Serializable {
 
     public void setContributor_ID(int contributor_ID) {
         Contributor_ID = contributor_ID;
+    }
+    public void setContributor_ID(String contributor_ID) {
+        Contributor_ID = Integer.parseInt( contributor_ID );
     }
 }
 

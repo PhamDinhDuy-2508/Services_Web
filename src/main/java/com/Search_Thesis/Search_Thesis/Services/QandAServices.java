@@ -2,6 +2,9 @@ package com.Search_Thesis.Search_Thesis.Services;
 
 import com.Search_Thesis.Search_Thesis.DTO.*;
 import com.Search_Thesis.Search_Thesis.Model.*;
+import com.Search_Thesis.Search_Thesis.Services.CacheService.CacheServiceImpl.CacheManager_iml_PAGINATION;
+import com.Search_Thesis.Search_Thesis.Services.CacheService.CacheServiceImpl.CacheManager_iml_PAGINATION_comment;
+import com.Search_Thesis.Search_Thesis.Services.CacheService.CacheServiceImpl.CacheManager_iml_PAGINATION_question;
 import com.Search_Thesis.Search_Thesis.Services.Cloudinary.CloudinaryService;
 import com.Search_Thesis.Search_Thesis.Services.JwtService.JwtService;
 import com.Search_Thesis.Search_Thesis.repository.*;
@@ -52,10 +55,6 @@ public class QandAServices {
     @Autowired
     @Qualifier("CloudinaryService")
     CloudinaryService cloudinaryServices;
-
-    @Autowired
-    Cache_Services cache_services;
-
     @Autowired
     private Reply reply;
 
@@ -64,9 +63,6 @@ public class QandAServices {
     @Autowired
     Comment_ques_repository comment_ques_repository;
 
-
-    @Autowired
-    Cache_Services<List<Question>, Question, Integer> listCache_services_quesion;
 
     @Autowired
     CacheManager_iml_PAGINATION cache_manager_question;

@@ -1,30 +1,26 @@
-package com.Search_Thesis.Search_Thesis.Services;
+package com.Search_Thesis.Search_Thesis.Services.CacheService.CacheServiceImpl;
 
 import com.Search_Thesis.Search_Thesis.Model.Category_Question;
 import com.Search_Thesis.Search_Thesis.Model.Question;
 import com.Search_Thesis.Search_Thesis.DTO.Category_question_id_name;
 import com.Search_Thesis.Search_Thesis.DTO.QuestionDetailResponse;
+import com.Search_Thesis.Search_Thesis.Services.CacheService.CacheManager;
 import com.Search_Thesis.Search_Thesis.repository.Question_Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
-import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-@Service
+@Service("CacheManager_iml_PAGINATION_question")
 
-public class CacheManager_iml_PAGINATION_question implements Cache_Manager<String> {
+public class CacheManager_iml_PAGINATION_question implements CacheManager<String> {
     @Autowired
     Question_Repository question_repository ;
 
     @Autowired
-    CacheManager cacheManager ;
+    org.springframework.cache.CacheManager cacheManager ;
 
-    @Override
-    public String getCache(String id, String... value) {
-        return null;
-    }
     public boolean add_Ques_into_Cache() {
         List<Question> questionList = question_repository.findAll() ;
         PagedListHolder<Question> pagedListHolder =  new PagedListHolder<>(questionList) ;

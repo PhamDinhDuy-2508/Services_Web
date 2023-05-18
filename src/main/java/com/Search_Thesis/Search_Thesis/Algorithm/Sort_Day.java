@@ -32,8 +32,7 @@ public class Sort_Day  implements  Sort<List<Folder>>{
             for (int j  =   i +1   ; j < folders.size() ;j++ ) {
                 Date date   =  folder_array[i].getPublish_date() ;
                 Date date1 =  folder_array[j].getPublish_date();
-                System.out.println(date1);
-                System.out.println(date);
+
                 if(date.after(date1))  {
                     temp = folder_array[i];
                     folder_array[i]  = folder_array[j]; ;

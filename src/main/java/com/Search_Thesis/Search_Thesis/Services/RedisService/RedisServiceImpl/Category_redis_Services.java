@@ -1,8 +1,8 @@
-package com.Search_Thesis.Search_Thesis.Services.Redis.RedisServiceImpl;
+package com.Search_Thesis.Search_Thesis.Services.RedisService.RedisServiceImpl;
 
 import com.Search_Thesis.Search_Thesis.Model.Category_Redis;
 import com.Search_Thesis.Search_Thesis.Model.Folder;
-import com.Search_Thesis.Search_Thesis.Services.Redis.Services_Redis;
+import com.Search_Thesis.Search_Thesis.Services.RedisService.Services_Redis;
 import com.Search_Thesis.Search_Thesis.repository.Category_document_Responsitory;
 import com.Search_Thesis.Search_Thesis.repository.Folder_Respository;
 import org.springframework.beans.factory.annotation.Autowired;

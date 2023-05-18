@@ -5,8 +5,8 @@ import com.Search_Thesis.Search_Thesis.Services.Document_services;
 import com.Search_Thesis.Search_Thesis.Services.Document_services_2;
 import com.Search_Thesis.Search_Thesis.Services.Edit_Document_Services;
 import com.Search_Thesis.Search_Thesis.Services.JwtService.JwtService;
-import com.Search_Thesis.Search_Thesis.Services.Redis.RedisServiceImpl.Category_redis_Services;
-import com.Search_Thesis.Search_Thesis.Services.Redis.RedisServiceImpl.Document_Service_redis;
+import com.Search_Thesis.Search_Thesis.Services.RedisService.RedisServiceImpl.Category_redis_Services;
+import com.Search_Thesis.Search_Thesis.Services.RedisService.RedisServiceImpl.Document_Service_redis;
 import com.Search_Thesis.Search_Thesis.repository.Document_Repository;
 import com.Search_Thesis.Search_Thesis.repository.Folder_Respository;
 import com.Search_Thesis.Search_Thesis.repository.User_respository;
@@ -19,7 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,8 +39,11 @@ public class Edit_Document_rest {
     Document_services document_services ;
     @Autowired
     Document_services_2 document_services_2 ;
+
+
     @Autowired
     Folder_Respository folder_respository ;
+
     @Autowired
     @Qualifier("JwtServices")
     JwtService jwt_services ;
@@ -58,19 +60,11 @@ public class Edit_Document_rest {
 
     @Autowired
     User user ;
-    @PostConstruct
-    public void Cache_Clear() {
-        for(String name:cacheManager.getCacheNames()){
-            System.out.println(name);           // clear cache by name
-        }
 
-    }
 
     @GetMapping("/displayfolder/{code}")
     public ResponseEntity display_document(@PathVariable String code) {
         List<Folder> folderList =  document_services_2.getMap_category_Folder().get(code) ;
-        System.out.println(folderList);
-
 
         return  ResponseEntity.ok(folderList) ;
     }
@@ -138,8 +132,6 @@ public class Edit_Document_rest {
         })  ;
     }
 
-
-
     @DeleteMapping("/Edit_Folder/{id}")
     public CompletableFuture<ResponseEntity> Delete(@PathVariable String id) {
 
@@ -154,9 +146,7 @@ public class Edit_Document_rest {
         Cookie[] cookies = request.getCookies();
         try {
             if (cookies != null) {
-
                 for (Cookie cookie : cookies) {
-                    System.out.println(cookie.getName()  + cookie.getValue());
                     if (cookie.getName().equals(name)) {
                         return cookie.getValue();
                     }
@@ -260,11 +250,9 @@ public class Edit_Document_rest {
             if (cookies != null) {
 
                 for (Cookie cookie : cookies) {
-                    System.out.println(cookie.getName());
                     if (cookie.getName().equals(name)) {
                         cookie.setValue("");
                         cookie.setPath("/");
-
                         cookie.setMaxAge(0);
                         response.addCookie(cookie);
                         return;
@@ -272,9 +260,7 @@ public class Edit_Document_rest {
                 }
             }
         }
-        catch (Exception e) {
-            return  ;
-        }
+        catch (Exception e) {}
     }
 }
 @Data
