@@ -86,7 +86,7 @@ public class Folder_info_Services implements Services_Redis<Folder_model_redis, 
 
 
         redisTemplate.opsForHash().put("1_Expire", now, document_redis);
-        ;
+        
 
         redisTemplate.opsForHash().values("1_Expire");
     }
