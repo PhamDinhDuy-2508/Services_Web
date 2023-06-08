@@ -555,6 +555,7 @@ function back_to_document_page(){
                 create_folder()
                 $("#check_folder").hide()
                 $('#save_change_folder_new').attr("data-dismiss","modal");
+                $('#folder_search').val($('#add_folder_new').val())
             }
         }
 
@@ -685,8 +686,6 @@ function back_to_document_page(){
                 console.log(response);
             });
 
-
-
         });
     });
 </script>
@@ -696,14 +695,32 @@ function back_to_document_page(){
 <script>
     function  load_folder(){
         async function get_folder() {
-            var url = "http://localhost:8080/api/ckt/get_folder?code="+ document.getElementById('category').value
-            let response = await fetch(url);
-            let y = await response.json();
-            for (let i = 0; i < y.length; i++) {
+            var myHeaders = new Headers();
+            myHeaders.append("Cookie", "SESSION=MTQwMTA5ZmQtMjliNy00NWUxLWJkZTktMmNmYjRhYTMwYTlm");
+            var url = "http://localhost:8983/solr/folderSearch/query?q=Category:*"+ document.getElementById('category').value+"*&q.op=OR&indent=true&wt=json"
 
-                $('#folder_list').append(
-                    "<option value="+y[i].title+"></option>")
-            }
+            var settings = {
+                "url": url,
+                "method": "GET",
+                "timeout": 0,
+                "headers": {
+                    "Cookie": "SESSION=MTQwMTA5ZmQtMjliNy00NWUxLWJkZTktMmNmYjRhYTMwYTlm"
+                },
+            };
+
+            $.ajax(settings).done(function (response) {
+                console.log(JSON.parse(response).response);
+                var JSON_arr = JSON.parse(response).response.docs
+                console.log(JSON_arr)
+                for (let i = 0; i < JSON_arr.length; i++) {
+                    $('#folder_list').append(
+                        "<option value="+JSON_arr[i].Folder+"></option>")
+                }
+            });
+
+            // let response = await fetch(url);
+            // let y = await response.json();
+
             $('#category_add_folder_new').val(document.getElementById('category').value)
             $("#category_add_folder_new").prop('disabled', true);
 
@@ -787,14 +804,6 @@ function back_to_document_page(){
             }
 
 
-            // await fetch('http://localhost:8080/api/ckt/upload_document', {
-            //     method: "POST",
-            //     body: formData
-            // });
-            // alert('The file has been uploaded successfully.');
-
-
-
     }
     function create_folder(){
         var token =  get_Cookie('login_jwt')
@@ -844,7 +853,6 @@ function back_to_document_page(){
            console.log(settings)
 
            $.ajax(settings).done(function (response) {
-               console.log(response);
            });
 
        }
@@ -916,8 +924,6 @@ function back_to_document_page(){
                 $('#category_list').append(
                     "<option value="+response[i].code+">"+response[i].name+"</option>")
             }
-            console.log(response);
-
         });
 
 
@@ -926,7 +932,6 @@ function back_to_document_page(){
 
     <script>
         $(document).ready(function () {
-
 
             $("#category").on("input", function () {
                 var settings = {

@@ -57,6 +57,13 @@ public class UserServiceImpl {
 
         return username1 ;
     }
+    public int getUSerIdFromJwt(String token) {
+        JwtServiceImpl jwt_services = new JwtServiceImpl();
+        jwt_services.setJwt(token);
+        JSONObject jsonObject = jwt_services.getPayload();
+        int user_id = (int) jsonObject.get("id");
+        return  user_id ;
+    }
     public  boolean checkRequestParam(String username1  , String requestParam){
         if(username1.equals(requestParam)) {
             return true ;
@@ -104,7 +111,6 @@ public class UserServiceImpl {
         User user1 = user_respository.findUsersByEmail(email);
 
         try {
-
             if(user1 != null) {
                 user1.setResettoken(token);
                 user_respository.save(user1);

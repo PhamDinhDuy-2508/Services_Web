@@ -3,10 +3,10 @@ package com.Search_Thesis.Search_Thesis.Services.BackupService.BackupImpl;
 import com.Search_Thesis.Search_Thesis.Model.Document;
 import com.Search_Thesis.Search_Thesis.Model.Document_info_redis;
 import com.Search_Thesis.Search_Thesis.Services.BackupService.Backup;
-import com.Search_Thesis.Search_Thesis.Services.RedisService.RedisServiceImpl.Document_info_redis_Services;
-import com.Search_Thesis.Search_Thesis.Services.RedisService.RedisServiceImpl.Folder_info_Services;
+import com.Search_Thesis.Search_Thesis.Services.CacheService.RedisService.RedisServiceImpl.Document_info_redis_Services;
+import com.Search_Thesis.Search_Thesis.Services.CacheService.RedisService.RedisServiceImpl.Folder_info_Services;
 import com.Search_Thesis.Search_Thesis.repository.Document_Repository;
-import com.Search_Thesis.Search_Thesis.repository.Folder_Respository;
+import com.Search_Thesis.Search_Thesis.repository.FolderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -27,7 +27,7 @@ public class BackupDocument implements Backup {
     Folder_info_Services folder_info_services;
 
     @Autowired
-    Folder_Respository folder_respository;
+    FolderRepository folder_respository;
 
     @Autowired
     Document_Repository document_repository;

@@ -3,12 +3,12 @@ package com.Search_Thesis.Search_Thesis.Rest;
 import com.Search_Thesis.Search_Thesis.Model.Document;
 import com.Search_Thesis.Search_Thesis.Model.Document_info_redis;
 import com.Search_Thesis.Search_Thesis.Model.Folder;
-import com.Search_Thesis.Search_Thesis.Model.Folder_model_redis;
+import com.Search_Thesis.Search_Thesis.Model.FolderRedisModel;
 import com.Search_Thesis.Search_Thesis.Services.HistoryService.History_Services;
 import com.Search_Thesis.Search_Thesis.Services.JwtService.JwtService;
-import com.Search_Thesis.Search_Thesis.Services.RedisService.RedisServiceImpl.Document_Service_redis;
+import com.Search_Thesis.Search_Thesis.Services.CacheService.RedisService.RedisServiceImpl.Document_Service_redis;
 import com.Search_Thesis.Search_Thesis.repository.Document_Repository;
-import com.Search_Thesis.Search_Thesis.repository.Folder_Respository;
+import com.Search_Thesis.Search_Thesis.repository.FolderRepository;
 import lombok.Data;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class History_rest {
     @Autowired
     Document_Repository document_repository ;
     @Autowired
-    Folder_Respository folder_respository ;
+    FolderRepository folder_respository ;
     @Autowired
     RedisTemplate redisTemplate ;
     @Autowired
@@ -52,7 +52,7 @@ public class History_rest {
         try {
             List<Document> list =  new ArrayList<>() ;
 
-             List<Folder_model_redis> folder_model_redis =  history_services.Get_History_Folder(user_id);
+             List<FolderRedisModel> folder_model_redis =  history_services.Get_History_Folder(user_id);
              List<Document_info_redis> document_info_redis = history_services.Get_History_Document(user_id);
 
             history_services.Set_Contributor_History(String.valueOf(ID), document_info_redis , folder_model_redis );
@@ -101,7 +101,7 @@ class Document_Histoty{
 @Data
 class History_response{
     private List<Document> document_histories ;
-    private  List<Folder_model_redis> folder_histories ;
+    private  List<FolderRedisModel> folder_histories ;
 
     @Override
     public String toString() {

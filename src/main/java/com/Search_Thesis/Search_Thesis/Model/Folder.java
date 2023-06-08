@@ -1,12 +1,15 @@
 package com.Search_Thesis.Search_Thesis.Model;
 
 import com.google.gson.annotations.Expose;
+import org.apache.commons.lang3.builder.HashCodeExclude;
+import org.apache.commons.lang3.builder.ToStringExclude;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.Collection;
 
 
 @Entity
@@ -35,6 +38,19 @@ public class Folder implements Serializable {
 
     @Column(name = "Contributor_id")
     private  int Contributor_ID  ;
+
+    @OneToMany(mappedBy = "folder" , cascade = CascadeType.ALL)
+    @ToStringExclude
+    @HashCodeExclude
+    private Collection<Document> documents ;
+
+    public Collection<Document> getDocuments() {
+        return documents;
+    }
+
+    public void setDocuments(Collection<Document> documents) {
+        this.documents = documents;
+    }
 
     public int getIdFolder() {
         return idFolder;
@@ -78,5 +94,9 @@ public class Folder implements Serializable {
     public void setContributor_ID(String contributor_ID) {
         Contributor_ID = Integer.parseInt( contributor_ID );
     }
+
+
+
+
 }
 

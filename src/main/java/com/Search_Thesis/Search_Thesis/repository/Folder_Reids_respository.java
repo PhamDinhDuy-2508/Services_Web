@@ -3,7 +3,7 @@ package com.Search_Thesis.Search_Thesis.repository;
 import com.Search_Thesis.Search_Thesis.Model.Document;
 import com.Search_Thesis.Search_Thesis.Model.Folder;
 import com.Search_Thesis.Search_Thesis.Model.Document_redis;
-import com.Search_Thesis.Search_Thesis.Model.Folder_model_redis;
+import com.Search_Thesis.Search_Thesis.Model.FolderRedisModel;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -23,7 +23,7 @@ public  class  Folder_Reids_respository  {
 
     @Async
 
-    public Folder_model_redis save(String user_id  ,  Folder_model_redis folder)  {
+    public FolderRedisModel save(String user_id  , FolderRedisModel folder)  {
 
         String test ="1_2508_folder" ;
 

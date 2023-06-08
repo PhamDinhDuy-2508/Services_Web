@@ -16,7 +16,6 @@ import java.util.Optional;
 public class DaoImplSolrDocument implements SolrCommandDAO<DocumentSolrSearch> {
     private SolrTemplate solrTemplate;
 
-
     @Autowired
     public void setSolrTemplate(SolrTemplate solrTemplate) {
         this.solrTemplate = solrTemplate;
@@ -41,6 +40,7 @@ public class DaoImplSolrDocument implements SolrCommandDAO<DocumentSolrSearch> {
     }
 
     @Override
+    @Transactional
     public void merge(DocumentSolrSearch documentSolrSearch) {
         PartialUpdate partialUpdate = new org.springframework.data.solr.core.query.PartialUpdate("id", documentSolrSearch.getId());
         DocumentSolrSearch documentSolrSearchById = solrDocumentRepository.findDocumentSolrSearchById(documentSolrSearch.getId());
@@ -48,7 +48,7 @@ public class DaoImplSolrDocument implements SolrCommandDAO<DocumentSolrSearch> {
             solrDocumentRepository.save(documentSolrSearch);
         } else {
             updateChange(documentSolrSearchById.getContent(), documentSolrSearch.getContent(), partialUpdate);
-            partialUpdate.setValueOfField("folderId" , documentSolrSearch.getFolderId());
+            partialUpdate.setValueOfField("folderId", documentSolrSearch.getFolderId());
             solrTemplate.saveBean("DocumentSearch", partialUpdate);
             solrTemplate.commit("DocumentSearch");
         }
@@ -60,7 +60,12 @@ public class DaoImplSolrDocument implements SolrCommandDAO<DocumentSolrSearch> {
 
     }
 
-    public  void updateChange(String oldContent, String newContent, PartialUpdate partialUpdate) {
+    @Override
+    public List<DocumentSolrSearch> getByCode(String value) {
+        return null;
+    }
+
+    public void updateChange(String oldContent, String newContent, PartialUpdate partialUpdate) {
         if (oldContent != newContent) {
 
             String[] suggestIndex = newContent.split("[-.\\s+]");

@@ -1,9 +1,9 @@
 package com.Search_Thesis.Search_Thesis.Rest;
 
 import com.Search_Thesis.Search_Thesis.Model.Root_Folder;
+import com.Search_Thesis.Search_Thesis.Services.DocumentServices2;
 import com.Search_Thesis.Search_Thesis.Services.Document_services;
-import com.Search_Thesis.Search_Thesis.Services.Document_services_2;
-import com.Search_Thesis.Search_Thesis.Services.Dowload_File_Utils;
+import com.Search_Thesis.Search_Thesis.Services.Utils.DowloadFileUtils;
 import com.Search_Thesis.Search_Thesis.Services.Drive.DriveService;
 import com.Search_Thesis.Search_Thesis.Services.SessionService.SessionService;
 import com.Search_Thesis.Search_Thesis.Services.Utils.MediaTypeUtils;
@@ -42,10 +42,10 @@ public class download_document_rest {
     SessionService session_serviceImpl;
 
     @Autowired
-    Document_services_2 document_services_2;
+    DocumentServices2 document_services_2;
 
     @Autowired
-    Dowload_File_Utils dowload_file_utils;
+    DowloadFileUtils dowload_file_utils;
 
     @Autowired
     ApplicationEventPublisher applicationEventPublisher;

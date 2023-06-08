@@ -2,6 +2,8 @@ package com.Search_Thesis.Search_Thesis.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.builder.ToStringExclude;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Component;
 
@@ -45,6 +47,12 @@ public class Document implements Serializable {
     @Column(name = "Id_folder")
 
     private int Id_folder ;
+    @ManyToOne
+    @JoinColumn(name = "FolderId")
+    @EqualsAndHashCode.Exclude
+    @ToStringExclude
+    private  Folder folder ;
+
 
     @Override
     public String toString() {

@@ -37,21 +37,20 @@ public class CloudinaryServiceImpl implements CloudinaryService {
         }
     }
 
-    public Map upload(String image_name, byte[] img_byte_arr) {
+    public Map upload(String name, byte[] byte_arr) {
         synchronized (this) {
             Map image_src = new HashMap<>();
             try {
                 image_src = cloudinary.uploader()
-                        .upload(img_byte_arr, ObjectUtils.asMap(
+                        .upload(byte_arr, ObjectUtils.asMap(
                                 "resource_type", "auto",
-                                "public_id", image_name
+                                "public_id", name
                         ));
                 return image_src;
             } catch (Exception e) {
                 return null;
             }
         }
-
     }
 
 }

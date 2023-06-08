@@ -3,7 +3,7 @@ package com.Search_Thesis.Search_Thesis.Schedule.ScheduleServiceImpl;
 import com.Search_Thesis.Search_Thesis.Model.Document;
 import com.Search_Thesis.Search_Thesis.Model.DocumentSolrSearch;
 import com.Search_Thesis.Search_Thesis.Schedule.ScheduleService;
-import com.Search_Thesis.Search_Thesis.Services.Utils.ConverterPkg.DocumentSearchSolrConverter;
+import com.Search_Thesis.Search_Thesis.Services.Converter.ConverterImpl.DocumentSearchSolrConverter;
 import com.Search_Thesis.Search_Thesis.repository.Document_Repository;
 import com.Search_Thesis.Search_Thesis.repository.SolrRepository.SolrCommandDAO;
 import com.Search_Thesis.Search_Thesis.repository.SolrRepository.SolrDocumentRepository;

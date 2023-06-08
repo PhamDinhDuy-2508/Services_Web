@@ -11,7 +11,9 @@ import java.util.List;
 public interface Root_Responsitory extends JpaRepository<Root_Folder,  Integer> {
     @Query("SELECT u FROM Root_Folder u WHERE u.id = :ID")
     Root_Folder findRoot_FolderByIdById(int ID) ;
-
     List<Root_Folder> findAll() ;
+
+    @Query("update Root_Folder u set u.parentId = :parentID where  u.id = :id")
+    void updateParentIdByRootId(String parentID ,  String id) ;
 
 }

@@ -1,14 +1,14 @@
 package com.Search_Thesis.Search_Thesis.Services.HistoryService;
 
 import com.Search_Thesis.Search_Thesis.Model.Document_info_redis;
-import com.Search_Thesis.Search_Thesis.Model.Folder_model_redis;
+import com.Search_Thesis.Search_Thesis.Model.FolderRedisModel;
 import com.Search_Thesis.Search_Thesis.Services.BackupService.BackupImpl.BackupDocument;
 import com.Search_Thesis.Search_Thesis.Services.BackupService.BackupImpl.BackupFolder;
 import com.Search_Thesis.Search_Thesis.Services.BackupService.BackupService;
-import com.Search_Thesis.Search_Thesis.Services.RedisService.RedisServiceImpl.Document_info_redis_Services;
-import com.Search_Thesis.Search_Thesis.Services.RedisService.RedisServiceImpl.Folder_info_Services;
+import com.Search_Thesis.Search_Thesis.Services.CacheService.RedisService.RedisServiceImpl.Document_info_redis_Services;
+import com.Search_Thesis.Search_Thesis.Services.CacheService.RedisService.RedisServiceImpl.Folder_info_Services;
 import com.Search_Thesis.Search_Thesis.repository.Document_Repository;
-import com.Search_Thesis.Search_Thesis.repository.Folder_Respository;
+import com.Search_Thesis.Search_Thesis.repository.FolderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -33,7 +33,7 @@ public class History_Services {
     Folder_info_Services folder_info_services;
 
     @Autowired
-    Folder_Respository folder_respository;
+    FolderRepository folder_respository;
 
     @Autowired
     Document_Repository document_repository;
@@ -67,12 +67,12 @@ public class History_Services {
 
     }
 
-    public List<Folder_model_redis> Get_History_Folder(String ID) {
+    public List<FolderRedisModel> Get_History_Folder(String ID) {
 
         List<String> key = redisTemplate.opsForHash().keys("Delete_folder").stream().toList();
 
 
-        List<Folder_model_redis> folderList = new ArrayList<>();
+        List<FolderRedisModel> folderList = new ArrayList<>();
 
         for (String ignored : key) {
 
@@ -80,7 +80,7 @@ public class History_Services {
 
             if (Id_fromKey.equals(ID)) {
 
-                Folder_model_redis document_info_redis = folder_info_services.findProductById(ignored, 0);
+                FolderRedisModel document_info_redis = folder_info_services.findProductById(ignored, 0);
 
                 folderList.add(document_info_redis);
             }
@@ -88,7 +88,7 @@ public class History_Services {
         return folderList;
     }
 
-    public void Set_Contributor_History(String ID, List<Document_info_redis> History_document, List<Folder_model_redis> History_Folder) {
+    public void Set_Contributor_History(String ID, List<Document_info_redis> History_document, List<FolderRedisModel> History_Folder) {
         Hashtable hashtable1 = new Hashtable<>();
         hashtable1.put("document", History_document);
         hashtable1.put("folder", History_Folder);
@@ -133,10 +133,10 @@ public class History_Services {
 //            if (hashtable2 == null) {
 //                return;
 //            }
-//            Stack<Folder_model_redis> stack_process = new Stack<>();
-//            List<Folder_model_redis> folder_model_redis = (List<Folder_model_redis>) hashtable2.get("folder");
+//            Stack<FolderRedisModel> stack_process = new Stack<>();
+//            List<FolderRedisModel> folder_model_redis = (List<FolderRedisModel>) hashtable2.get("folder");
 //
-//            for (Folder_model_redis folder_model_rediss : folder_model_redis) {
+//            for (FolderRedisModel folder_model_rediss : folder_model_redis) {
 //
 //                int ID_Folder = Integer.parseInt(ID);
 //
@@ -146,7 +146,7 @@ public class History_Services {
 //                    break;
 //                }
 //            }
-//            Folder_model_redis folder_model_redis1 = stack_process.peek();
+//            FolderRedisModel folder_model_redis1 = stack_process.peek();
 //
 //            Backup.Insert_Folder_into_database(folder_respository, folder_model_redis1, user_id);
 //            Backup.Insert_document_into_database(  folder_respository , document_repository,folder_model_redis1);

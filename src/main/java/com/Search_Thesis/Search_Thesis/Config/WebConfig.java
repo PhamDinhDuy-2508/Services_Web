@@ -6,6 +6,7 @@ import com.cloudinary.utils.ObjectUtils;
 import net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.cache.RedisCacheManagerBuilderCustomizer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -21,56 +22,52 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 
 import java.time.Duration;
 
 @Configuration
 @EnableScheduling
 @EnableSchedulerLock(defaultLockAtMostFor = "10m")
-@ConditionalOnProperty(name="scheduler.enabled", matchIfMissing = true)
+@ConditionalOnProperty(name = "scheduler.enabled", matchIfMissing = true)
 @EnableRedisRepositories
-
-
 
 @EnableSolrRepositories(
         basePackages = "com.Search_Thesis.Search_Thesis.repository.SolrRepository")
-public class WebConfig implements WebMvcConfigurer {
+public class WebConfig extends WebMvcConfigurerAdapter  implements WebMvcConfigurer  {
+
+    @Value("${page.folder.size}")
+    private   int pageNumberSize;
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**").allowedOrigins("http://localhost:8983" , "http://localhost:9200/");
+    }
 
 
-//    public MappingJackson2HttpMessageConverter jacksonMessageConverter(){
-//        MappingJackson2HttpMessageConverter messageConverter = new MappingJackson2HttpMessageConverter();
-//
-//        ObjectMapper mapper = new ObjectMapper();
-//        //Registering Hibernate4Module to support lazy objects
-//        mapper.registerModule(new Hibernate4Module());
-//
-//        messageConverter.setObjectMapper(mapper);
-//        return messageConverter;
-//
-//    }
-//
-//    @Override
-//    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-//        //Here we add our custom-configured HttpMessageConverter
-//        converters.add(jacksonMessageConverter());
-//        WebMvcConfigurer.super.configureMessageConverters(converters);
-//    }
 
     @Override
-        public void addViewControllers(ViewControllerRegistry registry) {
-        }
+    public void addViewControllers(ViewControllerRegistry registry) {
+    }
 
-        @Bean
-        public FilterRegistrationBean<Document_Filter> loggingFilter() {
+    @Bean
+    public FilterRegistrationBean<Document_Filter> loggingFilter() {
 
-            FilterRegistrationBean<Document_Filter> registrationBean
-                    = new FilterRegistrationBean<>();
-            registrationBean.setFilter(new Document_Filter());
-            registrationBean.addUrlPatterns("/document/**");
-            return  registrationBean ;
-        }
+        FilterRegistrationBean<Document_Filter> registrationBean
+                = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new Document_Filter());
+        registrationBean.addUrlPatterns("/document/**");
+        return registrationBean;
+    }
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurerAdapter() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**").allowedOrigins("http://localhost:9200","http://localhost:8983", "http://localhost:8080").allowedMethods("PUT", "DELETE",
+                        "GET", "POST");
+            }
+        };
+    }
 
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
@@ -88,27 +85,30 @@ public class WebConfig implements WebMvcConfigurer {
 
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(jedisConnectionFactory());
-        template.setEnableTransactionSupport(true) ;
+        template.setEnableTransactionSupport(true);
 
         return template;
     }
+
     @Bean
     public CommonsMultipartResolver multipartResolver() {
-        CommonsMultipartResolver resolver = new CommonsMultipartResolver() ;
+        CommonsMultipartResolver resolver = new CommonsMultipartResolver();
         resolver.setMaxInMemorySize(50000000);
         resolver.setDefaultEncoding("UTF-8");
-        return  resolver ;
+        return resolver;
     }
+
     @Bean
-    public Cloudinary cloudinary () {
+    public Cloudinary cloudinary() {
         Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
-                "cloud_name" ,"digdf0acz" ,
-                        "api_key" ,"313475329574338" ,
-                        "api_secret" ,"PXQS7oQfMZhCgXFSIQWpeBgEWOc" ,
-                        "secure" ,true
-        )) ;
-        return cloudinary ;
+                "cloud_name", "digdf0acz",
+                "api_key", "313475329574338",
+                "api_secret", "PXQS7oQfMZhCgXFSIQWpeBgEWOc",
+                "secure", true
+        ));
+        return cloudinary;
     }
+
     @Bean
     public SolrClient solrClient() {
         return new HttpSolrClient.Builder("http://localhost:8983/solr").build();
@@ -119,44 +119,12 @@ public class WebConfig implements WebMvcConfigurer {
         return new SolrTemplate(client);
     }
 
-
-//    @Bean
-//    public JedisConnectionFactory connectionFactory() {
-//        RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
-//        configuration.setHostName("localhost");
-//        configuration.setPort(6379);
-//
-//        return new JedisConnectionFactory(configuration);
-//    }
-//
-//    @Bean
-//    public RedisTemplate<String, Object> template() {
-//        RedisTemplate<String, Object> template = new RedisTemplate<>();
-//        template.setConnectionFactory(connectionFactory());
-//        template.setKeySerializer(new StringRedisSerializer());
-//        template.setHashKeySerializer(new StringRedisSerializer());
-//        template.setHashKeySerializer(new JdkSerializationRedisSerializer());
-//        template.setValueSerializer(new JdkSerializationRedisSerializer());
-//        template.setEnableTransactionSupport(true);
-//        template.afterPropertiesSet();
-//
-//        return template;
-//    }
-
     @Bean
     public TaskScheduler taskScheduler() {
         final ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
         scheduler.setPoolSize(10);
         return scheduler;
     }
-
-//    @Bean
-//    public RedisCacheConfiguration cacheConfiguration() {
-//        return RedisCacheConfiguration.defaultCacheConfig()
-//                .entryTtl(Duration.ofMinutes(60))
-//                .disableCachingNullValues()
-//                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
-//    }
     @Bean
     public RedisCacheManagerBuilderCustomizer redisCacheManagerBuilderCustomizer() {
         return (builder) -> builder
@@ -165,16 +133,6 @@ public class WebConfig implements WebMvcConfigurer {
                 .withCacheConfiguration("customerCache",
                         RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(5)));
     }
-//    @Bean
-//    public CacheManager cacheManager() {
-//        SimpleCacheManager cacheManager = new SimpleCacheManager();
-//        List<Cache> caches = new ArrayList<Cache>();
-//        caches.add(new ConcurrentMapCache("getActionsBycasId"));
-//        cacheManager.setCaches(caches);
-//        return cacheManager;
-//    }
-
-
 
 
 

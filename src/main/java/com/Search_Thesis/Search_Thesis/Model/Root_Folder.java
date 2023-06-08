@@ -1,5 +1,6 @@
 package com.Search_Thesis.Search_Thesis.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Component;
 
@@ -20,9 +21,15 @@ public class Root_Folder {
     @Column
     private  String name ;
 
+    @Column(name = "parent_id")
+    @JsonIgnore
+    private  String parentId ;
+
     @OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER, mappedBy = "root_folder")
 
     private Set< Category_document> category_document ;
+
+
 
     @Override
     public String toString() {
@@ -55,5 +62,13 @@ public class Root_Folder {
 
     public void setCategory_document(Set<Category_document> category_document) {
         this.category_document = category_document;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 }

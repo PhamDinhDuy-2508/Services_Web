@@ -59,7 +59,7 @@ public class Security_Config  extends WebSecurityConfigurerAdapter {
         @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable()
-                .authorizeRequests().antMatchers("/document/**","/edit_document/**" ,"/load_user_token_Edit_page""/api/ckt/**" ,"/profile/**","/home/**" ,"/login" , "/blog" ,"/css/**" , "/fonts/**" , "/img/**" ,"/js/**","/reset_pass" ,"/contact").hasRole("ADMIN").
+                .authorizeRequests().antMatchers("/document/**","/edit_document/**" ,"/load_user_token_Edit_page","/api/ckt/**" ,"/profile/**","/home/**" ,"/login" , "/blog" ,"/css/**" , "/fonts/**" , "/img/**" ,"/js/**","/reset_pass" ,"/contact").hasRole("ADMIN").
                 antMatchers("/load_user_token_Edit_page" , "/login" ,"/blog", "/sign_up","/reset_pass","/reset_pass/**",
                           "/profile/**","/forgot_password/**" ,"/home/**" ,"/api/ckt/**","/css/**" , "/fonts/**" , "/img/**" ,"/js/**"
                         ,"/document/**" , "/topic/**" ,
@@ -99,7 +99,7 @@ public class Security_Config  extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/api/login").permitAll() // Cho phép tất cả mọi người truy cập vào địa chỉ này
 //                .anyRequest().authenticated(); // Tất cả các request khác đều cần phải xác thực mới được truy cập
 //
-//        // Thêm một lớp Filter kiểm tra jwt
+//        // Thêm một lớp SortBy kiểm tra jwt
 //        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 //    }
 }

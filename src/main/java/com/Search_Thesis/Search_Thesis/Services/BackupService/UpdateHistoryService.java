@@ -2,11 +2,11 @@ package com.Search_Thesis.Search_Thesis.Services.BackupService;
 
 import com.Search_Thesis.Search_Thesis.Model.Document;
 import com.Search_Thesis.Search_Thesis.Model.Folder;
-import com.Search_Thesis.Search_Thesis.Model.Folder_model_redis;
-import com.Search_Thesis.Search_Thesis.Services.RedisService.RedisServiceImpl.Document_info_redis_Services;
-import com.Search_Thesis.Search_Thesis.Services.RedisService.RedisServiceImpl.Folder_info_Services;
+import com.Search_Thesis.Search_Thesis.Model.FolderRedisModel;
+import com.Search_Thesis.Search_Thesis.Services.CacheService.RedisService.RedisServiceImpl.Document_info_redis_Services;
+import com.Search_Thesis.Search_Thesis.Services.CacheService.RedisService.RedisServiceImpl.Folder_info_Services;
 import com.Search_Thesis.Search_Thesis.repository.Document_Repository;
-import com.Search_Thesis.Search_Thesis.repository.Folder_Respository;
+import com.Search_Thesis.Search_Thesis.repository.FolderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class UpdateHistoryService {
     Folder_info_Services folder_info_services;
 
     @Autowired
-    Folder_Respository folder_respository;
+    FolderRepository folder_respository;
 
     @Autowired
     Document_Repository document_repository;
@@ -40,7 +40,7 @@ public class UpdateHistoryService {
         this.userId = userId;
         Id = id;
     }
-    public  void Insert_Folder_into_database(Folder_Respository folder_respository, Folder_model_redis folder_model_redis, String user_id) {
+    public  void Insert_Folder_into_database(FolderRepository folder_respository, FolderRedisModel folder_model_redis, String user_id) {
             Folder folder = new Folder();
 
             folder.setTitle(folder_model_redis.getTitle());
@@ -58,7 +58,7 @@ public class UpdateHistoryService {
 
     }
 
-    public  List<Document> Insert_document_into_database(Folder_Respository folder_respository, Document_Repository document_repository , Folder_model_redis folder_model_redis) {
+    public  List<Document> Insert_document_into_database(FolderRepository folder_respository, Document_Repository document_repository , FolderRedisModel folder_model_redis) {
         String Title = folder_model_redis.getTitle() ;
         String Code =  folder_model_redis.getCategorydocument().getCode() ;
 

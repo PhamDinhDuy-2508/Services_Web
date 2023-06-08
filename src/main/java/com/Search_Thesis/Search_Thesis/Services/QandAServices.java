@@ -522,7 +522,7 @@ public class QandAServices {
         return LIST;
     }
 
-    //    @Cacheable(value = "question_filter" , key = "#Filter")
+    //    @Cacheable(value = "question_filter" , key = "#SortBy")
     public List<Question> load_all_Filter(String Filter) {
         if (Filter.equals("View")) {
             List<Question> questionList = question_repository.findByViewContaining();
@@ -540,7 +540,7 @@ public class QandAServices {
 
     }
 
-    //    @Cacheable(value = "question_page" ,  key = "#page.concat('-').concat( #Filter)")
+    //    @Cacheable(value = "question_page" ,  key = "#page.concat('-').concat( #SortBy)")
     public List<QuestionDetailResponse> load_with_Filter(String page, String Filter) {
         if (Filter.equals("Default")) {
             return load_all_with_page(page, "None");

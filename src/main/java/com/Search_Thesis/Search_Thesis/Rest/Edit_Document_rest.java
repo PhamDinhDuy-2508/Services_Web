@@ -1,20 +1,16 @@
 package com.Search_Thesis.Search_Thesis.Rest;
 
 import com.Search_Thesis.Search_Thesis.Model.*;
+import com.Search_Thesis.Search_Thesis.Services.CacheService.RedisService.RedisServiceImpl.Document_Service_redis;
+import com.Search_Thesis.Search_Thesis.Services.DocumentServices2;
 import com.Search_Thesis.Search_Thesis.Services.Document_services;
-import com.Search_Thesis.Search_Thesis.Services.Document_services_2;
-import com.Search_Thesis.Search_Thesis.Services.Edit_Document_Services;
+import com.Search_Thesis.Search_Thesis.Services.EditDocumentServices;
 import com.Search_Thesis.Search_Thesis.Services.JwtService.JwtService;
-import com.Search_Thesis.Search_Thesis.Services.RedisService.RedisServiceImpl.Category_redis_Services;
-import com.Search_Thesis.Search_Thesis.Services.RedisService.RedisServiceImpl.Document_Service_redis;
-import com.Search_Thesis.Search_Thesis.repository.Document_Repository;
-import com.Search_Thesis.Search_Thesis.repository.Folder_Respository;
 import com.Search_Thesis.Search_Thesis.repository.User_respository;
 import lombok.Data;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,15 +30,9 @@ import java.util.concurrent.ExecutionException;
 @RequestMapping("/api/ckt")
 public class Edit_Document_rest {
     @Autowired
-    Document_Repository document_repository ;
-    @Autowired
     Document_services document_services ;
     @Autowired
-    Document_services_2 document_services_2 ;
-
-
-    @Autowired
-    Folder_Respository folder_respository ;
+    DocumentServices2 document_services_2 ;
 
     @Autowired
     @Qualifier("JwtServices")
@@ -50,13 +40,11 @@ public class Edit_Document_rest {
     @Autowired
     User_respository user_respository ;
     @Autowired
-    Edit_Document_Services edit_document_services ;
+    EditDocumentServices edit_document_services ;
     @Autowired
     Document_Service_redis document_service_redis ;
-    @Autowired
-    Category_redis_Services category_redis_services ;
-    @Autowired
-    CacheManager  cacheManager;
+
+
 
     @Autowired
     User user ;
@@ -167,7 +155,6 @@ public class Edit_Document_rest {
         String delete_Cookie = "";
 
         if(id_document.equals("all")) {
-            delete_Cookie = ReadCookies(request, "deleteRequest");
 
             delete_Cookie = id_folder+"_all";
 
@@ -228,19 +215,19 @@ public class Edit_Document_rest {
 //    @Cacheable(value = "pagination"  , key = "{#page_num  ,  #code ,  #filter}")
     @GetMapping("pagination/{page_num}/{code}/{filter}")
     public ResponseEntity pagination_document(@PathVariable String page_num, @PathVariable String code, @PathVariable String filter) {
-        int page =  Integer.parseInt(page_num) ;
-        List<Folder> folderList =  document_services_2.load_folder(code) ;
-//        Category_Redis category_redis  = category_redis_services.find("Category" , code) ;
-
-        if(filter.equals("default")) {
-//            List<Folder> folders =  category_redis.getFolderList() ;
-
-            return ResponseEntity.ok( document_services_2.pagination(code , page ,  folderList)) ;
-        }
-        else  {
-            List<Folder> folders  =  document_services_2.Filter(code , filter) ;
-            return ResponseEntity.ok(document_services_2.pagination(code , page , folders)) ;
-        }
+        return  null ;
+//        int page =  Integer.parseInt(page_num) ;
+//        List<Folder> folderList =  document_services_2.load_folder(code) ;
+//
+//        if(filter.equals("default")) {
+////            List<Folder> folders =  category_redis.getFolderList() ;
+//
+//            return ResponseEntity.ok( document_services_2.loadFolder(code , page ,  folderList)) ;
+//        }
+//        else  {
+//            List<Folder> folders  =  document_services_2.Filter(code , filter) ;
+//            return ResponseEntity.ok(document_services_2.load_Document(code , page , folders)) ;
+//        }
 
     }
 

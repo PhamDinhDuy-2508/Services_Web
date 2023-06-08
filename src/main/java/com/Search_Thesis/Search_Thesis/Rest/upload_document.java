@@ -7,7 +7,7 @@ import com.Search_Thesis.Search_Thesis.Model.Root_Folder;
 import com.Search_Thesis.Search_Thesis.Services.Document_services;
 import com.Search_Thesis.Search_Thesis.Services.Drive.DriveService;
 import com.Search_Thesis.Search_Thesis.Services.JwtService.JwtService;
-import com.Search_Thesis.Search_Thesis.repository.Category_document_Responsitory;
+import com.Search_Thesis.Search_Thesis.repository.Category_document_Repository;
 import com.Search_Thesis.Search_Thesis.repository.Root_Responsitory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -48,7 +48,7 @@ public class upload_document
     Root_Responsitory root_responsitory ;
 
     @Autowired
-    Category_document_Responsitory category_document_responsitory ;
+    Category_document_Repository category_document_responsitory ;
 
     @PostMapping ("/create_folder")
     public void create_folder_DIRECTORY(@RequestBody Create_folder create_folder ) throws IOException {

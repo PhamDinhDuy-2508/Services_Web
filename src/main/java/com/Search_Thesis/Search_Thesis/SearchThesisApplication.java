@@ -16,7 +16,7 @@ import java.util.List;
 //@SpringBootApplication(scanBasePackages = {"com.Search_Thesis.Search_Thesis.resposity" ,
 //		"com.Search_Thesis.Search_Thesis.Services" ,"com.Search_Thesis.Search_Thesis.Model" ,
 //		"com.Search_Thesis.Search_Thesis.Security","com.Search_Thesis.Search_Thesis.JWT",
-//		"com.Search_Thesis.Search_Thesis.Filter" ,"com.Search_Thesis.Search_Thesis.Rest","com.Search_Thesis.Search_Thesis.Controller"  } ,
+//		"com.Search_Thesis.Search_Thesis.SortBy" ,"com.Search_Thesis.Search_Thesis.Rest","com.Search_Thesis.Search_Thesis.Controller"  } ,
 //scanBasePackageClasses = {SignIn_Respository.class})
 
 @SpringBootApplication
