@@ -1,6 +1,5 @@
 package com.Search_Thesis.Search_Thesis.Services.DocumentService;
 
-import com.Search_Thesis.Search_Thesis.Algorithm.Search_Document;
 import com.Search_Thesis.Search_Thesis.DTO.FolderResponse;
 import com.Search_Thesis.Search_Thesis.Model.*;
 import com.Search_Thesis.Search_Thesis.Services.CacheService.RedisService.RedisServiceImpl.Category_redis_Services;
@@ -67,8 +66,7 @@ public class DocumentServices2 {
     @Autowired
     DowloadFileUtils dowload_file_utils;
 
-    @Autowired
-    Search_Document search_document;
+
 
     private Converter<FolderSolrSearch, FolderResponse> converter;
 
@@ -213,11 +211,7 @@ public class DocumentServices2 {
         if (signal.isBlank()) {
             return CompletableFuture.completedFuture(base);
         }
-        search_document.setList(base);
 
-        search_document.Search(signal);
-
-        result = search_document.getResult();
 
         return CompletableFuture.completedFuture(result);
 
