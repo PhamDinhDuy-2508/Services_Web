@@ -243,8 +243,8 @@
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <a class="dropdown-item" onclick="Filter('AZ')">A->Z</a>
                             <a class="dropdown-item" onclick="Filter('ZA')">Z<-A</a>
-                            <a class="dropdown-item" onclick="Filter('DateI')">Date: Giảm dần</a>
-                            <a class="dropdown-item" onclick="Filter('DateE')">Date: Tăng dần</a>
+                            <a class="dropdown-item" onclick="Filter('DateAsc')">Date: Giảm dần</a>
+                            <a class="dropdown-item" onclick="Filter('DateDesc')">Date: Tăng dần</a>
                         </div>
 
                     </div>
@@ -1107,7 +1107,6 @@
             "method": "GET",
             "timeout": 0,
             "headers": {
-                "Cookie": "SESSION=NGM4MTc5NjgtMmUwNS00YzM2LTkzYzYtYjY2ZGEyNmVmYmQ1"
             },
             "processData": false,
             "mimeType": "multipart/form-data",
@@ -1161,7 +1160,6 @@
             "method": "GET",
             "timeout": 0,
             "headers": {
-                "Cookie": "SESSION=OWE1NDJkY2ItMjdjMy00MWQ3LTg3OTctN2I4NTY1YTYyMzM4"
             },
             "processData": false,
             "mimeType": "multipart/form-data",
@@ -1196,6 +1194,68 @@
     }
 </script>
 <script>
+    function Filter(signal) {
+
+        if(signal == "AZ") {
+            $('#dropdownMenuButton').text("A->Z")
+        }
+        else  if(signal == "ZA") {
+            $('#dropdownMenuButton').text("Z->A")
+        }
+        else  if(signal=="DateAsc"){
+            $('#dropdownMenuButton').text("Date: Giảm dần")
+
+        }else  if(signal=="DateDesc"){
+            $('#dropdownMenuButton').text("Date: Tăng dần")
+        }
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set("Filter" , signal)
+        var code = urlParams.get("code")
+        var newParams = urlParams.toString()
+        var filter =  urlParams.get("Filter")
+        var Page =  urlParams.get("page") ;
+        if(filter == "default") {
+            filter = "AZ" ;
+        }
+
+        window.history.pushState("object or string", "Title", "http://localhost:8080/document?"  + newParams);
+        var settings = {
+            "url": "http://localhost:8080/api/ckt/sortBy/"+code+"/"+Page+"?signal="+filter,
+            "method": "GET",
+            "timeout": 0,
+            "headers": {
+
+            },
+        };
+        console.log("http://localhost:8080/api/ckt/sortBy/"+code+"/"+Page+"?signal="+filter)
+
+        $.ajax(settings).done(function (response) {
+            var Json =  response
+            var totalFolder =  Json.length
+            $('#folder_list').empty()
+
+            for ( let i = 0; i <totalFolder ; i++) {
+                var onclick = "onclick='show_folder(" + Json[i].id + ")'"
+
+
+                var folder = "<div class='document' type='button' id='" + Json[i].id + "'" + onclick + " data-toggle='modal' " + " data-target='#myModal'" + "> " +
+                    "                <div class='document-body'>" +
+                    "                    <i class='fa fa-folder-open text-info '></i>" +
+                    "                </div>" +
+                    "                <div class='document-footer'>" +
+                    "                    <span class='document-name'>" + Json[i].folderName + " </span>" +
+                    "                  <span class='document-description link' >" + Json[i].datePublic + "</span>" +
+                    "                </div>" +
+                    "            </div>"
+                $('#folder_list').append(folder)
+                document.getElementById(Json[i].id).style.cursor = "pointer";
+            }        });
+
+            // redirect_first_page(code , filter)
+
+    }
+</script>
+<script>
     function  reload_page(page , code , Filter){
         sortBy(code, Filter , page)
         var settings = {
@@ -1210,6 +1270,7 @@
             "contentType": false,
         };
         $.ajax(settings).done(function (response) {
+
             let JSON_CONVERT = JSON.parse(response)
 
             let count = Math.ceil(JSON_CONVERT.pageNumber)
@@ -1274,7 +1335,6 @@ function sortBy(Code,sortBystatus,page) {
         "contentType": false,
     };
     $.ajax(settings).done(function (response) {
-        console.log(response);
     });
 }
 </script>
@@ -1286,7 +1346,6 @@ function sortBy(Code,sortBystatus,page) {
             "method": "GET",
             "timeout": 0,
             "headers": {
-                "Cookie": "SESSION=OWE1NDJkY2ItMjdjMy00MWQ3LTg3OTctN2I4NTY1YTYyMzM4"
             },
             "processData": false,
             "mimeType": "multipart/form-data",
@@ -1354,34 +1413,35 @@ function sortBy(Code,sortBystatus,page) {
 
 
         var settings = {
-            "url": "http://localhost:8080/api/ckt/pagination/"+page+ "?Code=" +code+"&Filter="+filter,
+            "url": "http://localhost:8080/api/ckt/page/"+code+ "/"+page+"/"+filter,
             "method": "GET",
             "timeout": 0,
             "headers": {
-                "Cookie": "SESSION=NjIxZGI4MTQtOTNhNC00NTExLWFmOGMtYTgwNTYxNjg4NDAz"
             },
         };
-        // console.log(settings)
 
         $.ajax(settings).done(function (response) {
-            var Json = response
+            var Json = response.folderList
+            console.log(Json.length)
             $('#folder_list').empty()
             // $('#amount').text("Tìm được " +Json.length.toString() + " folder")
             for ( let i = 0; i < Json.length ; i++) {
-                var onclick = "onclick='show_folder(" + Json[i].idFolder + ")'"
+                var ID = Json[i].id
+                console.log(ID)
+                var onclick = "onclick='show_folder(" + ID + ")'"
 
 
-                var folder = "<div class='document' type='button' id='" + Json[i].idFolder + "'" + onclick + " data-toggle='modal' " + " data-target='#myModal'" + "> " +
+                var folder = "<div class='document' type='button' id='" + ID + "'" + onclick + " data-toggle='modal' " + " data-target='#myModal'" + "> " +
                     "                <div class='document-body'>" +
                     "                    <i class='fa fa-folder-open text-info '></i>" +
                     "                </div>" +
                     "                <div class='document-footer'>" +
-                    "                    <span class='document-name'>" + Json[i].title + " </span>" +
-                    "                  <span class='document-description link' >" + Json[i].publish_date + "</span>" +
+                    "                    <span class='document-name'>" + Json[i].folderName + " </span>" +
+                    "                  <span class='document-description link' >" + Json[i].datePublic + "</span>" +
                     "                </div>" +
                     "            </div>"
                 $('#folder_list').append(folder)
-                document.getElementById(Json[i].idFolder).style.cursor = "pointer";
+                document.getElementById(ID).style.cursor = "pointer";
             }
         });
     }
@@ -1394,7 +1454,6 @@ function show_folder(ID) {
         "method": "GET",
         "timeout": 0,
         "headers": {
-            "Cookie": "SESSION=MTkxYTQ2YTYtNzkyOS00ZmZiLWJjNTYtYTVhNGRlNTIzNDgx"
         },
         "processData": false,
         "mimeType": "multipart/form-data",
@@ -1433,33 +1492,7 @@ function show_folder(ID) {
 
 }
 </script>
-<script>
-    function Filter(signal) {
 
-        if(signal == "AZ") {
-            $('#dropdownMenuButton').text("A->Z")
-        }
-        else  if(signal == "ZA") {
-            $('#dropdownMenuButton').text("Z->A")
-        }
-        else  if(signal=="DateI"){
-            $('#dropdownMenuButton').text("Date: Giảm dần")
-
-        }else  if(signal=="DateE"){
-            $('#dropdownMenuButton').text("Date: Tăng dần")
-        }
-        const urlParams = new URLSearchParams(window.location.search);
-        urlParams.set("Filter" , signal)
-        var code = urlParams.get("code")
-        var newParams = urlParams.toString()
-        var filter =  urlParams.get("Filter")
-
-        window.history.pushState("object or string", "Title", "http://localhost:8080/document?"  + newParams);
-        alert(urlParams)
-        // redirect_first_page(code , filter)
-
-    }
-</script>
 <script>
     $.fn.extend({
         treed: function (o) {
@@ -1531,7 +1564,6 @@ function show_folder(ID) {
             "headers": {
                 "Authorization": "Basic Zm9vOmZvbw==",
                 "Content-Type": "application/json",
-                "Cookie": "SESSION=NjkwNjM2OGQtNzNhZC00YmViLWIwOWUtZmUxZjA3YjVlNTM1"
             },
         };
             $.ajax(settings).done(function (response) {

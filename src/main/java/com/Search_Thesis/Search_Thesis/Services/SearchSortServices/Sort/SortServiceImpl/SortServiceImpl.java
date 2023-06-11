@@ -47,7 +47,7 @@ public class SortServiceImpl implements SortService<FolderSolrSearch> {
                     return  sortFolderFactory.sortBy(SortStandardEnum.Date_DESC) ;
                 }
                 default: {
-                    return  null  ;
+                    return sortFolderFactory.sortBy(SortStandardEnum.A_Z)  ;
                 }
             }
         } catch (Exception ignored) {

@@ -5,7 +5,7 @@ import com.Search_Thesis.Search_Thesis.Model.Comment_Reply_Question;
 import com.Search_Thesis.Search_Thesis.Model.Question;
 import com.Search_Thesis.Search_Thesis.Model.Reply;
 import com.Search_Thesis.Search_Thesis.Services.Drive.DriveService;
-import com.Search_Thesis.Search_Thesis.Services.QandAServices;
+import com.Search_Thesis.Search_Thesis.Services.QandAServices.QandAServices;
 import com.Search_Thesis.Search_Thesis.repository.Question_Repository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.json.JSONObject;

@@ -1,7 +1,18 @@
 package com.Search_Thesis.Search_Thesis.Services.Utils;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class DocumentUtils {
@@ -52,5 +63,27 @@ public class DocumentUtils {
     public static int rows(int pageNumber) {
         return DocumentUtils.getPageNumberSize() * pageNumber;
     }
+
+    public static String convertToFormatYYMMDD(Date date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return localDate.format(formatter);
+    }
+    public static<U> JsonArray convertListToJson(List<U> list) {
+
+        Gson gson =  new Gson() ;
+        StringBuilder stringBuilder =  new StringBuilder(gson.toJson(list)) ;
+        if(stringBuilder.charAt(0) =='['){
+            stringBuilder.deleteCharAt(0);
+            stringBuilder.deleteCharAt(stringBuilder.length()-1) ;
+        }
+        return  null ;
+    }
+    public static Pageable pageable(int page , int rows , Sort sort) {
+        return PageRequest.of(page-1 , rows , sort) ;
+    }
+
+
+
 
 }

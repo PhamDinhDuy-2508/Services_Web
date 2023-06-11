@@ -9,5 +9,8 @@ public interface CloudinaryService {
 
      Map upload(String image_name, byte[] img_byte_arr);
 
+     void createFolder(String name,byte[] folderByte) ;
+
+
 
 }

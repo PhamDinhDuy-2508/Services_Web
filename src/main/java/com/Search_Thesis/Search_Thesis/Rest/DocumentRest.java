@@ -3,14 +3,14 @@ package com.Search_Thesis.Search_Thesis.Rest;
 import com.Search_Thesis.Search_Thesis.DTO.Create_category;
 import com.Search_Thesis.Search_Thesis.DTO.Create_folder;
 import com.Search_Thesis.Search_Thesis.DTO.FolderResponse;
-import com.Search_Thesis.Search_Thesis.Event.Create_Category_Event;
-import com.Search_Thesis.Search_Thesis.Event.Create_folder_Event;
+import com.Search_Thesis.Search_Thesis.Event.CreateCategoryEvent;
+import com.Search_Thesis.Search_Thesis.Event.CreateFolderEvent;
 import com.Search_Thesis.Search_Thesis.Model.*;
 import com.Search_Thesis.Search_Thesis.Services.CacheService.RedisService.RedisServiceImpl.Category_redis_Services;
 import com.Search_Thesis.Search_Thesis.Services.CacheService.RedisService.RedisServiceImpl.Document_Service_redis;
 import com.Search_Thesis.Search_Thesis.Services.Converter.Converter;
-import com.Search_Thesis.Search_Thesis.Services.DocumentServices2;
-import com.Search_Thesis.Search_Thesis.Services.Document_services;
+import com.Search_Thesis.Search_Thesis.Services.DocumentService.DocumentServices2;
+import com.Search_Thesis.Search_Thesis.Services.DocumentService.Document_services;
 import com.Search_Thesis.Search_Thesis.Services.Drive.DriveService;
 import com.Search_Thesis.Search_Thesis.Services.JwtService.JwtService;
 import com.Search_Thesis.Search_Thesis.Services.SearchSortServices.Sort.SortService;
@@ -69,7 +69,7 @@ public class DocumentRest {
     SessionService session_serviceImpl;
     @Autowired
     @Qualifier("SessionServiceGenerics")
-    SessionServiceForGenerics<List<Folder>> session_service_Generics ;
+    SessionServiceForGenerics<List<Folder>> session_service_Generics;
     @Autowired
     FolderRepository folder_respository;
     @Autowired
@@ -89,7 +89,8 @@ public class DocumentRest {
     @Autowired
     Category_redis_Services category_redis_services;
 
-    private Converter<FolderSolrSearch , FolderResponse> converter ;
+    private Converter<FolderSolrSearch, FolderResponse> converter;
+
     @Autowired
     @Qualifier("FolderEntityConvertToDto")
 
@@ -98,13 +99,13 @@ public class DocumentRest {
     }
 
     @Autowired
-    private UserServiceImpl userService ;
+    private UserServiceImpl userService;
 
 
+    private SortService<FolderSolrSearch> sortService;
 
-    private SortService<FolderSolrSearch> sortService ;
     @Autowired
-    public DocumentRest(@Qualifier("SortService")SortService<FolderSolrSearch> sortService) {
+    public DocumentRest(@Qualifier("SortService") SortService<FolderSolrSearch> sortService) {
         this.sortService = sortService;
     }
 
@@ -133,12 +134,6 @@ public class DocumentRest {
             return ResponseEntity.notFound().build();
         }
     }
-    @GetMapping("/search_document")
-    public ResponseEntity<List<Category_document>> response_category_search(HttpServletRequest request, @RequestParam("value") String value) {
-        List<Category_document> res = new ArrayList<>();
-        res = document_services.Search_Category(this.list_category, value);
-        return ResponseEntity.ok(res);
-    }
 
     @GetMapping("/find_category")
     public ResponseEntity<Boolean> find_cate(@RequestParam("root") String root_id, @RequestParam("code") String code) throws ExecutionException, InterruptedException {
@@ -155,7 +150,7 @@ public class DocumentRest {
     @PostMapping("/Create_new_Category")
     public ResponseEntity<Boolean> create_category(@RequestBody Create_category create_category) {
         try {
-            applicationEventPublisher.publishEvent(new Create_Category_Event(this, create_category));
+            applicationEventPublisher.publishEvent(new CreateCategoryEvent(this, create_category));
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -170,27 +165,9 @@ public class DocumentRest {
             String name_of_Session = "List_Folder_" + this.list_folder.get(0).getTitle();
             session_service_Generics.Create_Session(request, name_of_Session, this.list_folder);
 
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         return ResponseEntity.ok(this.list_folder);
-    }
-
-    @GetMapping("/search_folder")
-    public ResponseEntity<List<Folder>> get_list(@RequestParam("name") String name, HttpServletRequest request) throws ExecutionException, InterruptedException {
-//
-//        Session_Service_2<List<Folder>> session_service_2 =  new Session_Service_2<>() ;
-//
-//        String name_of_Session = "List_Folder_"+name ;
-//
-//        this.list_folder = session_service_2.Get_Session(request , name_of_Session) ;
-//
-//
-//        if (this.list_folder == null) {
-//            this.list_folder = this.futureTask.get();
-//        }
-//        List<Folder> res = document_services.Search_folder(this.list_folder, name);
-
-
-        return ResponseEntity.ok(null);
     }
 
     @GetMapping("/check_folder")
@@ -209,7 +186,7 @@ public class DocumentRest {
         Create_folder.setUser_id(String.valueOf(userService.getUSerIdFromJwt(token)));
 
         try {
-            applicationEventPublisher.publishEvent(new Create_folder_Event(this, Create_folder));
+            applicationEventPublisher.publishEvent(new CreateFolderEvent(this, Create_folder));
 
         } catch (Exception e) {
         }
@@ -283,41 +260,32 @@ public class DocumentRest {
     public ResponseEntity<?> preview(HttpServletRequest request, @PathVariable("ID") String ID) throws GeneralSecurityException, IOException {
 
         String filename = document_services_2.pdf_Path(ID);
-
         try {
             session_serviceImpl.createSession(request, "folder", ID);
             return ResponseEntity.ok(resourceLoader.getResource("file:" + filename));
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
-//        return  null ;
     }
 
-    @GetMapping(value = "/Search_Document/{code}")
-
-    public CompletableFuture<ResponseEntity> Search_Document(@RequestParam("signal") String signal, HttpServletRequest request, @PathVariable String code) {
-        String HasKey = code + "_folder";
-
-        Document_redis document_redis = document_service_redis.find(HasKey, code);
-
-        this.documentList = document_redis.getDocuments();
-
-        return document_services_2.search_document(this.documentList,
-                signal).thenApply(ResponseEntity::ok);
+    @GetMapping(value = "/page/{code}/{page}/{sortBy}" , produces = MediaType.APPLICATION_JSON_VALUE)
+    public String Page(@PathVariable String code, @PathVariable String sortBy, @PathVariable String page) {
+        return  document_services_2.loadFolder(code, page, sortBy).toString();
     }
-/// category->Folder( lan dau tien )
-    @GetMapping(value = "/pagination/{Code}" , produces = MediaType.APPLICATION_JSON_VALUE)
+
+    /// category->Folder( lan dau tien )
+    @GetMapping(value = "/pagination/{Code}", produces = MediaType.APPLICATION_JSON_VALUE)
     public String Page(@PathVariable String Code) throws ParseException {
-        return document_services_2.loadFolder(Code).toString() ;
+        return document_services_2.loadFolder(Code).toString();
     }
+
     @GetMapping(value = "/loadFolder/{Code}")
     public String LoadFolderForFirstRedirectFormCategory(@PathVariable String Code) throws ParseException {
-        return document_services_2.loadFolder(Code).toString() ;
+        return document_services_2.loadFolder(Code).toString();
     }
 
     @GetMapping("dowload_file/{id}")
     public ResponseEntity<?> dowload(@PathVariable String id, HttpServletResponse response) throws IOException, GeneralSecurityException {
-//        drive_service.dowload_file(id , response.getOutputStream()) ;
         return ResponseEntity.ok(true);
     }
 
@@ -336,20 +304,20 @@ public class DocumentRest {
     }
 
     @GetMapping("/sortBy/{Code}/{page_num}")
-    public ResponseEntity<?> sortBy(@RequestParam("signal") String signal, @PathVariable String Code, @PathVariable String page_num) {
-        return ResponseEntity.ok( converter.convertFromEntityListType
+    public ResponseEntity sortBy(@RequestParam("signal") String signal, @PathVariable String Code, @PathVariable String page_num) {
+        return ResponseEntity.ok(converter.convertFromEntityListType
                 (sortService.setOption(signal).
-                sortWith(Code , Integer.parseInt(page_num)))) ;
+                        sortWith(Code, Integer.parseInt(page_num))));
     }
+
     @PostMapping("/createRoot")
-    public void createRoot(){
+    public void createRoot() {
         try {
-            drive_service.listEverything();
-        }
-        catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println(drive_service.listEverything());
+        } catch (Exception e) {
         }
     }
+
 
 }
 

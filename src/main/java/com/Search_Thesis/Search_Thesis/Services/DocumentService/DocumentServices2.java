@@ -1,4 +1,4 @@
-package com.Search_Thesis.Search_Thesis.Services;
+package com.Search_Thesis.Search_Thesis.Services.DocumentService;
 
 import com.Search_Thesis.Search_Thesis.Algorithm.Search_Document;
 import com.Search_Thesis.Search_Thesis.DTO.FolderResponse;
@@ -121,9 +121,9 @@ public class DocumentServices2 {
         Hash_category_documentList = new HashMap<>();
         List<List<Category_document>> category_documentList = new ArrayList<>();
 
-        for (int i = 0; i < root_folders.size(); i++) {
+        for (Root_Folder rootFolder : root_folders) {
 
-            category_documentList.add(category_document_responsitory.findByID(root_folders.get(i).getId()));
+            category_documentList.add(category_document_responsitory.findByID(rootFolder.getId()));
 
         }
         return category_documentList;
@@ -260,14 +260,25 @@ public class DocumentServices2 {
     public Object loadFolder(String code) throws ParseException {
         List<FolderResponse> folderResponseList = converter.convertFromEntityListType
                 (sortService.setOption(DocumentUtils.getDefaultSortType()).sortWith(code, 1));
+        return  loadFolderDto(folderResponseList ,  code) ;
+    }
+    public Object loadFolder(String code , String page , String sortBy){
+        List<FolderResponse> folderResponseList = converter.convertFromEntityListType
+                (sortService.setOption(sortBy).sortWith(code, Integer.parseInt(page)));
+
+        return  loadFolderDto(folderResponseList ,  code) ;
+
+
+    }
+    public  JSONObject loadFolderDto(List<FolderResponse> folderResponseList, String code){
         int totalPage = (solrSearchSolrCommandDAO.getByCode(code).size())/DocumentUtils.getPageNumberSize();
 
         JSONObject jsonObject = new JSONObject() ;
         jsonObject.put("pageNumber" ,  totalPage + 1) ;
         jsonObject.put("folderName" ,    category_document_responsitory.findByCode(code).getName()) ;
         jsonObject.put("folderList"  ,  folderResponseList) ;
-        return jsonObject ;
 
+        return  jsonObject ;
     }
 
 

@@ -1,4 +1,4 @@
-package com.Search_Thesis.Search_Thesis.Services;
+package com.Search_Thesis.Search_Thesis.Services.QandAServices;
 
 import com.Search_Thesis.Search_Thesis.DTO.*;
 import com.Search_Thesis.Search_Thesis.Model.*;

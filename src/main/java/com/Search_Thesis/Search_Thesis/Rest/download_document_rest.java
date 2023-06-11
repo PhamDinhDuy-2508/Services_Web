@@ -1,8 +1,8 @@
 package com.Search_Thesis.Search_Thesis.Rest;
 
 import com.Search_Thesis.Search_Thesis.Model.Root_Folder;
-import com.Search_Thesis.Search_Thesis.Services.DocumentServices2;
-import com.Search_Thesis.Search_Thesis.Services.Document_services;
+import com.Search_Thesis.Search_Thesis.Services.DocumentService.DocumentServices2;
+import com.Search_Thesis.Search_Thesis.Services.DocumentService.Document_services;
 import com.Search_Thesis.Search_Thesis.Services.Utils.DowloadFileUtils;
 import com.Search_Thesis.Search_Thesis.Services.Drive.DriveService;
 import com.Search_Thesis.Search_Thesis.Services.SessionService.SessionService;

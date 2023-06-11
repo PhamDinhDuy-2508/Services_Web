@@ -1,6 +1,6 @@
 package com.Search_Thesis.Search_Thesis.Services;
 
-import com.Search_Thesis.Search_Thesis.Event.sendEmail_Event;
+import com.Search_Thesis.Search_Thesis.Event.SendEmailEvent;
 import com.Search_Thesis.Search_Thesis.Model.User;
 import com.Search_Thesis.Search_Thesis.Services.UserService.UserServiceImpl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ public class ForgotPassword_Services {
 
     @Async
     @EventListener
-    public void ForgotPassword(sendEmail_Event sendEmail_event) throws MessagingException, UnsupportedEncodingException {
+    public void ForgotPassword(SendEmailEvent sendEmail_event) throws MessagingException, UnsupportedEncodingException {
 
         user =  user_service.getUserByEmailAndUpdateToken(sendEmail_event.getEmail(), sendEmail_event.getToken()) ;
          if(user == null) {

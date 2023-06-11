@@ -4,11 +4,11 @@ import org.springframework.context.ApplicationEvent;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class Load_User_Event extends ApplicationEvent {
+public class LoadUserEvent extends ApplicationEvent {
 
     private  String username ;
     private HttpServletRequest request ;
-    public Load_User_Event(Object source, String username , HttpServletRequest request) {
+    public LoadUserEvent(Object source, String username , HttpServletRequest request) {
         super(source);
         this.username =  username ;
         this.request = request ;

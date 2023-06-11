@@ -5,14 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.web.multipart.MultipartFile;
 
-public class Upload_document_Event extends ApplicationEvent {
+public class UploadDocumentEvent extends ApplicationEvent {
 
     @Autowired
     MultipartFile[] multipartFile ;
     @Autowired
     Create_folder create_folder ;
 
-    public Upload_document_Event(Object source , MultipartFile[] multipartFile , Create_folder create_folder) {
+    public UploadDocumentEvent(Object source , MultipartFile[] multipartFile , Create_folder create_folder) {
         super(source);
         this.multipartFile =  multipartFile ;
         this.create_folder =  create_folder ;

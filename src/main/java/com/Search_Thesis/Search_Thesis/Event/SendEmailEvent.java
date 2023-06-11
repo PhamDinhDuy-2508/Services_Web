@@ -4,7 +4,7 @@ import org.springframework.context.ApplicationEvent;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class sendEmail_Event extends ApplicationEvent {
+public class SendEmailEvent extends ApplicationEvent {
 
     private String email ;
 
@@ -35,7 +35,7 @@ public class sendEmail_Event extends ApplicationEvent {
         this.request = request;
     }
 
-    public sendEmail_Event(Object source, String email , HttpServletRequest request , String token) {
+    public SendEmailEvent(Object source, String email , HttpServletRequest request , String token) {
         super(source);
 
         this.email = email;

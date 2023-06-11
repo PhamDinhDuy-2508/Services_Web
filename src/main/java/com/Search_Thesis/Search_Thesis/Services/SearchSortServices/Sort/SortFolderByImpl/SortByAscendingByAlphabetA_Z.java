@@ -13,9 +13,6 @@ import java.util.List;
 @Service("AscendingByAlphabet")
 public class SortByAscendingByAlphabetA_Z implements SortBy<FolderSolrSearch> {
 
-
-
-
     private SolrFolderRepository solrFolderRepository;
     @Autowired
     public void setSolrFolderRepository(SolrFolderRepository solrFolderRepository) {
@@ -23,15 +20,12 @@ public class SortByAscendingByAlphabetA_Z implements SortBy<FolderSolrSearch> {
     }
     @Override
     public List<FolderSolrSearch> sortWith(String code, int pageNum) {
-        String rows  = String.valueOf(DocumentUtils.rows(pageNum));
-        String start =  String.valueOf(DocumentUtils.start(pageNum));
-        return solrFolderRepository.sortFolderResult(code  ,rows , start, sortByAsc());
+        int rows  = DocumentUtils.getPageNumberSize();
+        return solrFolderRepository.sortFolderResult(code , DocumentUtils.pageable(pageNum ,  rows , sortByAsc()));
     }
 
-
-
     private Sort sortByAsc() {
-        return Sort.by(Sort.Direction.ASC,"Folder" );
+        return Sort.by("Folder").ascending() ;
     }
 
 

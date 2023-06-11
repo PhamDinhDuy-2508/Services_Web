@@ -1,6 +1,6 @@
 package com.Search_Thesis.Search_Thesis.Rest;
 
-import com.Search_Thesis.Search_Thesis.Event.sendEmail_Event;
+import com.Search_Thesis.Search_Thesis.Event.SendEmailEvent;
 import com.Search_Thesis.Search_Thesis.Model.User;
 import com.Search_Thesis.Search_Thesis.Services.ForgotPassword_Services;
 import lombok.Data;
@@ -44,7 +44,7 @@ public class forgotPassword_Rest {
             return ;
         }
         else {
-            applicationEventPublisher.publishEvent(new sendEmail_Event(this,gmail_response.getEmail(), request , token));
+            applicationEventPublisher.publishEvent(new SendEmailEvent(this,gmail_response.getEmail(), request , token));
 
         }
         threadpool.shutdown();

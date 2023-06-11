@@ -19,14 +19,9 @@ public class SortByDateDescending implements SortBy<FolderSolrSearch> {
     }
     @Override
     public List<FolderSolrSearch> sortWith(String standard, int pageNum) {
-        String rows  = String.valueOf(DocumentUtils.rows(pageNum));
-        String start =  String.valueOf(DocumentUtils.start(pageNum));
-
-        return folderRepository.sortFolderResult(standard  ,rows , start, sortByDesc());
+        int rows  = DocumentUtils.getPageNumberSize();
+        return folderRepository.sortFolderResult(standard , DocumentUtils.pageable(pageNum , rows , sortByDesc()));
     }
-
-
-
     private Sort sortByDesc() {
         return Sort.by(Sort.Direction.DESC , "datePublic" ) ;
     }

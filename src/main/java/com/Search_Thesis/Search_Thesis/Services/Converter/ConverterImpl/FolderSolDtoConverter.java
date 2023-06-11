@@ -3,6 +3,7 @@ package com.Search_Thesis.Search_Thesis.Services.Converter.ConverterImpl;
 import com.Search_Thesis.Search_Thesis.DTO.FolderResponse;
 import com.Search_Thesis.Search_Thesis.Model.FolderSolrSearch;
 import com.Search_Thesis.Search_Thesis.Services.Converter.Converter;
+import com.Search_Thesis.Search_Thesis.Services.Utils.DocumentUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,15 +23,17 @@ public class FolderSolDtoConverter extends Converter< FolderSolrSearch ,FolderRe
     public static FolderResponse convertFromEntity(final FolderSolrSearch entity) {
         return FolderResponse.builder().folderName(entity.getFolder())
                 .id(entity.getId())
-                .datePublic(String.valueOf(entity.getDatePublic()))
+                .datePublic(DocumentUtils.convertToFormatYYMMDD(entity.getDatePublic()))
                 .code(entity.getCode())
                 .build();
     }
 
-    public static List<FolderResponse> convertFromEntityListType(final  List<FolderSolrSearch> listEntity) {
-        return listEntity.stream().map(entity -> {
+    public static String convertFromEntityListType(final  List<FolderSolrSearch> listEntity) {
+          List<FolderResponse> list = listEntity.stream().map(entity -> {
             FolderResponse dto = convertFromEntity(entity);
             return dto;
         }).toList();
+          return  null ;
     }
+
 }

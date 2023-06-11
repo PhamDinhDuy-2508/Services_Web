@@ -22,10 +22,8 @@ public class SortByDescendingByAlphabetZ_A implements SortBy<FolderSolrSearch> {
 
     @Override
     public List<FolderSolrSearch> sortWith(String code, int pageNum) {
-        String rows  = String.valueOf(DocumentUtils.rows(pageNum));
-        String start =  String.valueOf(DocumentUtils.start(pageNum));
-
-        return solrFolderRepository.sortFolderResult(code  ,rows , start, sortByDesc());
+        int rows  = DocumentUtils.getPageNumberSize();
+        return solrFolderRepository.sortFolderResult(code  , DocumentUtils.pageable(pageNum , rows , sortByDesc()));
     }
 
 

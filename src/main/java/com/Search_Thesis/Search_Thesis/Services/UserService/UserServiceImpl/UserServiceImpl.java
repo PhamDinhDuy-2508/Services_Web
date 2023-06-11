@@ -1,6 +1,6 @@
 package com.Search_Thesis.Search_Thesis.Services.UserService.UserServiceImpl;
 
-import com.Search_Thesis.Search_Thesis.Event.Load_User_Event;
+import com.Search_Thesis.Search_Thesis.Event.LoadUserEvent;
 import com.Search_Thesis.Search_Thesis.Model.User;
 import com.Search_Thesis.Search_Thesis.Services.JwtService.JwtServiceImpl.JwtServiceImpl;
 import com.Search_Thesis.Search_Thesis.repository.SignIn_Respository;
@@ -26,7 +26,7 @@ public class UserServiceImpl {
     private  String username;
     @Async
     @EventListener
-    public void Create_USer(Load_User_Event load_user_event )   {
+    public void Create_USer(LoadUserEvent load_user_event )   {
         username =  load_user_event.getUsername() ;
         user = signIn_respository.findUsersByAccount(username) ;
 

@@ -21,10 +21,9 @@ public class SortByDateAscending implements SortBy<FolderSolrSearch> {
 
     @Override
     public List<FolderSolrSearch> sortWith(String code, int pageNum) {
-        String rows  = String.valueOf(DocumentUtils.rows(pageNum));
-        String start =  String.valueOf(DocumentUtils.start(pageNum));
+        int rows  = DocumentUtils.getPageNumberSize();
 
-        return folderRepository.sortFolderResult(code  ,rows , start, sortByAsc());
+        return folderRepository.sortFolderResult(code  , DocumentUtils.pageable(pageNum , rows , sortByAsc()));
     }
 
 

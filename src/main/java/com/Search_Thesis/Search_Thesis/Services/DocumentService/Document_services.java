@@ -1,10 +1,10 @@
-package com.Search_Thesis.Search_Thesis.Services;
+package com.Search_Thesis.Search_Thesis.Services.DocumentService;
 
 import com.Search_Thesis.Search_Thesis.Algorithm.Search_Folder;
 import com.Search_Thesis.Search_Thesis.Algorithm.Search_category;
 import com.Search_Thesis.Search_Thesis.Config.DriveConfig;
-import com.Search_Thesis.Search_Thesis.Event.Create_Category_Event;
-import com.Search_Thesis.Search_Thesis.Event.Upload_document_Event;
+import com.Search_Thesis.Search_Thesis.Event.CreateCategoryEvent;
+import com.Search_Thesis.Search_Thesis.Event.UploadDocumentEvent;
 import com.Search_Thesis.Search_Thesis.Model.*;
 import com.Search_Thesis.Search_Thesis.Services.Drive.DriveServiceImpl.DriveServices;
 import com.Search_Thesis.Search_Thesis.Services.Drive.UpdateDriveServices;
@@ -151,7 +151,7 @@ public class Document_services {
 
     @EventListener
     @Async
-    public void Create_new_Category(Create_Category_Event create_category_event) {
+    public void Create_new_Category(CreateCategoryEvent create_category_event) {
         try {
 
             root_folder.setId(Integer.valueOf(create_category_event.getCreate_category().getRoot_id()));
@@ -273,7 +273,7 @@ public class Document_services {
 
     @EventListener
     @Async
-    public void Create_Document(Upload_document_Event upload_document_event) throws Exception {
+    public void Create_Document(UploadDocumentEvent upload_document_event) throws Exception {
 
 
         String root_name = upload_document_event.getCreate_folder().getRoot_name();
@@ -421,7 +421,7 @@ class Send_File implements Runnable {
     private final BlockingDeque<MultipartFile> multipartFileBlockingDeque;
     private List<MultipartFile> multipartFile;
     @Autowired
-    Upload_document_Event upload_document_event;
+    UploadDocumentEvent upload_document_event;
     @Autowired
     FolderRepository folder_respository;
 
@@ -469,7 +469,7 @@ class processing_FILE implements Runnable {
     @Autowired
     Document_services document_services;
     @Autowired
-    Upload_document_Event upload_document_event;
+    UploadDocumentEvent upload_document_event;
     private String path;
     private Folder folder;
 
