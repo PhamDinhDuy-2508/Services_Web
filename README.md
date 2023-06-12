@@ -1,4 +1,4 @@
-# Services_Web(using spring boot, JPA  , Mysql , Redis)
+# Services_Web(using spring boot, JPA, Mysql, Redis, Solr)
 Services Web 
 
 using java spring boot , Mysql , JPA , Redis
