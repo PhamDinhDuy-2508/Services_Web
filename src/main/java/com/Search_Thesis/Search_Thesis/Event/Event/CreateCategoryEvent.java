@@ -1,4 +1,4 @@
-package com.Search_Thesis.Search_Thesis.Event;
+package com.Search_Thesis.Search_Thesis.Event.Event;
 
 import com.Search_Thesis.Search_Thesis.DTO.Create_category;
 import org.springframework.context.ApplicationEvent;

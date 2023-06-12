@@ -3,7 +3,7 @@ package com.Search_Thesis.Search_Thesis.Schedule;
 import com.Search_Thesis.Search_Thesis.Services.CacheService.RedisService.RedisServiceImpl.Document_Service_redis;
 import com.Search_Thesis.Search_Thesis.Services.CacheService.RedisService.RedisServiceImpl.Document_info_redis_Services;
 import com.Search_Thesis.Search_Thesis.Services.CacheService.CacheServiceImpl.CacheManager_iml_PAGINATION_question;
-import com.Search_Thesis.Search_Thesis.Services.EditDocumentServices;
+import com.Search_Thesis.Search_Thesis.Services.DocumentService.EditDocumentServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;

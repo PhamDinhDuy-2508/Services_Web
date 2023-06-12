@@ -10,7 +10,7 @@ import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
 
 @Service
-public class Email_Services {
+public class EmailServices {
     @Autowired
     private JavaMailSender mailSender;
 

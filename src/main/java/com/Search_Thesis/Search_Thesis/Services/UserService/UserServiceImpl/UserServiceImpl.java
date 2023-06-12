@@ -1,6 +1,6 @@
 package com.Search_Thesis.Search_Thesis.Services.UserService.UserServiceImpl;
 
-import com.Search_Thesis.Search_Thesis.Event.LoadUserEvent;
+import com.Search_Thesis.Search_Thesis.Event.Event.LoadUserEvent;
 import com.Search_Thesis.Search_Thesis.Model.User;
 import com.Search_Thesis.Search_Thesis.Services.JwtService.JwtServiceImpl.JwtServiceImpl;
 import com.Search_Thesis.Search_Thesis.repository.SignIn_Respository;

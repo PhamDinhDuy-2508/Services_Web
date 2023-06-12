@@ -6,10 +6,6 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 @Service("LoginServices")
 public class Login_Services {
@@ -26,20 +22,6 @@ public class Login_Services {
         cookie1.setPath("/");
         cookie1.setMaxAge(60*3600);
         response.addCookie(cookie1);
-    }
-
-    public  void Create_Session(String user_name ,String password ,  HttpServletRequest request , HttpServletResponse response){
-        HttpSession session  =  request.getSession(true);
-        session.setAttribute(user_name ,password);
-        session.setMaxInactiveInterval(60*3600);
-    }
-   public List<Cookie> getCookiesFromPath( HttpServletRequest request, String path) {
-        Cookie[] allCookies = request.getCookies();
-        if (path == null || path.isEmpty()) { // convert cookie array to cookie list
-            return Arrays.asList(allCookies);
-        }
-        List<Cookie> cookieList = new ArrayList<Cookie>();
-        return cookieList;
     }
 
 }

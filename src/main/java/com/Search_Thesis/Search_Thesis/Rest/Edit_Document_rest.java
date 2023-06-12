@@ -4,7 +4,7 @@ import com.Search_Thesis.Search_Thesis.Model.*;
 import com.Search_Thesis.Search_Thesis.Services.CacheService.RedisService.RedisServiceImpl.Document_Service_redis;
 import com.Search_Thesis.Search_Thesis.Services.DocumentService.DocumentServices2;
 import com.Search_Thesis.Search_Thesis.Services.DocumentService.Document_services;
-import com.Search_Thesis.Search_Thesis.Services.EditDocumentServices;
+import com.Search_Thesis.Search_Thesis.Services.DocumentService.EditDocumentServices;
 import com.Search_Thesis.Search_Thesis.Services.JwtService.JwtService;
 import com.Search_Thesis.Search_Thesis.repository.User_respository;
 import lombok.Data;

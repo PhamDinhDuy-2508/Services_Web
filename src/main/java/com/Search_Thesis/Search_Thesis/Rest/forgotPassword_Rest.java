@@ -1,6 +1,6 @@
 package com.Search_Thesis.Search_Thesis.Rest;
 
-import com.Search_Thesis.Search_Thesis.Event.SendEmailEvent;
+import com.Search_Thesis.Search_Thesis.Event.Event.SendEmailEvent;
 import com.Search_Thesis.Search_Thesis.Model.User;
 import com.Search_Thesis.Search_Thesis.Services.ForgotPassword_Services;
 import lombok.Data;

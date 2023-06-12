@@ -1,6 +1,6 @@
 package com.Search_Thesis.Search_Thesis.Rest;
 
-import com.Search_Thesis.Search_Thesis.Event.LoadUserEvent;
+import com.Search_Thesis.Search_Thesis.Event.Event.LoadUserEvent;
 import com.Search_Thesis.Search_Thesis.JWT.jwtUtils;
 import com.Search_Thesis.Search_Thesis.DTO.Authencation_Response;
 import com.Search_Thesis.Search_Thesis.Model.User;

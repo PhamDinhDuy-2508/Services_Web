@@ -1,4 +1,4 @@
-package com.Search_Thesis.Search_Thesis.Event;
+package com.Search_Thesis.Search_Thesis.Event.Event;
 
 import org.springframework.context.ApplicationEvent;
 

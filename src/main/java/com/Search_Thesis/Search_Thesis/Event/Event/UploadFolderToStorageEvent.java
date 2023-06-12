@@ -1,4 +1,4 @@
-package com.Search_Thesis.Search_Thesis.Event;
+package com.Search_Thesis.Search_Thesis.Event.Event;
 
 import com.Search_Thesis.Search_Thesis.DTO.FolderToDropboxModel_update_or_creare;
 import org.springframework.context.ApplicationEvent;

@@ -1,7 +1,7 @@
 package com.Search_Thesis.Search_Thesis.Rest;
 
 import com.Search_Thesis.Search_Thesis.DTO.Create_folder;
-import com.Search_Thesis.Search_Thesis.Event.UploadDocumentEvent;
+import com.Search_Thesis.Search_Thesis.Event.Event.UploadDocumentEvent;
 import com.Search_Thesis.Search_Thesis.Model.Category_document;
 import com.Search_Thesis.Search_Thesis.Model.Root_Folder;
 import com.Search_Thesis.Search_Thesis.Services.DocumentService.Document_services;

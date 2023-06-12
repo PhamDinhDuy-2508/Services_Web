@@ -5,7 +5,7 @@ import com.Search_Thesis.Search_Thesis.Model.FolderRedisModel;
 import com.Search_Thesis.Search_Thesis.Model.Question;
 import com.Search_Thesis.Search_Thesis.Services.CacheService.RedisService.RedisServiceImpl.Document_info_redis_Services;
 import com.Search_Thesis.Search_Thesis.Services.CacheService.RedisService.RedisServiceImpl.Folder_info_Services;
-import com.Search_Thesis.Search_Thesis.Services.EditDocumentServices;
+import com.Search_Thesis.Search_Thesis.Services.DocumentService.EditDocumentServices;
 import com.Search_Thesis.Search_Thesis.repository.Question_Repository;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
