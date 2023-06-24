@@ -10,7 +10,6 @@ import java.util.List;
 
 @Service("SessionServiceGenerics")
 public class SessionServiceGenericsImpl  implements SessionServiceForGenerics<List<Folder>> {
-
     @Override
     public void Create_Session(HttpServletRequest request, String name, List<Folder> list_json) {
         HttpSession session = request.getSession(true);

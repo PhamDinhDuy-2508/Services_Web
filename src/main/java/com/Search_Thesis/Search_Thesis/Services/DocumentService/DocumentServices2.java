@@ -2,6 +2,7 @@ package com.Search_Thesis.Search_Thesis.Services.DocumentService;
 
 import com.Search_Thesis.Search_Thesis.DTO.FolderResponse;
 import com.Search_Thesis.Search_Thesis.Model.*;
+import com.Search_Thesis.Search_Thesis.Model.SolrModels.FolderSolrSearch;
 import com.Search_Thesis.Search_Thesis.Services.CacheService.RedisService.RedisServiceImpl.Category_redis_Services;
 import com.Search_Thesis.Search_Thesis.Services.Converter.Converter;
 import com.Search_Thesis.Search_Thesis.Services.SearchSortServices.Sort.SortService;

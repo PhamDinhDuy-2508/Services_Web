@@ -1,7 +1,7 @@
 package com.Search_Thesis.Search_Thesis.Services.SearchSortServices.Sort.SortServiceImpl;
 
 import com.Search_Thesis.Search_Thesis.DTO.FolderResponse;
-import com.Search_Thesis.Search_Thesis.Model.FolderSolrSearch;
+import com.Search_Thesis.Search_Thesis.Model.SolrModels.FolderSolrSearch;
 import com.Search_Thesis.Search_Thesis.Services.Converter.Converter;
 import com.Search_Thesis.Search_Thesis.Services.SearchSortServices.Sort.SortBy;
 import com.Search_Thesis.Search_Thesis.Services.SearchSortServices.Sort.SortFolderFactory;

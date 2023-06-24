@@ -1,6 +1,6 @@
 package com.Search_Thesis.Search_Thesis.Services.SearchSortServices.Sort.SortFolderByImpl;
 
-import com.Search_Thesis.Search_Thesis.Model.FolderSolrSearch;
+import com.Search_Thesis.Search_Thesis.Model.SolrModels.FolderSolrSearch;
 import com.Search_Thesis.Search_Thesis.Services.SearchSortServices.Sort.SortBy;
 import com.Search_Thesis.Search_Thesis.Services.Utils.DocumentUtils;
 import com.Search_Thesis.Search_Thesis.repository.SolrRepository.SolrFolderRepository;

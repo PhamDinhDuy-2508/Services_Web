@@ -43,18 +43,35 @@
             <!--								<li class="nav-item"><a class="nav-link" href="single-blog.html">Blog Details</a></li>-->
             <!--							</ul>-->
             <!--						</li>-->
+
             <li class="nav-item submenu dropdown active">
-              <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+              <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" id="login"
                  aria-expanded="false">Login Page</a>
               <ul class="dropdown-menu">
-                <li class="nav-item active"><a class="nav-link" href="login.html">Login</a></li>
-                <li class="nav-item"><a class="nav-link" href="tracking.html">Tracking</a></li>
-                <li class="nav-item"><a class="nav-link" href="elements.html">Elements</a></li>
+                <li class="nav-item active"><a class="nav-link" href="login">Login</a></li>
               </ul>
             </li>
-            <li class="nav-item"><a class="nav-link" href="/home">Trang chủ</a></li>
+            <li class="nav-item submenu dropdown active">
+              <a href="#" class=" bi bi-person-badge nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" id="user"
+                 aria-expanded="false"></a>
+              <ul class="dropdown-menu">
+                <li class="nav-item ">
+                  <i class="bi bi-person-badge"></i>
+                  <a class="nav-link" onclick="redirect_to_profle_page()">Profile</a>
+                </li>
 
-            <li class="nav-item"><a class="nav-link" href="/Create_question">Tạo Câu hỏi</a></li>
+                <li class="nav-item">
+                  <i class="bi bi-person-badge"></i>
+                  <a class="nav-link" href="/login">Đăng xuất</a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item"><a class="nav-link" href="/contact">Liên hệ</a></li>
+
+
+            <!--                        <li class="nav-item"><a class="nav-link" href="/blog">Blog</a></li>-->
+
+            <!--                        <li class="nav-item"><a class="nav-link" href="contact.html">Liên hệ</a></li>-->
           </ul>
           <ul class="nav navbar-nav navbar-right">
 
@@ -317,28 +334,6 @@
         console.log(response);
         var list_quest = response
         $("#Question_list").empty()
-        // $("#Question_list").append(" <div class=\"row text-left mb-5\">\n" +
-        //         "        <div class=\"col-lg-6 mb-3 mb-sm-0\">\n" +
-        //         "          <div class=\"dropdown bootstrap-select   \" style=\"width: 100%;\">\n" +
-        //         "            <select class=\"form-control form-control-lg bg-white bg-op-9 text-sm w-lg-50\" data-toggle=\"select\" tabindex=\"-98\">\n" +
-        //         "              <option> Categories </option>\n" +
-        //         "              <option> Learn </option>\n" +
-        //         "              <option> Share </option>\n" +
-        //         "              <option> Build </option>\n" +
-        //         "            </select>\n" +
-        //         "          </div>\n" +
-        //         "        </div>\n" +
-        //         "        <div class=\"col-lg-6 text-lg-right\">\n" +
-        //         "          <div class=\"dropdown bootstrap-select   bg-white bg-op-9 ml-auto text-sm w-lg-50\" style=\"width: 100%;\">\n" +
-        //         "            <select id=\"SortBy\" class=\"form-control form-control-lg bg-white bg-op-9 ml-auto text-sm w-lg-50\" data-toggle=\"select\" tabindex=\"-98\">\n" +
-        //         "              <option> SortBy by </option>\n" +
-        //         "              <option> Votes </option>\n" +
-        //         "              <option> Replys </option>\n" +
-        //         "              <option> Views </option>\n" +
-        //         "            </select>\n" +
-        //         "          </div>\n" +
-        //         "        </div>\n" +
-        //         "      </div>")
 
 
         for (var i = 0; i < list_quest.length; i++) {
@@ -568,6 +563,57 @@ function reload_page(page) {
      }
    });
  }
+</script>
+<script>
+  $(document).ready(function (){
+    console.log("test")
+    const api_url =
+            "http://localhost:8080/home/get_session";
+    var settings = {
+      "url": "http://localhost:8080/home/get_session",
+      "method": "GET",
+      "timeout": 0,
+
+    };
+
+    $.ajax(settings).done(function (response) {
+      console.log(response)
+      console.log(JSON.parse(JSON.stringify(response)));
+      if(response ==  null) {
+        $('#login').show()
+        $('#user').hide()
+        $('#say_hello').hide()
+
+      }
+      else if(response!= null) {
+        set_Info(response)
+
+      }
+
+    });
+
+  })
+</script>
+<script>
+  function  redirect_to_profle_page(){
+    var  title = $('#user').text();
+    var  username = title.slice(10,title.length)
+
+    window.location.href="http://localhost:8080/profile?username="+username
+  }
+</script>
+<script>
+  function  set_Info(username){
+    $('#login').hide()
+    $('#user').show()
+    var text = " Xin Chào " + username ;
+    $('#user').text(text)
+    $('#user').val(username)
+    $('#say_hello').show()
+
+
+
+  }
 </script>
 <script>
 function load_topic() {

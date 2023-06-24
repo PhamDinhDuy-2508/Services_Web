@@ -1,7 +1,7 @@
 package com.Search_Thesis.Search_Thesis.Services.Converter.ConverterImpl;
 
 import com.Search_Thesis.Search_Thesis.Model.Document;
-import com.Search_Thesis.Search_Thesis.Model.DocumentSolrSearch;
+import com.Search_Thesis.Search_Thesis.Model.SolrModels.DocumentSolrSearch;
 import com.Search_Thesis.Search_Thesis.Services.Converter.Converter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

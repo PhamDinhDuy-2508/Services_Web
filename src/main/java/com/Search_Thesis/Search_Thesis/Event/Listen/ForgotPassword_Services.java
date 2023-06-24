@@ -39,18 +39,13 @@ public class ForgotPassword_Services {
     public void ForgotPassword(SendEmailEvent sendEmail_event) throws MessagingException, UnsupportedEncodingException {
 
         user =  user_service.getUserByEmailAndUpdateToken(sendEmail_event.getEmail(), sendEmail_event.getToken()) ;
-         if(user == null) {
-             return;
-         }
-         else {
-             String resetPasswordLink = Utility.getSiteURL(sendEmail_event.getRequest()) + "/reset_pass?token=" + sendEmail_event.getToken();
-//             System.out.println(resetPasswordLink);
 
+         if(user != null) {
+             String resetPasswordLink = Utility.getSiteURL(sendEmail_event.getRequest()) + "/reset_pass?token=" + sendEmail_event.getToken();
              email_services.Send_Email(sendEmail_event.getEmail(),   resetPasswordLink);
-        }
-    }
-    public User getByToken(String token){
-      return  null ;
+         }
+
+
     }
 }
 class Utility {

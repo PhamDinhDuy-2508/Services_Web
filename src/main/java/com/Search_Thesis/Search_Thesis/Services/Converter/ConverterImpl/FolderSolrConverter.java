@@ -1,7 +1,7 @@
 package com.Search_Thesis.Search_Thesis.Services.Converter.ConverterImpl;
 
 import com.Search_Thesis.Search_Thesis.Model.Folder;
-import com.Search_Thesis.Search_Thesis.Model.FolderSolrSearch;
+import com.Search_Thesis.Search_Thesis.Model.SolrModels.FolderSolrSearch;
 import com.Search_Thesis.Search_Thesis.Services.Converter.Converter;
 import org.springframework.stereotype.Service;
 @Service("FolderSolrConverter")

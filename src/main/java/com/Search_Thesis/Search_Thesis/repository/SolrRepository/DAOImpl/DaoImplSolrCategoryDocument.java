@@ -1,6 +1,6 @@
 package com.Search_Thesis.Search_Thesis.repository.SolrRepository.DAOImpl;
 
-import com.Search_Thesis.Search_Thesis.Model.CategoryDocumentSolrSearch;
+import com.Search_Thesis.Search_Thesis.Model.SolrModels.CategoryDocumentSolrSearch;
 import com.Search_Thesis.Search_Thesis.repository.SolrRepository.SolrCategoryDocumentRepository;
 import com.Search_Thesis.Search_Thesis.repository.SolrRepository.SolrCommandDAO;
 import org.springframework.beans.factory.annotation.Autowired;

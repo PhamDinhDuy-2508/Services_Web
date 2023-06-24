@@ -1,6 +1,6 @@
 package com.Search_Thesis.Search_Thesis.Services.SearchSortServices.Sort;
 
-import com.Search_Thesis.Search_Thesis.Model.FolderSolrSearch;
+import com.Search_Thesis.Search_Thesis.Model.SolrModels.FolderSolrSearch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;

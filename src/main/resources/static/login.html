@@ -261,9 +261,7 @@
 
     fetch("http://localhost:8080/api/ckt/authencationRequest", requestOptions)
             .then(response =>{
-              alert(response)
               console.log(response)
-              alert(response.status)
                 if(response.status != 404) {
 
                   save_session()
@@ -276,11 +274,6 @@
             })
   }
 
-</script>
-<script>
-  function Signed_Up() {
-    console.log("asdasd")
-  }
 </script>
 <script>
   $(document).ready(function (){

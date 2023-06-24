@@ -1,5 +1,7 @@
 package com.Search_Thesis.Search_Thesis.Model;
 
+import com.Search_Thesis.Search_Thesis.Model.Category_document;
+import com.Search_Thesis.Search_Thesis.Model.Document;
 import lombok.Data;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.data.redis.core.RedisHash;

@@ -6,6 +6,7 @@ import com.Search_Thesis.Search_Thesis.DTO.FolderResponse;
 import com.Search_Thesis.Search_Thesis.Event.Event.CreateCategoryEvent;
 import com.Search_Thesis.Search_Thesis.Event.Event.CreateFolderEvent;
 import com.Search_Thesis.Search_Thesis.Model.*;
+import com.Search_Thesis.Search_Thesis.Model.SolrModels.FolderSolrSearch;
 import com.Search_Thesis.Search_Thesis.Services.CacheService.RedisService.RedisServiceImpl.Category_redis_Services;
 import com.Search_Thesis.Search_Thesis.Services.CacheService.RedisService.RedisServiceImpl.Document_Service_redis;
 import com.Search_Thesis.Search_Thesis.Services.Converter.Converter;
@@ -54,16 +55,12 @@ import java.util.concurrent.Future;
 public class DocumentRest {
     @Autowired
     ApplicationEventPublisher applicationEventPublisher;
-    @Autowired
-    Document_Service_redis document_service_redis;
 
     @Autowired
     @Qualifier("DriveService")
     DriveService drive_service;
     @Autowired
     Document_services document_services;
-    @Autowired
-    Root_Folder root_folder;
     @Autowired
     @Qualifier("SessionService")
     SessionService session_serviceImpl;
@@ -81,14 +78,10 @@ public class DocumentRest {
     @Autowired
     @Qualifier("JwtServices")
     JwtService jwt_services;
-
     @Autowired
     ResourceLoader resourceLoader;
     @Autowired
     CacheManager cacheManager;
-    @Autowired
-    Category_redis_Services category_redis_services;
-
     private Converter<FolderSolrSearch, FolderResponse> converter;
 
     @Autowired
@@ -122,7 +115,8 @@ public class DocumentRest {
 
     @GetMapping("/load_category")
     public ResponseEntity<List<Category_document>> response_category(@RequestParam("root") String Root, HttpServletRequest request) {
-        root_folder = document_services.load_Root_Folder(Root);
+
+        Root_Folder root_folder = document_services.load_Root_Folder(Root);
         try {
             list_category = document_services.load_category(root_folder.getId());
             Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();

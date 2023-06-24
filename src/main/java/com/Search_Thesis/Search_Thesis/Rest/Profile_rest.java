@@ -1,5 +1,6 @@
 package com.Search_Thesis.Search_Thesis.Rest;
 
+import com.Search_Thesis.Search_Thesis.DTO.JWTResponse;
 import com.Search_Thesis.Search_Thesis.Event.Event.LoadUserEvent;
 import com.Search_Thesis.Search_Thesis.JWT.jwtUtils;
 import com.Search_Thesis.Search_Thesis.DTO.Authencation_Response;
@@ -78,7 +79,7 @@ public class Profile_rest {
                 return ResponseEntity.ok(user) ;
             }
             catch (Exception e){
-                JWT_response jwt_responses = new JWT_response() ;
+                JWTResponse jwt_responses = new JWTResponse() ;
                 jwt_responses.setJwt(""); ;
                 return ResponseEntity.ok(jwt_responses);
         }

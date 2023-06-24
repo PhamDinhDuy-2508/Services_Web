@@ -1,6 +1,6 @@
 package com.Search_Thesis.Search_Thesis.repository.SolrRepository.DAOImpl;
 
-import com.Search_Thesis.Search_Thesis.Model.FolderSolrSearch;
+import com.Search_Thesis.Search_Thesis.Model.SolrModels.FolderSolrSearch;
 import com.Search_Thesis.Search_Thesis.repository.SolrRepository.SolrCommandDAO;
 import com.Search_Thesis.Search_Thesis.repository.SolrRepository.SolrFolderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,12 +40,10 @@ public class DaoImplSolrFolder implements SolrCommandDAO<FolderSolrSearch> {
         }
         else {
             updateChange(folderSolrSearch , folderSolrSearch1 ,  partialUpdate );
-            solrTemplate.saveBean("folderSearch", partialUpdate);
-            solrTemplate.commit("folderSearch");
+            solrTemplate.saveBean("FolderSearch2", partialUpdate);
+            solrTemplate.commit("FolderSearch2");
         }
-
     }
-
     @Override
     public void Persist(FolderSolrSearch folderSolrSearch) {
     }
@@ -62,7 +60,7 @@ public class DaoImplSolrFolder implements SolrCommandDAO<FolderSolrSearch> {
             String[] suggestIndex = newModel.getAutoSuggest();
             partialUpdate.setValueOfField("Category" ,  newModel.getCategory());
             partialUpdate.setValueOfField("code" , newModel.getCode());
-            partialUpdate.setValueOfField("Folder" , newModel.getFolder());
+            partialUpdate.setValueOfField("Folder_t" , newModel.getFolder());
             partialUpdate.setValueOfField("autoSuggest" , newModel.getAutoSuggest());
         }
 

@@ -1,8 +1,9 @@
 package com.Search_Thesis.Search_Thesis.Rest;
 
 import com.Search_Thesis.Search_Thesis.Event.Event.SendEmailEvent;
+import com.Search_Thesis.Search_Thesis.Event.Listen.ForgotPassword_Services;
 import com.Search_Thesis.Search_Thesis.Model.User;
-import com.Search_Thesis.Search_Thesis.Services.ForgotPassword_Services;
+//import com.Search_Thesis.Search_Thesis.Services.ForgotPassword_Services;
 import lombok.Data;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;

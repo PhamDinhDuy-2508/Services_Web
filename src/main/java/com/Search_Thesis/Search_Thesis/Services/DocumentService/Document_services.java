@@ -1,11 +1,10 @@
 package com.Search_Thesis.Search_Thesis.Services.DocumentService;
 
-import com.Search_Thesis.Search_Thesis.Algorithm.Search_Folder;
-import com.Search_Thesis.Search_Thesis.Algorithm.Search_category;
 import com.Search_Thesis.Search_Thesis.Config.DriveConfig;
 import com.Search_Thesis.Search_Thesis.Event.Event.CreateCategoryEvent;
 import com.Search_Thesis.Search_Thesis.Event.Event.UploadDocumentEvent;
 import com.Search_Thesis.Search_Thesis.Model.*;
+import com.Search_Thesis.Search_Thesis.Model.SolrModels.CategoryDocumentSolrSearch;
 import com.Search_Thesis.Search_Thesis.Services.Drive.DriveServiceImpl.DriveServices;
 import com.Search_Thesis.Search_Thesis.Services.Drive.UpdateDriveServices;
 import com.Search_Thesis.Search_Thesis.Services.SessionService.SessionService;
@@ -54,11 +53,7 @@ public class Document_services {
     @Autowired
     @Qualifier("SessionService")
     SessionService session_serviceImpl;
-    @Autowired
-    Search_category search_category;
 
-    @Autowired
-    Search_Folder search_folder;
 
     @Autowired
     SolrCategoryDocumentRepository solrCategoryDocumentRepository;
@@ -118,20 +113,20 @@ public class Document_services {
 
     public List<Category_document> Search_Category(List<Category_document> category_documentList, String request_detail) {
 
-        this.search_category.setList(category_documentList);
-        this.search_category.Search(request_detail);
-
-        Set<String> Key = this.search_category.getResult().keySet();
-        Map<String, Category_document> map_cate = this.search_category.getResult();
-        List<Category_document> res = new ArrayList<>();
-
-        for (String x : Key) {
-            res.add(map_cate.get(x));
-        }
-        if (request_detail.isEmpty()) {
-            return category_documentList;
-        }
-        return res;
+//        this.search_category.setList(category_documentList);
+//        this.search_category.Search(request_detail);
+//
+//        Set<String> Key = this.search_category.getResult().keySet();
+//        Map<String, Category_document> map_cate = this.search_category.getResult();
+//        List<Category_document> res = new ArrayList<>();
+//
+//        for (String x : Key) {
+//            res.add(map_cate.get(x));
+//        }
+//        if (request_detail.isEmpty()) {
+//            return category_documentList;
+//        }
+        return Collections.emptyList();
     }
 
     @Async
@@ -417,100 +412,100 @@ public class Document_services {
 }
 
 // producer
-class Send_File implements Runnable {
-    private final BlockingDeque<MultipartFile> multipartFileBlockingDeque;
-    private List<MultipartFile> multipartFile;
-    @Autowired
-    UploadDocumentEvent upload_document_event;
-    @Autowired
-    FolderRepository folder_respository;
-
-    public Send_File(BlockingDeque<MultipartFile> multipartFileBlockingDeque, List<MultipartFile> multipartFile) {
-        this.multipartFileBlockingDeque = multipartFileBlockingDeque;
-        this.multipartFile = multipartFile;
-    }
-
-    @Override
-    public void run() {
-
-        List<MultipartFile> multipartFiles = new ArrayList<>();
-        List<Document> documentList = new ArrayList<>();
-        try {
-            while (true) {
-                if (multipartFile.size() == 0) {
-                    break;
-                }
-                MultipartFile multipartFile1 = multipartFile.get(0);
-                send_File(multipartFile1);
-
-                multipartFile.remove(0);
-                wait();
-
-            }
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    public void send_File(MultipartFile multipartFile) {
-        this.multipartFileBlockingDeque.add(multipartFile);
-    }
-
-
-}
-
-class processing_FILE implements Runnable {
-    private final BlockingDeque<MultipartFile> multipartFiles;
-    @Autowired
-    Document_Repository document_repository;
-    @Autowired
-    FolderRepository folder_respository;
-    @Autowired
-    Document_services document_services;
-    @Autowired
-    UploadDocumentEvent upload_document_event;
-    private String path;
-    private Folder folder;
-
-    public processing_FILE(BlockingDeque<MultipartFile> multipartFiles, String path, Folder folder) {
-
-        this.multipartFiles = multipartFiles;
-
-        this.path = path;
-        this.folder = folder;
-    }
-
-    @Override
-    public void run() {
-        try {
-
-            Processing_File(multipartFiles.take());
-
-        } catch (InterruptedException e) {
-
-            notifyAll();
-            throw new RuntimeException(e);
-
-        }
-        notifyAll();
-
-    }
-
-    public void Processing_File(MultipartFile multipartFile) {
-        String root_name = upload_document_event.getCreate_folder().getRoot_name();
-
-        String category_name = upload_document_event.getCreate_folder().getCode();
-
-        String Folder_name = upload_document_event.getCreate_folder().getFolder_name();
-
-        Folder folder1 = folder_respository.findByTitleAndCode(category_name, Folder_name);
-
-        if (this.path != null) {
-        }
-
-    }
-
-
-}
-
+//class Send_File implements Runnable {
+//    private final BlockingDeque<MultipartFile> multipartFileBlockingDeque;
+//    private List<MultipartFile> multipartFile;
+//    @Autowired
+//    UploadDocumentEvent upload_document_event;
+//    @Autowired
+//    FolderRepository folder_respository;
+//
+//    public Send_File(BlockingDeque<MultipartFile> multipartFileBlockingDeque, List<MultipartFile> multipartFile) {
+//        this.multipartFileBlockingDeque = multipartFileBlockingDeque;
+//        this.multipartFile = multipartFile;
+//    }
+//
+//    @Override
+//    public void run() {
+//
+//        List<MultipartFile> multipartFiles = new ArrayList<>();
+//        List<Document> documentList = new ArrayList<>();
+//        try {
+//            while (true) {
+//                if (multipartFile.size() == 0) {
+//                    break;
+//                }
+//                MultipartFile multipartFile1 = multipartFile.get(0);
+//                send_File(multipartFile1);
+//
+//                multipartFile.remove(0);
+//                wait();
+//
+//            }
+//
+//        } catch (Exception e) {
+//            System.out.println(e.getMessage());
+//        }
+//    }
+//
+//    public void send_File(MultipartFile multipartFile) {
+//        this.multipartFileBlockingDeque.add(multipartFile);
+//    }
+//
+//
+//}
+//
+//class processing_FILE implements Runnable {
+//    private final BlockingDeque<MultipartFile> multipartFiles;
+//    @Autowired
+//    Document_Repository document_repository;
+//    @Autowired
+//    FolderRepository folder_respository;
+//    @Autowired
+//    Document_services document_services;
+//    @Autowired
+//    UploadDocumentEvent upload_document_event;
+//    private String path;
+//    private Folder folder;
+//
+//    public processing_FILE(BlockingDeque<MultipartFile> multipartFiles, String path, Folder folder) {
+//
+//        this.multipartFiles = multipartFiles;
+//
+//        this.path = path;
+//        this.folder = folder;
+//    }
+//
+//    @Override
+//    public void run() {
+//        try {
+//
+//            Processing_File(multipartFiles.take());
+//
+//        } catch (InterruptedException e) {
+//
+//            notifyAll();
+//            throw new RuntimeException(e);
+//
+//        }
+//        notifyAll();
+//
+//    }
+//
+//    public void Processing_File(MultipartFile multipartFile) {
+//        String root_name = upload_document_event.getCreate_folder().getRoot_name();
+//
+//        String category_name = upload_document_event.getCreate_folder().getCode();
+//
+//        String Folder_name = upload_document_event.getCreate_folder().getFolder_name();
+//
+//        Folder folder1 = folder_respository.findByTitleAndCode(category_name, Folder_name);
+//
+//        if (this.path != null) {
+//        }
+//
+//    }
+//
+//
+//}
+//

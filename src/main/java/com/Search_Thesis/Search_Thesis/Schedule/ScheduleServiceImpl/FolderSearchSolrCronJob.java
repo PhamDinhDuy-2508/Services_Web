@@ -1,7 +1,7 @@
 package com.Search_Thesis.Search_Thesis.Schedule.ScheduleServiceImpl;
 
 import com.Search_Thesis.Search_Thesis.Model.Folder;
-import com.Search_Thesis.Search_Thesis.Model.FolderSolrSearch;
+import com.Search_Thesis.Search_Thesis.Model.SolrModels.FolderSolrSearch;
 import com.Search_Thesis.Search_Thesis.Schedule.ScheduleService;
 import com.Search_Thesis.Search_Thesis.Services.Converter.Converter;
 import com.Search_Thesis.Search_Thesis.repository.FolderRepository;
@@ -35,7 +35,7 @@ public class FolderSearchSolrCronJob implements ScheduleService {
     Converter<Folder, FolderSolrSearch> converter;
 
     @Async
-    @Scheduled(fixedRate = 180000, initialDelay = 100000)
+    @Scheduled(fixedRate = 180000, initialDelay =  100000)
     @Override
     public void CronJob() {
         List<Folder> folderList = folder_respository.findAll();

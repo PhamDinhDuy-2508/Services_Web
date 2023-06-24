@@ -14,7 +14,6 @@ import java.util.List;
 @EnableRedisRepositories
 @EnableAutoConfiguration
 public class CategoryRedis implements Serializable {
-
     private String Code ;
     private List<Folder> folderList ;
 }

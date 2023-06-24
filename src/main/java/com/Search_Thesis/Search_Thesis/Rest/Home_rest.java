@@ -3,6 +3,8 @@ package com.Search_Thesis.Search_Thesis.Rest;
 
 import com.Search_Thesis.Search_Thesis.Model.User;
 import com.Search_Thesis.Search_Thesis.Services.JwtService.JwtService;
+import com.Search_Thesis.Search_Thesis.Services.SessionService.CookieServices.CookieServices;
+import com.Search_Thesis.Search_Thesis.Services.SessionService.SessionService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -11,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,12 +30,12 @@ import javax.servlet.http.HttpSession;
 
 public class Home_rest {
     @Autowired
-    private User user ;
-    @Autowired
     @Qualifier("JwtServices")
     JwtService jwt_services ;
     @Autowired
-    private HttpSession httpSession;
+    SessionService sessionService ;
+    @Autowired
+    CookieServices cookieServices ;
 
 
     @RequestMapping("/**")
@@ -43,10 +46,6 @@ public class Home_rest {
         httpSession.setAttribute("test" , "duy");
         httpSession.setMaxInactiveInterval(6000);
 
-        HttpSession Session = request.getSession() ;
-
-        String test = (String) Session.getAttribute("test");
-
     }
 
     @GetMapping()
@@ -56,26 +55,10 @@ public class Home_rest {
         return mav;
     }
     @GetMapping( "/logout")
-    public String logoutPage(HttpServletRequest request, HttpServletResponse response , HttpSession session) {
-        Cookie cookies[] =  request.getCookies() ;
+    public String logoutPage(@CookieValue("login_jwt") String token ,  HttpServletRequest request, HttpServletResponse response) {
 
-        if (cookies != null)
-            for (Cookie cookie : cookies) {
-                System.out.println(cookie.getName());
-
-                if(cookie.getName().equals("login_jwt")){
-                    cookie.setValue("");
-                    cookie.setPath("/");
-                    cookie.setMaxAge(0);
-                    response.addCookie(cookie);
-                }
-
-            }
-        session.invalidate();
-
-        session =  request.getSession(true) ;
-//        session.setAttribute("jwt_code" , "");
-//        session.setMaxInactiveInterval(0);
+        cookieServices.deleteCookie(response , request , "login_jwt");
+        sessionService.deleteSession(token);
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null) {
@@ -85,33 +68,13 @@ public class Home_rest {
     }
 
     @GetMapping("/get_session")
-    public ResponseEntity get_Session_Login(HttpServletRequest request , HttpSession session ){
-        httpSession =  request.getSession(false) ;
-
+    public ResponseEntity<?> get_Session_Login(@CookieValue("login_jwt") String token ){
             try {
-                String jwt = (String) httpSession.getAttribute("jwt_code");
-                jwt_services.setJwt(jwt);
-                System.out.println(jwt);
-
-                JSONObject jsonObject = jwt_services.getPayload();
-                String username = (String) jsonObject.get("sub");
-
-                System.out.println(username);
-
-                JWT_response jwt_response = new JWT_response();
-                jwt_response.setJwt(username);
-                System.out.println(jwt);
+                String username =  sessionService.getSession(token);
                 return ResponseEntity.ok(username);
             }
             catch ( Exception e) {
-                System.out.println(e.getMessage());
                 return  null ;
             }
-
         }
-
-
-
-
-
 }

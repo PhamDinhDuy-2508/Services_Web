@@ -1,5 +1,6 @@
 package com.Search_Thesis.Search_Thesis.Rest;
 
+import com.Search_Thesis.Search_Thesis.DTO.JWTResponse;
 import com.Search_Thesis.Search_Thesis.Services.JwtService.JwtServiceImpl.JwtServiceImpl;
 import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class Blog_rest {
             JSONObject jsonObject = jwt_services.getPayload();
             String username = (String) jsonObject.get("sub");
 
-            JWT_response jwt_response =  new JWT_response() ;
+            JWTResponse jwt_response =  new JWTResponse() ;
             jwt_response.setJwt(username);
             return ResponseEntity.ok(jwt_response) ;
         }

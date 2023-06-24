@@ -16,7 +16,6 @@ import java.util.Set;
 @Table(name = "category_document")
 public class Category_document implements Serializable {
 
-
     @Id
     @Expose
     @GeneratedValue(strategy= GenerationType.IDENTITY)

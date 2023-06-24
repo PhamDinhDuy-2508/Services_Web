@@ -1,7 +1,7 @@
 package com.Search_Thesis.Search_Thesis.Schedule.ScheduleServiceImpl;
 
 import com.Search_Thesis.Search_Thesis.Model.Document;
-import com.Search_Thesis.Search_Thesis.Model.DocumentSolrSearch;
+import com.Search_Thesis.Search_Thesis.Model.SolrModels.DocumentSolrSearch;
 import com.Search_Thesis.Search_Thesis.Schedule.ScheduleService;
 import com.Search_Thesis.Search_Thesis.Services.Converter.ConverterImpl.DocumentSearchSolrConverter;
 import com.Search_Thesis.Search_Thesis.repository.Document_Repository;
@@ -39,7 +39,6 @@ public class DocumentSearchSolrCronJob implements ScheduleService {
     @Override
     @Async
     @Scheduled(fixedRate = 180000, initialDelay = 100000)
-
     public void CronJob() {
         List<Document> documents = documentRepository.findAll();
 

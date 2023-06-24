@@ -1,6 +1,6 @@
 package com.Search_Thesis.Search_Thesis.repository.SolrRepository;
 
-import com.Search_Thesis.Search_Thesis.Model.CategoryDocumentSolrSearch;
+import com.Search_Thesis.Search_Thesis.Model.SolrModels.CategoryDocumentSolrSearch;
 import org.springframework.data.solr.repository.Query;
 import org.springframework.data.solr.repository.SolrCrudRepository;
 

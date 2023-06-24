@@ -45,6 +45,7 @@ public class JwtTokenProvider {
 
         return Long.parseLong(claims.getSubject());
     }
+
     public boolean validateToken(String authToken) {
         try {
             Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(authToken);

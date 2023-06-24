@@ -1,6 +1,6 @@
 package com.Search_Thesis.Search_Thesis.Schedule.ScheduleServiceImpl;
 
-import com.Search_Thesis.Search_Thesis.Model.CategoryDocumentSolrSearch;
+import com.Search_Thesis.Search_Thesis.Model.SolrModels.CategoryDocumentSolrSearch;
 import com.Search_Thesis.Search_Thesis.Model.Category_document;
 import com.Search_Thesis.Search_Thesis.Schedule.ScheduleService;
 import com.Search_Thesis.Search_Thesis.Services.Converter.Converter;
