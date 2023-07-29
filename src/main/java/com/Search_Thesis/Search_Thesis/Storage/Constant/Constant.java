@@ -11,4 +11,5 @@ public class Constant {
     public static final String createFolderBatch = "files/create_folder_batch";
 
     public static  final String deleteFolderBatch ="files/delete_batch" ;
+    public static  final  String rootFolder = "/Web_Service/Pham Duy/Root" ;
 }

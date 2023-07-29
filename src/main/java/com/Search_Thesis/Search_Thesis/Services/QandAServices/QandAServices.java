@@ -70,7 +70,6 @@ public class QandAServices {
     @Autowired
     CacheManager_iml_PAGINATION_question cacheManager_iml_pagination_question;
 
-
     private ExecutorService threadpool = Executors.newCachedThreadPool();
 
     public int get_size_list() {
@@ -101,14 +100,9 @@ public class QandAServices {
 
 
         ArrayList<QuestionDetailResponse> LIST = new ArrayList<QuestionDetailResponse>(question_detail_respons.subList(0, question_detail_respons.size()));
-
         return LIST;
-//        }
-
-
     }
 
-    //    @Cacheable(value = "question_list" )
     public List<Question> load_all() {
         return question_repository.findAll();
     }

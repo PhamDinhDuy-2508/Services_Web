@@ -52,10 +52,8 @@ public class upload_document
 
     @PostMapping ("/create_folder")
     public void create_folder_DIRECTORY(@RequestBody Create_folder create_folder ) throws IOException {
-        this.create_folder =  create_folder ;
         document_services.Create_Folder_Directory(create_folder.getRoot_name() ,
                 create_folder.getCode() ,  create_folder.getFolder_name());
-
     }
 
     @PostMapping("/upload_document/{id_root}/{code_category}/{name_folder}")

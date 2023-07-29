@@ -113,19 +113,6 @@ public class Document_services {
 
     public List<Category_document> Search_Category(List<Category_document> category_documentList, String request_detail) {
 
-//        this.search_category.setList(category_documentList);
-//        this.search_category.Search(request_detail);
-//
-//        Set<String> Key = this.search_category.getResult().keySet();
-//        Map<String, Category_document> map_cate = this.search_category.getResult();
-//        List<Category_document> res = new ArrayList<>();
-//
-//        for (String x : Key) {
-//            res.add(map_cate.get(x));
-//        }
-//        if (request_detail.isEmpty()) {
-//            return category_documentList;
-//        }
         return Collections.emptyList();
     }
 
@@ -288,16 +275,13 @@ public class Document_services {
         String id = drive_service.getFolderId(file_PATH);
 
 
-//        System.out.println(Arrays.toString(upload_document_event.getMultipartFile()[0].getBytes()));
 
-///https://drive.google.com/file/d/107wEnfCHBcu2BT57-twdmI-r_H9FAArT/view?usp=share_link
         for (MultipartFile multipartFile : upload_document_event.getMultipartFile()) {
+            multipartFiles.add(multipartFile) ;
             com.google.api.services.drive.model.File file = drive_service.uploadFile(multipartFile, file_PATH);
             System.out.println(file.getParents());
 
-//            String id_Folder = drive_service.getFolderId(file_PATH) ;
             document = create_Document_info(multipartFile.getOriginalFilename(), file.getParents().get(0), folder1, file.getWebViewLink(), file.getId());
-//            document_repository.save(document);
             documentList.add(document);
             document_repository.save(document);
 

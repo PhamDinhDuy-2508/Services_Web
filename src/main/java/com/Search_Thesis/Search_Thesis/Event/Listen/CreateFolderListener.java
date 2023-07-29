@@ -1,11 +1,12 @@
 package com.Search_Thesis.Search_Thesis.Event.Listen;
 
-import com.Search_Thesis.Search_Thesis.DTO.FolderToDropboxModel_update_or_creare;
+import com.Search_Thesis.Search_Thesis.DTO.FolderToDropboxModel_update_or_create;
 import com.Search_Thesis.Search_Thesis.Event.Event.CreateFolderEvent;
 import com.Search_Thesis.Search_Thesis.Event.Event.UploadFolderToStorageEvent;
 import com.Search_Thesis.Search_Thesis.Model.Category_document;
 import com.Search_Thesis.Search_Thesis.Model.Folder;
 import com.Search_Thesis.Search_Thesis.Services.Drive.DriveService;
+import com.Search_Thesis.Search_Thesis.Storage.Constant.Constant;
 import com.Search_Thesis.Search_Thesis.repository.Category_document_Repository;
 import com.Search_Thesis.Search_Thesis.repository.FolderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,13 +67,18 @@ public class CreateFolderListener {
     public void createFolderListener(CreateFolderEvent create_folder_event) throws Exception {
 
         Category_document categoryDocument = categoryDocumentRepository.findByCode(create_folder_event.getCreate_folder().getCode());
+
         create_folder_event.getCreate_folder().setName(categoryDocument.getName());
+
         try {
             String root_name = create_folder_event.getCreate_folder().getRoot_name();
+
             String category_name = create_folder_event.getCreate_folder().getCode();
+
             String folder_name = create_folder_event.getCreate_folder().getFolder_name();
 
             folder.setTitle(create_folder_event.getCreate_folder().getFolder_name());
+
             LocalDate myObj = LocalDate.now();
 
             java.sql.Date date = java.sql.Date.valueOf(myObj.toString());
@@ -80,6 +86,7 @@ public class CreateFolderListener {
             folder.setPublish_date(date);
 
             category_document.setNewfolder(Collections.singleton(folder));
+
             folder.setCategorydocument(categoryDocument);
 
             folder.setContributor_ID(Integer.parseInt(create_folder_event.getCreate_folder().getUser_id()));
@@ -87,10 +94,10 @@ public class CreateFolderListener {
 
             folderRepository.save(folder);
 
-            String filePath = "/Web_Service/Pham Duy/" + root_name + "/" + category_name + "/" + folder_name;
+            String filePath =  Constant.rootFolder + root_name + "/" + category_name + "/" + folder_name;
 
             try {
-                applicationEventPublisher.publishEvent(new UploadFolderToStorageEvent(this , new FolderToDropboxModel_update_or_creare(List.of(filePath))));
+                applicationEventPublisher.publishEvent(new UploadFolderToStorageEvent(this , new FolderToDropboxModel_update_or_create(List.of(filePath))));
 
             } catch (Exception e) {
                 logger.info(e.getMessage());
@@ -100,9 +107,7 @@ public class CreateFolderListener {
         } catch (Exception e) {
             throw new Exception("Cannot Create Folder");
         }
-
         reInitialize();
-
     }
 
     private void reInitialize() {
