@@ -7,6 +7,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,10 +15,12 @@ import java.util.function.Function;
 
 @Service("jwtUtils")
 public class jwtUtils {
-    private String SECRET_KEY = "phamduy2508";
+    private String SECRET_KEY = "phamdinhduy2508";
+    private final long JWT_EXPIRATION = 604800000L;
+
 
     public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+        return getUserNameFromJwt(token);
     }
 
     public Date extractExpiration(String token) {
@@ -26,7 +29,11 @@ public class jwtUtils {
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
+        return claimsResolver.apply((Claims) claims.get("username"));
+    }
+    public String getUserNameFromJwt(String jwt) {
+        final  Claims claims = extractAllClaims(jwt) ;
+        return (String)claims.get("username");
     }
 
     private Claims extractAllClaims(String token) {
@@ -39,11 +46,11 @@ public class jwtUtils {
 
     public String generateToken(UserDetails userDetails, int ID) {
         Map<String, Object> claims = new HashMap<>();
-
+        claims.put("username", userDetails.getUsername());
         claims.put("password", userDetails.getPassword());
         claims.put("id", ID);
-
-        return createToken(claims, userDetails.getUsername());
+        claims.put("role", userDetails.getAuthorities().stream().toList().get(0).getAuthority());
+        return createToken(claims, String.valueOf(ID));
     }
 
     public String generateToken(User userDetails) {
@@ -72,8 +79,10 @@ public class jwtUtils {
 
     private String createToken(Map<String, Object> claims, String subject) {
 
-        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION);
+        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(now)
+                .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY).compact();
     }
 

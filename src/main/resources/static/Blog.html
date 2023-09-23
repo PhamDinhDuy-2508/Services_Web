@@ -594,48 +594,48 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjCGmQ0Uq4exrzdcL6rvxywDDOvfAu6eE"></script>
 <script src="js/gmaps.min.js"></script>
 <script src="js/main.js"></script>
-<script>
-    $(document).ready(function (){
-        console.log("test")
-        const api_url =
-            "http://localhost:8080/home/get_session";
+<!--<script>-->
+<!--    $(document).ready(function (){-->
+<!--        console.log("test")-->
+<!--        const api_url =-->
+<!--            "http://localhost:8080/home/get_session";-->
 
-// Defining async function
-        async function getapi(url) {
+<!--// Defining async function-->
+<!--        async function getapi(url) {-->
 
-            // Storing response
-            const response = await fetch(url);
-            var data = await response.json();
-            const object = JSON.parse(JSON.stringify(data)) ;
-            console.log(object)
-            if(object.jwt != "null") {
-                set_Info(object.jwt)
-            }
-            else {
+<!--            // Storing response-->
+<!--            const response = await fetch(url);-->
+<!--            var data = await response.json();-->
+<!--            const object = JSON.parse(JSON.stringify(data)) ;-->
+<!--            console.log(object)-->
+<!--            if(object.jwt != "null") {-->
+<!--                set_Info(object.jwt)-->
+<!--            }-->
+<!--            else {-->
 
-                $('#login').show()
-                $('#user').hide()
-                $('#say_hello').hide()
+<!--                $('#login').show()-->
+<!--                $('#user').hide()-->
+<!--                $('#say_hello').hide()-->
 
-            }
-            // Storing data in form of JSON
-            var data = await response.json();
-            console.log(data);
-            if (response) {
-                console.log(response)
-            }
-        }
-        getapi(api_url)
-    })
-</script>
-<script>
-    function  redirect_to_profle_page(){
-        var  title = $('#user').text();
-        var  username = title.slice(10,title.length)
+<!--            }-->
+<!--            // Storing data in form of JSON-->
+<!--            var data = await response.json();-->
+<!--            console.log(data);-->
+<!--            if (response) {-->
+<!--                console.log(response)-->
+<!--            }-->
+<!--        }-->
+<!--        getapi(api_url)-->
+<!--    })-->
+<!--</script>-->
+<!--<script>-->
+<!--    function  redirect_to_profle_page(){-->
+<!--        var  title = $('#user').text();-->
+<!--        var  username = title.slice(10,title.length)-->
 
-        window.location.href="http://localhost:8080/profile?username="+username
-    }
-</script>
+<!--        window.location.href="http://localhost:8080/profile?username="+username-->
+<!--    }-->
+<!--</script>-->
 <script>
     function  set_Info(username){
         $('#login').hide()

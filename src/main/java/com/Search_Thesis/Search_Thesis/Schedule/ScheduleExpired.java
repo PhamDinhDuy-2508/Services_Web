@@ -21,20 +21,12 @@ import java.util.Set;
 @EnableScheduling
 public class ScheduleExpired {
 
-    @Autowired
     Document_Service_redis document_service_redis ;
-
-    @Autowired
     Document_info_redis_Services document_info_redis_services ;
-
-    @Autowired
     EditDocumentServices edit_document_services ;
-
-    @Autowired
     ExpireServices expire_services ;
-
-    @Autowired
     CacheManager_iml_PAGINATION_question cacheManager_iml_pagination_question ;
+
 
     private  Thread thread  ;
 
@@ -47,7 +39,7 @@ public class ScheduleExpired {
     }
 
     @Async
-    @Scheduled(fixedRate = 100000 , initialDelay  = 50000)
+//    @Scheduled(fixedRate = 100000 , initialDelay  = 50000)
 
     public void Update_Cache() throws InterruptedException {
         if(thread != null) {
@@ -64,7 +56,25 @@ public class ScheduleExpired {
         LocalDateTime localDateTime  ;
 
         Set<LocalDateTime> Time_Expired  = (Set<LocalDateTime>) document_info_redis_services.getHashKey("1_Expire");
-//        expire_services.Delete(now);
-
+    }
+    @Autowired
+    public void setDocument_service_redis(Document_Service_redis document_service_redis) {
+        this.document_service_redis = document_service_redis;
+    }
+    @Autowired
+    public void setDocument_info_redis_services(Document_info_redis_Services document_info_redis_services) {
+        this.document_info_redis_services = document_info_redis_services;
+    }
+    @Autowired
+    public void setEdit_document_services(EditDocumentServices edit_document_services) {
+        this.edit_document_services = edit_document_services;
+    }
+    @Autowired
+    public void setExpire_services(ExpireServices expire_services) {
+        this.expire_services = expire_services;
+    }
+    @Autowired
+    public void setCacheManager_iml_pagination_question(CacheManager_iml_PAGINATION_question cacheManager_iml_pagination_question) {
+        this.cacheManager_iml_pagination_question = cacheManager_iml_pagination_question;
     }
 }

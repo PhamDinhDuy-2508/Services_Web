@@ -1,4 +1,4 @@
-package com.Search_Thesis.Search_Thesis.Storage.Constant;
+package com.Search_Thesis.Search_Thesis.Services.Utils.Constant;
 
 public class Constant {
     public static final String dropBoxUrl = "https://api.dropboxapi.com/2/";
@@ -12,4 +12,10 @@ public class Constant {
 
     public static  final String deleteFolderBatch ="files/delete_batch" ;
     public static  final  String rootFolder = "/Web_Service/Pham Duy/Root" ;
+    public  static final  int USER_ROLE = 1001 ;
+    public  static final  int ADMIN_ROLE = 1002 ;
+    public  static final  String USER_ROLE_KEY = "Role.User" ;
+
+
+
 }

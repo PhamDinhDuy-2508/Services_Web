@@ -1632,87 +1632,87 @@ function show_folder(ID) {
 <script>
 
 </script>
-<script>
-    $(document).ready(function (){
-        const api_url =
-            "http://localhost:8080/home/get_session";
+<!--<script>-->
+<!--    $(document).ready(function (){-->
+<!--        const api_url =-->
+<!--            "http://localhost:8080/home/get_session";-->
 
-// Defining async function
-        async function getapi(url) {
+<!--// Defining async function-->
+<!--        async function getapi(url) {-->
 
-            // Storing response
-            const response = await fetch(url);
-            var data = await response.json();
-            const object = JSON.parse(JSON.stringify(data)) ;
-            if(object.jwt != "null") {
-                set_Info(object.jwt)
-            }
-            else {
-                $('#login').show()
-                $('#user').hide()
-                $('#say_hello').hide()
-            }
+<!--            // Storing response-->
+<!--            const response = await fetch(url);-->
+<!--            var data = await response.json();-->
+<!--            const object = JSON.parse(JSON.stringify(data)) ;-->
+<!--            if(object.jwt != "null") {-->
+<!--                set_Info(object.jwt)-->
+<!--            }-->
+<!--            else {-->
+<!--                $('#login').show()-->
+<!--                $('#user').hide()-->
+<!--                $('#say_hello').hide()-->
+<!--            }-->
 
-            // Storing data in form of JSON
-            var data = await response.json();
+<!--            // Storing data in form of JSON-->
+<!--            var data = await response.json();-->
 
-            if (response) {
-                console.log(response)
-            }
+<!--            if (response) {-->
+<!--                console.log(response)-->
+<!--            }-->
 
-        }
+<!--        }-->
 
-        getapi(api_url)
-    })
-</script>
-<script>
-    $(document).ready(function (){
-        const api_url =
-            "http://localhost:8080/home/get_session";
-        var settings = {
-            "url": "http://localhost:8080/home/get_session",
-            "method": "GET",
-            "timeout": 0,
+<!--        getapi(api_url)-->
+<!--    })-->
+<!--</script>-->
+<!--<script>-->
+<!--    $(document).ready(function (){-->
+<!--        const api_url =-->
+<!--            "http://localhost:8080/home/get_session";-->
+<!--        var settings = {-->
+<!--            "url": "http://localhost:8080/home/get_session",-->
+<!--            "method": "GET",-->
+<!--            "timeout": 0,-->
 
-        };
+<!--        };-->
 
-        $.ajax(settings).done(function (response) {
-            if(response ==  null) {
-                $('#login').show()
-                $('#user').hide()
-                $('#say_hello').hide()
+<!--        $.ajax(settings).done(function (response) {-->
+<!--            if(response ==  null) {-->
+<!--                $('#login').show()-->
+<!--                $('#user').hide()-->
+<!--                $('#say_hello').hide()-->
 
-            }
-            else if(response!= null) {
-                set_Info(response)
+<!--            }-->
+<!--            else if(response!= null) {-->
+<!--                set_Info(response)-->
 
-            }
+<!--            }-->
 
-        });
+<!--        });-->
 
-        async function getapi(url) {
+<!--        async function getapi(url) {-->
 
-            // Storing response
-            const response = await fetch(url);
-            var data = await response.json();
-            const object = JSON.parse(JSON.stringify(data)) ;
-            if(object.jwt != "null") {
-                set_Info(object.jwt)
-            }
-            else {
-                $('#login').show()
-                $('#user').hide()
-                $('#say_hello').hide()
+<!--            // Storing response-->
+<!--            const response = await fetch(url);-->
+<!--            var data = await response.json();-->
+<!--            const object = JSON.parse(JSON.stringify(data)) ;-->
+<!--            if(object.jwt != "null") {-->
+<!--                set_Info(object.jwt)-->
+<!--            }-->
+<!--            else {-->
+<!--                $('#login').show()-->
+<!--                $('#user').hide()-->
+<!--                $('#say_hello').hide()-->
 
-            }
-            // Storing data in form of JSON
-            var data = await response.json();
-            if (response) {
-                console.log(response)
-            }
-        }
-    })
-</script>
+<!--            }-->
+<!--            // Storing data in form of JSON-->
+<!--            var data = await response.json();-->
+<!--            if (response) {-->
+<!--                console.log(response)-->
+<!--            }-->
+<!--        }-->
+<!--    })-->
+<!--</script>-->
 
 
 <script>

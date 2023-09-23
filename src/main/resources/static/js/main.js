@@ -1,7 +1,7 @@
-
 $(document).ready(function(){
-	"use strict";
+    setHeaderOfRequest()
 
+    "use strict";
 	var window_width 	 = $(window).width(),
 	window_height 		 = window.innerHeight,
 	header_height 		 = $(".default-header").height(),
@@ -31,14 +31,7 @@ $(document).ready(function(){
     });
 
     // Search Toggle
-    $("#search_input_box").hide();
-    $("#search").on("click", function () {
-        $("#search_input_box").slideToggle();
-        $("#search_input").focus();
-    });
-    $("#close_search").on("click", function () {
-        $('#search_input_box').slideUp(500);
-    });
+
 
     /*==========================
 		javaScript for sticky header
@@ -61,126 +54,157 @@ $(document).ready(function(){
     /*=================================
     Javascript for product area carousel
     ==================================*/
-    $(".active-product-area").owlCarousel({
-        items:1,
-        autoplay:false,
-        autoplayTimeout: 5000,
-        loop:true,
-        nav:true,
-        navText:["<img src='img/product/prev.png'>","<img src='img/product/next.png'>"],
-        dots:false
-    });
-
-    /*=================================
-    Javascript for single product area carousel
-    ==================================*/
-    $(".s_Product_carousel").owlCarousel({
-      items:1,
-      autoplay:false,
-      autoplayTimeout: 5000,
-      loop:true,
-      nav:false,
-      dots:true
-    });
+    // $(".active-product-area").owlCarousel({
+    //     items:1,
+    //     autoplay:false,
+    //     autoplayTimeout: 5000,
+    //     loop:true,
+    //     nav:true,
+    //     navText:["<img src='img/product/prev.png'>","<img src='img/product/next.png'>"],
+    //     dots:false
+    // });
+    //
+    // /*=================================
+    // Javascript for single product area carousel
+    // ==================================*/
+    // $(".s_Product_carousel").owlCarousel({
+    //   items:1,
+    //   autoplay:false,
+    //   autoplayTimeout: 5000,
+    //   loop:true,
+    //   nav:false,
+    //   dots:true
+    // });
     
     /*=================================
     Javascript for exclusive area carousel
     ==================================*/
-    $(".active-exclusive-product-slider").owlCarousel({
-        items:1,
-        autoplay:false,
-        autoplayTimeout: 5000,
-        loop:true,
-        nav:true,
-        navText:["<img src='img/product/prev.png'>","<img src='img/product/next.png'>"],
-        dots:false
-    });
+    // $(".active-exclusive-product-slider").owlCarousel({
+    //     items:1,
+    //     autoplay:false,
+    //     autoplayTimeout: 5000,
+    //     loop:true,
+    //     nav:true,
+    //     navText:["<img src='img/product/prev.png'>","<img src='img/product/next.png'>"],
+    //     dots:false
+    // });
 
     //--------- Accordion Icon Change ---------//
 
-    $('.collapse').on('shown.bs.collapse', function(){
-        $(this).parent().find(".lnr-arrow-right").removeClass("lnr-arrow-right").addClass("lnr-arrow-left");
-    }).on('hidden.bs.collapse', function(){
-        $(this).parent().find(".lnr-arrow-left").removeClass("lnr-arrow-left").addClass("lnr-arrow-right");
-    });
+    // $('.collapse').on('shown.bs.collapse', function(){
+    //     $(this).parent().find(".lnr-arrow-right").removeClass("lnr-arrow-right").addClass("lnr-arrow-left");
+    // }).on('hidden.bs.collapse', function(){
+    //     $(this).parent().find(".lnr-arrow-left").removeClass("lnr-arrow-left").addClass("lnr-arrow-right");
+    // });
 
-  // Select all links with hashes
-  $('.main-menubar a[href*="#"]')
-    // Remove links that don't actually link to anything
-    .not('[href="#"]')
-    .not('[href="#0"]')
-    .click(function(event) {
-      // On-page links
-      if (
-        location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') 
-        && 
-        location.hostname == this.hostname
-      ) {
-        // Figure out element to scroll to
-        var target = $(this.hash);
-        target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
-        // Does a scroll target exist?
-        if (target.length) {
-          // Only prevent default if animation is actually gonna happen
-          event.preventDefault();
-          $('html, body').animate({
-            scrollTop: target.offset().top-70
-          }, 1000, function() {
-            // Callback after animation
-            // Must change focus!
-            var $target = $(target);
-            $target.focus();
-            if ($target.is(":focus")) { // Checking if the target was focused
-              return false;
-            } else {
-              $target.attr('tabindex','-1'); // Adding tabindex for elements not focusable
-              $target.focus(); // Set focus again
-            };
-          });
-        }
-      }
-    });
-
+  // // Select all links with hashes
+  // $('.main-menubar a[href*="#"]')
+  //   // Remove links that don't actually link to anything
+  //   .not('[href="#"]')
+  //   .not('[href="#0"]')
+  //   .click(function(event) {
+  //     // On-page links
+  //     if (
+  //       location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '')
+  //       &&
+  //       location.hostname == this.hostname
+  //     ) {
+  //       // Figure out element to scroll to
+  //       var target = $(this.hash);
+  //       target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+  //       // Does a scroll target exist?
+  //       if (target.length) {
+  //         // Only prevent default if animation is actually gonna happen
+  //         event.preventDefault();
+  //         $('html, body').animate({
+  //           scrollTop: target.offset().top-70
+  //         }, 1000, function() {
+  //           // Callback after animation
+  //           // Must change focus!
+  //           var $target = $(target);
+  //           $target.focus();
+  //           if ($target.is(":focus")) { // Checking if the target was focused
+  //             return false;
+  //           } else {
+  //             $target.attr('tabindex','-1'); // Adding tabindex for elements not focusable
+  //             $target.focus(); // Set focus again
+  //           };
+  //         });
+  //       }
+  //     }
+  //   });
+  //
 
 
       // -------   Mail Send ajax
 
-         $(document).ready(function() {
-            var form = $('#booking'); // contact form
-            var submit = $('.submit-btn'); // submit button
-            var alert = $('.alert-msg'); // alert div for show alert message
-
-            // form submit event
-            form.on('submit', function(e) {
-                e.preventDefault(); // prevent default form submit
-
-                $.ajax({
-                    url: 'booking.php', // form action url
-                    type: 'POST', // form submit method get/post
-                    dataType: 'html', // request type html/json/xml
-                    data: form.serialize(), // serialize form data
-                    beforeSend: function() {
-                        alert.fadeOut();
-                        submit.html('Sending....'); // change submit button text
-                    },
-                    success: function(data) {
-                        alert.html(data).fadeIn(); // fade in response data
-                        form.trigger('reset'); // reset form
-                        submit.attr("style", "display: none !important");; // reset submit button text
-                    },
-                    error: function(e) {
-                        console.log(e)
-                    }
-                });
-            });
-        });
-
-
+        //  $(document).ready(function() {
+        //     var form = $('#booking'); // contact form
+        //     var submit = $('.submit-btn'); // submit button
+        //     var alert = $('.alert-msg'); // alert div for show alert message
+        //
+        //     // form submit event
+        //     form.on('submit', function(e) {
+        //         e.preventDefault(); // prevent default form submit
+        //
+        //         $.ajax({
+        //             url: 'booking.php', // form action url
+        //             type: 'POST', // form submit method get/post
+        //             dataType: 'html', // request type html/json/xml
+        //             data: form.serialize(), // serialize form data
+        //             beforeSend: function() {
+        //                 alert.fadeOut();
+        //                 submit.html('Sending....'); // change submit button text
+        //             },
+        //             success: function(data) {
+        //                 alert.html(data).fadeIn(); // fade in response data
+        //                 form.trigger('reset'); // reset form
+        //                 submit.attr("style", "display: none !important");; // reset submit button text
+        //             },
+        //             error: function(e) {
+        //                 console.log(e)
+        //             }
+        //         });
+        //     });
+        // });
 
 
-    $(document).ready(function() {
-        $('#mc_embed_signup').find('form').ajaxChimp();
-    });   
+
+
+    // $(document).ready(function() {
+    //     $('#mc_embed_signup').find('form').ajaxChimp();
+    // });
+    function checkUserNameProcess(){
+        async function getapi(url) {
+
+            // Storing response
+            const response = await fetch(url);
+            var data = await response.json();
+            const object = JSON.parse(JSON.stringify(data)) ;
+            if(object.jwt != null) {
+                set_Info(object.jwt)
+            }
+            else {
+                $('#login').show()
+                $('#user').hide()
+                $('#say_hello').hide()
+            }
+            // Storing data in form of JSON
+            var data = await response.json();
+
+        }
+    }
+    function  setInfo(){
+        $('#login').hide()
+        $('#user').show()
+        var text = " Xin Chào " + username ;
+        if(username === null) {
+            return null  ;
+        }
+        $('#user').text(text)
+        $('#user').val(username)
+        $('#say_hello').show()
+    }
 
 
 
@@ -558,8 +582,45 @@ $(document).ready(function(){
           ]
         });
       }
+    async function  setHeaderOfRequest() {
+        const  jwt = getCookie("login_jwt")
+        var settings = {
+            "url": "http://localhost:8080/home/get_session",
+            "method": "GET",
+            "timeout": 0,
+            "headers":{
+                "Authorization":"Bearer " +jwt,
+                "Content-Type": "application/json",
+            }
+        };
+        $.ajax(settings).done(function (response) {
+            if(response ==  null) {
+                $('#login').show()
+                $('#user').hide()
+                $('#say_hello').hide()
+            }
+            else if(response!= null) {
+                set_Info(response)
+            }
+
+        });
+    }
+
+        function  set_Info(username) {
+            $('#login').hide()
+            $('#user').show()
+            var text = " Xin Chào " + username;
+            $('#user').text(text)
+            $('#user').val(username)
+            $('#say_hello').show()
+        }
+
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
 
 
-  
 
  });

@@ -287,36 +287,7 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjCGmQ0Uq4exrzdcL6rvxywDDOvfAu6eE"></script>
 <script src="js/gmaps.min.js"></script>
 <script src="js/main.js"></script>
-<script>
-    $(document).ready(function (){
-        console.log("test")
-        const api_url =
-            "http://localhost:8080/home/get_session";
-        var settings = {
-            "url": "http://localhost:8080/home/get_session",
-            "method": "GET",
-            "timeout": 0,
 
-        };
-
-        $.ajax(settings).done(function (response) {
-            console.log(response)
-            console.log(JSON.parse(JSON.stringify(response)));
-            if(response ==  null) {
-                $('#login').show()
-                $('#user').hide()
-                $('#say_hello').hide()
-
-            }
-            else if(response!= null) {
-                set_Info(response)
-
-            }
-
-        });
-
-    })
-</script>
 <script>
     function  redirect_to_profle_page(){
         var  title = $('#user').text();
@@ -333,9 +304,6 @@
         $('#user').text(text)
         $('#user').val(username)
         $('#say_hello').show()
-
-
-
     }
 </script>
 

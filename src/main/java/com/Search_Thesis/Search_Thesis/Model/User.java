@@ -2,6 +2,8 @@ package com.Search_Thesis.Search_Thesis.Model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -103,6 +105,7 @@ public class User  implements Serializable {
     public void setAccount(String account) {
         this.account = account;
     }
+
     public String getPassword() {
         return password;
     }
@@ -135,14 +138,6 @@ public class User  implements Serializable {
         this.country = country;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
     public String getResettoken() {
         return resettoken;
     }
@@ -167,67 +162,80 @@ public class User  implements Serializable {
         this.replySet = replySet;
     }
 
-    @Column
-    private String first_name  ;
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 
     @Column
-    private  String last_name ;
+    private String first_name;
 
     @Column
-    private  String email ;
+    private String last_name;
 
     @Column
-    private  String Phone ;
+    private String email;
 
     @Column
-    private  String city  ;
+    private String Phone;
 
     @Column
-    private  String State ;
+    private String city;
 
     @Column
-    private  String province ;
+    private String State;
 
     @Column
-    private  String sex ;
+    private String province;
+
+    @Column
+    private String sex;
 
     @Id
     @Column(name = "user_id")
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private  int user_id =0;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int user_id ;
 
     @Column(name = "account")
-    private String account ;
+    private String account;
     @JsonIgnore
 
-    private String   password ;
+    private String password;
 
-    @Column(name="Home_number")
-    private String Home_number ;
+    @Column(name = "Home_number")
+    private String Home_number;
     @Column(name = "street")
-    private String Street ;
+    private String Street;
 
     @Column(name = "country")
-    private String country ;
-    @JsonIgnore
-
-    private  String role ;
+    private String country;
     @JsonIgnore
 
     @Column
-    private String resettoken= "" ;
+    private String resettoken = "";
 
-    @OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER, mappedBy = "creator")
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER, mappedBy = "creator")
     @JsonIgnore
-    private Set<Question> questionList ;
+    private Set<Question> questionList;
 
 
-    @OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER, mappedBy = "user")
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER, mappedBy = "user")
     @JsonIgnore
-    private  Set<Reply> replySet ;
+    private Set<Reply> replySet;
 
-    @OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER, mappedBy = "user_comment")
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER, mappedBy = "user_comment")
     @JsonIgnore
-    private List<Comment_Reply_Question> comment_reply_questionList ;
+    private List<Comment_Reply_Question> comment_reply_questionList;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @Transient
+    @JsonIgnore
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles;
 
 }

@@ -28,54 +28,10 @@ import java.util.List;
 //		basePackageClasses = SignIn_Respository.class  )
 
 
-public class SearchThesisApplication implements CommandLineRunner {
+public class SearchThesisApplication{
 
-	@Autowired
-	Question_Repository question_repository ;
-	@Autowired
-	Tag_repository category_question_repository ;
-	@Autowired
-	PasswordEncoder passwordEncoder ;
 
 	public static void main(String[] args) {
 		SpringApplication.run(SearchThesisApplication.class, args);
 	}
-//	private  final Root_Responsitory root_responsitory ;
-	@Override
-	public void run(String... args) throws Exception {
-		List<Question> list =  question_repository.findAll() ;
-//		for (Question lis :list) {
-//			Category_Question category_question =  category_question_repository.findByCategory_id(1) ;
-//			lis.setCategory_questions(Arrays.asList(category_question) );
-//			System.out.println(lis.getCategory_questions());
-//
-//			question_repository.save(lis) ;
-//
-//		}
-//		User user =  new User() ;
-//		user.setAccount("PhamDinhDuy2508");
-//		user.setPassword(passwordEncoder.encode("25082000"));
-//		user_respository.save(user) ;
-
-
-//		Root_Folder root_folder =  new Root_Folder() ;
-//		root_folder.setId(2);
-//		root_folder.setName("Chuyên Ngành");
-//
-//		Category_document category_document =  new Category_document() ;
-//		category_document.setName("CAD Ứng Dụng");
-//		category_document.setCode("AS2013");
-//		category_document.setRoot_folder(root_folder);
-//
-//		root_folder.setCategory_document(Collections.singleton(category_document));
-//		root_responsitory.save(root_folder) ;
-//
-//
-//
-//
-//		categoryDocument_responsitory.findAll().forEach(p -> {
-//			System.out.println(p.getName());
-//		});
-	}
-
 }

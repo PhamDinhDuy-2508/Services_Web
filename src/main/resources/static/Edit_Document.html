@@ -1233,41 +1233,41 @@
     $('#tree3').treed({openedClass:'glyphicon-chevron-right', closedClass:'glyphicon-chevron-down'});
 
 </script>
-<script>
-    $(document).ready(function (){
-        console.log("test")
-        const api_url =
-            "http://localhost:8080/home/get_session";
+<!--<script>-->
+<!--    $(document).ready(function (){-->
+<!--        console.log("test")-->
+<!--        const api_url =-->
+<!--            "http://localhost:8080/home/get_session";-->
 
-// Defining async function
-        async function getapi(url) {
+<!--// Defining async function-->
+<!--        async function getapi(url) {-->
 
-            // Storing response
-            const response = await fetch(url);
-            var data = await response.json();
-            const object = JSON.parse(JSON.stringify(data)) ;
-            console.log(object)
-            if(object.jwt != "null") {
-                set_Info(object.jwt)
-            }
-            else {
-                $('#login').show()
-                $('#user').hide()
-                $('#say_hello').hide()
+<!--            // Storing response-->
+<!--            const response = await fetch(url);-->
+<!--            var data = await response.json();-->
+<!--            const object = JSON.parse(JSON.stringify(data)) ;-->
+<!--            console.log(object)-->
+<!--            if(object.jwt != "null") {-->
+<!--                set_Info(object.jwt)-->
+<!--            }-->
+<!--            else {-->
+<!--                $('#login').show()-->
+<!--                $('#user').hide()-->
+<!--                $('#say_hello').hide()-->
 
-            }
+<!--            }-->
 
 
-            // Storing data in form of JSON
-            var data = await response.json();
-            console.log(data);
-            if (response) {
-                console.log(response)
-            }
-        }
-        getapi(api_url)
-    })
-</script>
+<!--            // Storing data in form of JSON-->
+<!--            var data = await response.json();-->
+<!--            console.log(data);-->
+<!--            if (response) {-->
+<!--                console.log(response)-->
+<!--            }-->
+<!--        }-->
+<!--        getapi(api_url)-->
+<!--    })-->
+<!--</script>-->
 <script>
     function  redirect_to_profle_page(){
         var  title = $('#user').text();

@@ -6,7 +6,7 @@ import com.Search_Thesis.Search_Thesis.Event.Event.UploadFolderToStorageEvent;
 import com.Search_Thesis.Search_Thesis.Model.Category_document;
 import com.Search_Thesis.Search_Thesis.Model.Folder;
 import com.Search_Thesis.Search_Thesis.Services.Drive.DriveService;
-import com.Search_Thesis.Search_Thesis.Storage.Constant.Constant;
+import com.Search_Thesis.Search_Thesis.Services.Utils.Constant.Constant;
 import com.Search_Thesis.Search_Thesis.repository.Category_document_Repository;
 import com.Search_Thesis.Search_Thesis.repository.FolderRepository;
 import org.springframework.beans.factory.annotation.Autowired;

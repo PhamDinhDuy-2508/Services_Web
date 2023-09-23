@@ -1,5 +1,6 @@
 package com.Search_Thesis.Search_Thesis.Security;
 
+import com.Search_Thesis.Search_Thesis.Model.Role;
 import com.Search_Thesis.Search_Thesis.Model.User;
 import com.Search_Thesis.Search_Thesis.repository.User_respository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,61 +17,43 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+@Service("UserServices_Sercurity")
 public class UserServices_Sercurity implements UserDetailsService {
 
-    @Autowired
-    User_respository user_respository ;
-    private  User user ;
+    private User_respository user_respository;
 
+    @Autowired
+    private void setUser_respository(User_respository user_respository) {
+        this.user_respository = user_respository;
+    }
+
+    private User user;
 
     @Override
-
-
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        User user = user_respository.findUsersByAccount(username) ;
-        this.user =  user ;
-
-        System.out.println("User test "  + user.toString());
-        if(user == null) {
+        user = user_respository.findUsersByAccount(username);
+        if (user == null) {
             throw new UsernameNotFoundException(username);
         }
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder() ;
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
-//        String encoded =new BCryptPasswordEncoder().encode(user.getPassword());
-
-        User user1 = new User() ;
-        user1.setUser_id(user.getUser_id());
-        user1.setPassword( user.getPassword());
-        user1.setAccount(user.getAccount()) ;
-        System.out.println(user1);
-        return new CustomerDetails(user) ;
-
+        return new CustomerDetails(user);
     }
+
     private List<GrantedAuthority> getAuthorities(User user) {
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
-
-        // System.out.print("authorities :"+authorities);
+        for(Role role : user.getRoles()) {
+            authorities.add(new SimpleGrantedAuthority(role.getRole()));
+        }
         return authorities;
     }
 
     public User getUser() {
         return user;
     }
-//
-//
-//        return new CustomerDetails(user);
-//    }
-    @Transactional
+
     public UserDetails loadUserById(int id) {
         User user = user_respository.findById(id);
-        System.out.println(" test User"  + user);
-
         return new org.springframework.security.core.userdetails.User(
-                user.getAccount() , user.getPassword() ,getAuthorities(user));
+                user.getAccount(), user.getPassword(), getAuthorities(user));
     }
 
 }

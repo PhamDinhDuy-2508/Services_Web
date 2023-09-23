@@ -14,12 +14,10 @@ import javax.validation.constraints.Size;
 @RestController
 @RequestMapping("/reset_pass")
 public class resetPassword_rest {
-
     @Autowired
     UserServiceImpl user_service;
     @Autowired
     User user ;
-
     @GetMapping()
     public ModelAndView display(@RequestParam("token") String token) {
         ModelAndView mav = new ModelAndView("reset_pass.html");
@@ -28,14 +26,11 @@ public class resetPassword_rest {
     @GetMapping("/load_user")
     public ResponseEntity response(@RequestParam("token" )  String token ){
         try {
-            System.out.println(token);
             user =   user_service.getUserBytoken(token);
             user_res user_res =  new user_res() ;
-
             return  ResponseEntity.ok(user_res) ;
         }
         catch (Exception e) {
-            System.out.println(e.getMessage());
             return ResponseEntity.ok(new user_res()) ;
         }
     }

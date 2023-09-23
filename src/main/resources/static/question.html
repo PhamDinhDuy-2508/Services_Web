@@ -739,7 +739,8 @@ function Upload_Comment(id) {
             "method": "POST",
             "timeout": 0,
             "headers": {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization":"Bearer " +token,
             },
             "data": JSON.stringify({
                 "content": content,

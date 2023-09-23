@@ -16,7 +16,7 @@ import java.util.Map;
 public class JwtTokenProvider {
     private final String JWT_SECRET = "phamdinhduy2508";
 
-    private final long JWT_EXPIRATION = 604800000L;
+    private final long JWT_EXPIRATION = 120000 ;
     public String generateToken(CustomerDetails userDetails) {
         Date now = new Date();
 

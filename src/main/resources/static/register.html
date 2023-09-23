@@ -143,11 +143,15 @@
           </div>
           <div class="form-group">
             <input type="checkbox" name="agree-term" id="agree-term" class="agree-term" />
-            <label for="agree-term" class="label-agree-term"><span><span></span></span>I agree all statements in  <a href="#" class="term-service">Terms of service</a></label>
+            <label for="agree-term" class="label-agree-term"><span><span></span></span>I agree all statements in</label>
+            <a href="#" class="term-service">Terms of service</a>
           </div>
           <div class="form-group">
-            <button type="submit" name="submit" id="submit" class="form-submit" onclick=send_to_check() >Sign up</button>
+            <a  class="button_register text-light" onclick=send_to_check() >Sign up</a>
+
+<!--            <button type="primary-btn" name="submit" id="submit" onclick=send_to_check() >Sign up</button>-->
           </div>
+
         <p class="loginhere">
           Have already an account ? <a href="login" class="loginhere-link" onclick="redirrect_to_Login_page()">Login here</a>
         </p>

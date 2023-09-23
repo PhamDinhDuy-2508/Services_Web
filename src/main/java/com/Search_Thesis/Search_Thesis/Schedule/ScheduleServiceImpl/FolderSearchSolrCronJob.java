@@ -35,7 +35,7 @@ public class FolderSearchSolrCronJob implements ScheduleService {
     Converter<Folder, FolderSolrSearch> converter;
 
     @Async
-    @Scheduled(fixedRate = 180000, initialDelay =  100000)
+//    @Scheduled(fixedRate = 180000, initialDelay =  100000)
     @Override
     public void CronJob() {
         List<Folder> folderList = folder_respository.findAll();

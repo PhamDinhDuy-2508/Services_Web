@@ -2,7 +2,7 @@ package com.Search_Thesis.Search_Thesis.Storage.Services.DropBoxServiceImpl.Comm
 
 import com.Search_Thesis.Search_Thesis.DTO.FolderToDropBoxModel_delete;
 import com.Search_Thesis.Search_Thesis.DTO.FolderToDropboxModel_update_or_create;
-import com.Search_Thesis.Search_Thesis.Storage.Constant.Constant;
+import com.Search_Thesis.Search_Thesis.Services.Utils.Constant.Constant;
 import com.Search_Thesis.Search_Thesis.Storage.Services.Command.StorageFolderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;

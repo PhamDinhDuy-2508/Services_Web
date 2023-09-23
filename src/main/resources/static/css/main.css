@@ -7,6 +7,54 @@
 /* Wide Mobile Layout: 480px */
 /* Section Gaps css
 ============================================================================================ */
+.button_register{
+  position: relative;
+  overflow: hidden;
+  color: #192de0;
+  padding:  0 400px;
+  line-height: 50px;
+  border-radius: 50px;
+  display: inline-block;
+  text-transform: uppercase;
+
+  font-weight: 500;
+  cursor: pointer;
+  width: 100%;
+  -webkit-transition: all 0.3s ease 0s;
+  -moz-transition: all 0.3s ease 0s;
+  -o-transition: all 0.3s ease 0s;
+  transition: all 0.3s ease 0s;
+  background: -webkit-linear-gradient(90deg, rgba(0, 187, 255, 0.8) 0%, rgba(0, 13, 255, 0.8) 100%);
+
+}
+
+.button_register:before {
+  position: absolute;
+  left: -145px;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  content: "";
+  background: -webkit-linear-gradient(90deg, rgba(136, 199, 227, 0.8) 0%, rgba(237, 237, 245, 0.8) 100%);
+  opacity: 0;
+  -webkit-transform: skew(40deg);
+  -moz-transform: skew(40deg);
+  -ms-transform: skew(40deg);
+  -o-transform: skew(40deg);
+  transform: skew(40deg);
+  -webkit-transition: all 0.5s ease 0s;
+  -moz-transition: all 0.5s ease 0s;
+  -o-transition: all 0.5s ease 0s;
+  transition: all 0.5s ease 0s; }
+.button_register:hover {
+  color: #fcfcfc;
+  background: -webkit-linear-gradient(90deg, rgba(9, 9, 246, 0.8) 0%, rgba(0, 13, 255, 0.8) 100%);
+}
+.button_register:hover:before {
+  left: 900px;
+  opacity: .5;
+}
+
 .no-padding {
   padding: 0; }
 
@@ -55,7 +103,7 @@
 
 /* Start Gradient Area css
 ============================================================================================ */
-.gradient-bg, .primary-btn, .add-bag .add-btn, .single-product .product-details .prd-bottom .social-info span:after, .grid-btn:hover, .list-btn:hover, .grid-btn.active, .list-btn.active, .pagination a.active, .pagination a:hover, .s_Product_carousel .owl-dots div.active, .s_product_text .card_area .icon_btn:after, .product_description_area .nav.nav-tabs li a.active, .blog-pagination .page-item.active .page-link, .single-footer-widget .click-btn {
+.gradient-bg, .primary-btn, .add-bag .add-btn, .single-product .product-details .prd-bottom .social-info span:after, .grid-btn:hover, .list-btn:hover, .grid-btn.active, .list-btn.active, .pagination a.active, .pagination a:hover, .s_Product_carousel .owl-dots div.active, .s_product_text .card_area .icon_btn:after, .product_description_area .nav.nav-tabs li a.active, .blog-pagination .page-item.active .page-link, .single-footer-widget .click-btn  {
   background: -webkit-linear-gradient(90deg, rgba(0, 187, 255, 0.8) 0%, rgba(0, 13, 255, 0.8) 100%);
   background: -moz-linear-gradient(90deg, rgba(0, 187, 255, 0.82) 0%, rgba(0, 13, 255, 0.8) 100%);
   background: -o-linear-gradient(90deg, rgba(0, 187, 255, 0.8) 0%, rgba(0, 13, 255, 0.8) 100%);
@@ -80,7 +128,7 @@
 .primary-btn {
   position: relative;
   overflow: hidden;
-  color: #fff;
+  color: #192de0;
   padding: 0 30px;
   line-height: 50px;
   border-radius: 50px;

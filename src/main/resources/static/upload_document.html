@@ -573,13 +573,16 @@ function back_to_document_page(){
 
         $("#category").change(function(){
             console.log("http://localhost:8080/api/ckt/check/"+$('#category').val())
+            const  jwt = getCookie("login_jwt")
 
             var settings = {
                 "url": "http://localhost:8080/api/ckt/check/"+$('#category').val(),
                 "method": "GET",
                 "timeout": 0,
                 "headers": {
-                    "Cookie": "SESSION=MDFhYTA1YWMtZDEzNC00ZGVhLTlmYjctNTFmMDU5MjUyMjll"
+                    "Cookie": "SESSION=MDFhYTA1YWMtZDEzNC00ZGVhLTlmYjctNTFmMDU5MjUyMjll",
+                    "Authorization" : "Bearer " + jwt
+
                 },
                 "processData": false,
                 "mimeType": "multipart/form-data",

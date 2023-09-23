@@ -1,6 +1,5 @@
 package com.Search_Thesis.Search_Thesis.Event.Event;
 
-import com.Search_Thesis.Search_Thesis.Event.Event.UploadFolderToStorageEvent;
 import com.Search_Thesis.Search_Thesis.Storage.Services.DropBoxServiceImpl.Command.DropboxServiceCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
