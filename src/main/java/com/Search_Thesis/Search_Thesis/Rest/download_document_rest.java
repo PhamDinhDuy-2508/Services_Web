@@ -86,17 +86,13 @@ public class download_document_rest {
 
     @GetMapping("/download/{ID}/{filename}")
     public CompletableFuture<ResponseEntity> download_file(@PathVariable String ID, @PathVariable String filename , HttpServletResponse response) throws IOException {
-        System.out.println("Main_thread : " +  Thread.currentThread().getName() + Thread.currentThread().getId());
-
-
+        
        return document_services_2.Download(ID, filename, this.servletContext).
 
                 thenApply(file_path->{
-                    System.out.println("Thread_1  : " +  Thread.currentThread().getName()+ Thread.currentThread().getId());
 
                     MediaType mediaType = MediaTypeUtils.getMediaTypeForFileName(servletContext, ID);
                     Path path = Paths.get(file_path);
-
                     byte[] data = new byte[0];
                     try {
                         data = Files.readAllBytes(path);

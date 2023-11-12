@@ -43,7 +43,7 @@ public class DropboxServiceCommand implements StorageFolderService {
 
                 HttpEntity<FolderToDropboxModel_update_or_create> folderToDropboxModelHttpEntity = new HttpEntity<>(new FolderToDropboxModel_update_or_create(Collections.singletonList(path)), httpHeadersDropBox);
 
-                restTemplate.exchange(Constant.dropBoxUrl+Constant.createFolderBatch, HttpMethod.POST, folderToDropboxModelHttpEntity, FolderToDropboxModel_update_or_create.class);
+                restTemplate.exchange(Constant.dropBoxUrl + Constant.createFolderBatch, HttpMethod.POST, folderToDropboxModelHttpEntity, FolderToDropboxModel_update_or_create.class);
 
             } catch (Exception e) {
                 logger.info(e.getMessage());
@@ -55,20 +55,15 @@ public class DropboxServiceCommand implements StorageFolderService {
     @Async
     @Transactional
     public void deleteFolder(String path) {
-        CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
-            try {
+        try {
+            HttpEntity<FolderToDropBoxModel_delete> folderToDropboxModelHttpEntity = new HttpEntity<>(new FolderToDropBoxModel_delete(Collections.singletonList(path)), httpHeadersDropBox);
 
-                HttpEntity<FolderToDropBoxModel_delete> folderToDropboxModelHttpEntity = new HttpEntity<>(new FolderToDropBoxModel_delete(Collections.singletonList(path)), httpHeadersDropBox);
+            restTemplate.exchange(Constant.dropBoxUrl + Constant.deleteFolderBatch, HttpMethod.POST, folderToDropboxModelHttpEntity, FolderToDropboxModel_update_or_create.class);
 
-                restTemplate.exchange(Constant.dropBoxUrl+Constant.deleteFolderBatch, HttpMethod.POST, folderToDropboxModelHttpEntity, FolderToDropboxModel_update_or_create.class);
-
-            } catch (Exception e) {
-                logger.info(e.getMessage());
-            }
-        });
+        } catch (Exception e) {
+            logger.info(e.getMessage());
+        }
     }
-
-
 
 
     private void setHeader() {

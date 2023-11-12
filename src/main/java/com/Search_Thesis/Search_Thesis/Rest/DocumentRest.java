@@ -132,11 +132,7 @@ public class DocumentRest {
     @GetMapping("/find_category")
     public ResponseEntity<Boolean> find_cate(@RequestParam("root") String root_id, @RequestParam("code") String code) throws ExecutionException, InterruptedException {
         boolean check = false;
-
         Future<Boolean> search_check = document_services.find_category_code(root_id, code);
-
-        while (!search_check.isDone()) {
-        }
         check = search_check.get();
         return ResponseEntity.ok(check);
     }
@@ -145,10 +141,12 @@ public class DocumentRest {
     public ResponseEntity<Boolean> create_category(@RequestBody Create_category create_category) {
         try {
             applicationEventPublisher.publishEvent(new CreateCategoryEvent(this, create_category));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+            return ResponseEntity.status(200).body(true) ;
+
+        } catch (Exception ignored) {
+            return ResponseEntity.status(409).body(false) ;
         }
-        return null;
+
     }
 
     @GetMapping("/get_folder")

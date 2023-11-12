@@ -1,9 +1,7 @@
 package com.Search_Thesis.Search_Thesis.Services.RegisterService;
 
-import com.Search_Thesis.Search_Thesis.DTO.FolderResponse;
 import com.Search_Thesis.Search_Thesis.DTO.SignUpDTO;
 import com.Search_Thesis.Search_Thesis.Model.Role;
-import com.Search_Thesis.Search_Thesis.Model.SolrModels.FolderSolrSearch;
 import com.Search_Thesis.Search_Thesis.Model.User;
 import com.Search_Thesis.Search_Thesis.Services.Converter.Converter;
 import com.Search_Thesis.Search_Thesis.Services.MiddleWare.MiddleWare;
@@ -16,7 +14,6 @@ import com.Search_Thesis.Search_Thesis.repository.User_respository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -29,6 +26,7 @@ public class RegisterService {
     private final ValidationService validationService;
     private final User_respository userRespository;
     private Environment environment;
+
     private Converter<SignUpDTO, User> userSignUpConverter;
 
     @Autowired
@@ -50,10 +48,9 @@ public class RegisterService {
     public void registerUser(SignUpDTO sign) {
         Role role = new Role();
         role.setRoleID(Integer.parseInt(Objects.requireNonNull(environment.getProperty(Constant.USER_ROLE_KEY))));
-        role.setRole("user");
         User user = userSignUpConverter.convertFromDto(sign);
         user.setRoles(Set.of(role));
-        userRespository.save(user);
+        userRespository.saveAndFlush(user);
     }
 
     public Map<String, String> validate(SignUpDTO signUpData) {

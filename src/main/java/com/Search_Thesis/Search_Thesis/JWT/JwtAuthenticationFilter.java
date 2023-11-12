@@ -36,7 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         try {
-            String jwt = getJwtFromCookie(request);
+            String jwt = getJwtFromRequest(request);
             if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
                 int userId = Math.toIntExact(tokenProvider.getUserIdFromJWT(jwt));
                 UserDetails userDetails = customUserDetailsService.loadUserById(userId);
@@ -48,6 +48,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         } catch (Exception ex) {
             log.error("failed on set user authentication", ex);
+
         }
         filterChain.doFilter(request, response);
     }

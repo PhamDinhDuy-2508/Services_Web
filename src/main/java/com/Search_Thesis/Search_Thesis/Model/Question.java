@@ -67,7 +67,7 @@ public class Question    implements Serializable {
 //    @JsonIgnore
 //    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @JsonIgnore
-    @ManyToMany(    fetch = FetchType.LAZY )
+    @ManyToMany( fetch = FetchType.LAZY )
 
     @JoinTable(name =  "category_question_join" ,  joinColumns = @JoinColumn(name ="id_question" ) ,
             inverseJoinColumns =  @JoinColumn(name = "id_category" ) )
